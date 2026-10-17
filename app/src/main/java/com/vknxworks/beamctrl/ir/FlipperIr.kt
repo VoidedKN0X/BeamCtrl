@@ -42,7 +42,12 @@ object FlipperIr {
         }
         flush()
 
-        for (b in blocks) {
+        for ((index, b) in blocks.withIndex()) {
+            // A real remote has a few dozen signals; stop at a sane number instead of filling memory.
+            if (index >= MAX_SIGNALS) {
+                skipped.add(b["name"].orEmpty())
+                continue
+            }
             val name = b["name"].orEmpty().ifBlank { "Button" }
             val code = runCatching { toCode(b) }.getOrNull()
             if (code == null) {
@@ -66,9 +71,12 @@ object FlipperIr {
     private fun toCode(b: Map<String, String>): IrCode? {
         return when (b["type"]?.lowercase(Locale.ROOT)) {
             "raw" -> {
-                val freq = b["frequency"]?.toDoubleOrNull()?.toInt() ?: 38_000
-                val timings = b["data"].orEmpty().split(Regex("\\s+")).mapNotNull { it.toIntOrNull() }.filter { it > 0 }
-                if (timings.isEmpty()) null else IrCode.Raw(freq, timings)
+                val freq = b["frequency"]?.toDoubleOrNull()?.takeIf { it.isFinite() }?.toInt() ?: 38_000
+                val timings = b["data"].orEmpty().split(Regex("\\s+")).asSequence()
+                    .mapNotNull { it.toIntOrNull() }.filter { it > 0 }
+                    .take(IrLimits.MAX_TIMINGS + 1).toList()
+                // Only keep codes the blaster can actually send (frequency, length and timing limits).
+                if (timings.isEmpty()) null else IrCode.Raw(freq, timings).also { it.encode() }
             }
             "parsed" -> {
                 val a = bytesLe(b["address"])
@@ -90,8 +98,11 @@ object FlipperIr {
         }
     }
 
+    /** Signals read from one file; the rest are reported as skipped. */
+    const val MAX_SIGNALS = 500
+
     private fun prettyName(name: String): String =
-        name.replace('_', ' ').trim().replaceFirstChar { it.titlecase(Locale.getDefault()) }
+        name.replace('_', ' ').filterNot { it.isISOControl() }.trim().take(MAX_LABEL).replaceFirstChar { it.titlecase(Locale.getDefault()) }
 
     private val roleNames: Map<String, KeyRole> = buildMap<String, KeyRole> {
         fun alias(role: KeyRole, vararg names: String) = names.forEach { this[it] = role }
@@ -131,16 +142,21 @@ object FlipperIr {
 
     // ---------- Export ----------
 
+    private const val MAX_LABEL = 60
+
+    /** Keeps a name on one line, so a label can't add its own lines (fake signals) to an exported file. */
+    private fun oneLine(text: String): String = text.filterNot { it.isISOControl() }.trim()
+
     private fun le(value: Int, bytes: Int = 4): String =
         (0 until bytes).joinToString(" ") { hex((value shr (8 * it)) and 0xFF, 2) }
 
     fun write(remote: Remote): String = buildString {
         append("Filetype: IR signals file\n")
         append("Version: 1\n")
-        append("# Exported from BeamCtrl: ${remote.name}\n")
+        append("# Exported from BeamCtrl: ${oneLine(remote.name)}\n")
         for (b in remote.buttons) {
             append("#\n")
-            append("name: ${b.label.trim().replace(' ', '_').ifEmpty { "Button" }}\n")
+            append("name: ${oneLine(b.label).replace(' ', '_').ifEmpty { "Button" }}\n")
             val c = b.code
             fun parsed(protocol: String, address: Int, command: Int) {
                 append("type: parsed\n")

@@ -165,6 +165,7 @@ object Pronto {
 
     /** Decodes "0000 006D 0022 0002 0157 00AC …" (learned, modulated codes). */
     fun decode(hex: String): IrSignal {
+        require(hex.length <= IrLimits.MAX_PRONTO_CHARS) { "That Pronto code is too long" }
         val words = hex.trim().split(Regex("[\\s,]+")).filter { it.isNotEmpty() }.map {
             it.toIntOrNull(16) ?: throw IllegalArgumentException("\"$it\" isn't a hex number")
         }
@@ -173,6 +174,7 @@ object Pronto {
         val freqWord = words[1]
         require(freqWord > 0) { "Pronto frequency is zero" }
         val frequency = (1_000_000.0 / (freqWord * 0.241246)).roundToInt()
+        require(frequency in IrLimits.MIN_FREQUENCY..IrLimits.MAX_FREQUENCY) { "Pronto frequency is out of range" }
         val n1 = words[2] * 2
         val n2 = words[3] * 2
         require(n1 + n2 > 0) { "Pronto code has no timings" }
@@ -183,6 +185,9 @@ object Pronto {
         val second = seq(4 + n1, n2)
         val once = if (first.isNotEmpty()) first else second
         val repeat = if (second.isNotEmpty()) second else first
+        for (part in listOf(once, repeat)) {
+            require(part.fold(0L) { acc, v -> acc + v } <= IrLimits.MAX_PATTERN_US) { "That Pronto code is longer than two seconds" }
+        }
         return IrSignal(frequency, once, repeat)
     }
 
