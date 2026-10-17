@@ -1,55 +1,92 @@
 # BeamCtrl
 
-An infrared remote control app for phones with an IR blaster, part of the VKNXWorks Ctrl series (CraftyCtrl, FrigateCtrl, SeerrCtrl, JellyCtrl, FilesCtrl, NaviCtrl). Android 13+.
+**Turn your phone's IR blaster into a TV remote.**
+
+[![Latest release](https://img.shields.io/github/v/release/VoidedKN0X/BeamCtrl?label=download)](https://github.com/VoidedKN0X/BeamCtrl/releases/latest) ![Android 13+](https://img.shields.io/badge/Android-13%2B-3DDC84?logo=android&logoColor=white) [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE) [![Sponsor](https://img.shields.io/badge/sponsor-GitHub-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/VoidedKN0X)
+
+BeamCtrl is a remote control app for Android phones with an infrared (IR) blaster. Pick your TV brand or import a Flipper Zero file, and control your TV from your phone.
+
+Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
+
+<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/VoidedKN0X/BeamCtrl"><img src=".github/assets/badge_obtainium.png" alt="Get it on Obtainium" height="48"></a>
 
 ## Features
 
-**Remotes tab**
-- Every saved remote as a card, most recently used first
-- Quick power key on each card, without opening the remote
-- Long-press a card to edit, rename or delete it
+- **Ready-made remotes** for Samsung, LG, Sony, Philips and Vizio TVs, with test buttons before you save
+- **Find my TV** tries each brand's power code until your TV responds
+- **Import Flipper Zero `.ir` files** (for example from Flipper-IRDB), or build a remote button by button
+- **Full TV layout**: power, input, d-pad, volume, channels, playback keys and a number pad
+- **Hold to repeat** volume, channel and arrow keys
+- **Edit any remote**: change a button's code, add buttons, or export it as a Flipper Zero file
+- **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Pronto hex and raw timings
+- **Backup and restore** all remotes as a single file
+- Light, dark and pure black themes with Material You colours; tablet and foldable layout
 
-**Remote view**
-- A full TV-style layout: power, input, mute, d-pad with OK, back, home, menu, volume and channel rockers, info, guide, exit, playback keys and a number pad
-- Sections only show when the remote has those buttons; anything else goes in "More buttons"
-- Hold volume, channel and arrow keys to keep sending (NEC remotes send proper repeat frames)
-- A light in the top bar glows each time a signal goes out
-- Edit mode: tap any key to change its code, tap a dimmed spot to add one, or add free-form buttons
-- Export any remote as a Flipper Zero `.ir` file
+## Requirements
 
-**Add tab**
-- Ready-made TV remotes for Samsung, LG, Sony, Philips and Vizio, with test keys before saving
-- Find my TV: steps through each brand's power code until the TV responds
-- Import a Flipper Zero `.ir` file (for example from Flipper-IRDB); button names like Power, Vol_up and Ch_next land in the right places
-- Blank remote, built button by button
+- Android 13 or newer
+- A phone with a built-in IR blaster (many Xiaomi, OPPO, Honor, Huawei and Vivo phones have one)
 
-**Codes**
-- NEC and NEC extended, Samsung, Sony SIRC 12/15/20-bit, Philips RC5/RC5X and RC6, Pronto hex, and raw timings
-- RC5/RC6 toggle bit flips on each new press
-- Signals are sent from one background thread, so presses never overlap; carrier frequencies outside the emitter's range are moved to the closest supported one
+## Install
 
-**Settings**
-- IR blaster status and supported carrier frequencies
-- Vibrate on press, hold to repeat, number pad, keep screen on
-- Theme (system, dark, light, pure black) and wallpaper colours
-- Export and restore all remotes as a JSON backup (remotes are also in the phone's Android backup)
-- Phone layout with the floating glass tab island; tablet and unfolded foldable layout with a side rail
+1. Download the latest `.apk` file from the [Releases page](https://github.com/VoidedKN0X/BeamCtrl/releases/latest).
+2. Open it on your phone. Android may ask you to allow installing apps from your browser or file manager.
+3. Updates install over the old version. Your settings and login are kept.
 
-Phones can only send infrared, not receive it, so codes can't be learned from an existing remote.
+**Automatic updates with Obtainium:** install [Obtainium](https://github.com/ImranR98/Obtainium), then tap the button below on your phone. Obtainium adds BeamCtrl and installs every new release for you.
 
-## Building
+<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/VoidedKN0X/BeamCtrl"><img src=".github/assets/badge_obtainium.png" alt="Get it on Obtainium" height="48"></a>
 
-GitHub Actions builds a release APK on every push to `main` and publishes it on the Releases page.
+If the button doesn't open Obtainium, add `https://github.com/VoidedKN0X/BeamCtrl` in Obtainium by hand.
 
-Release signing uses the same setup as the other Ctrl apps:
+## Getting started
 
-| Name | Where |
+1. Open the **Add** tab and pick your TV brand, or tap **Find my TV**.
+2. Test a few buttons, then save the remote.
+3. Your remote now appears on the **Remotes** tab. Tap it to use it.
+
+## Tips and troubleshooting
+
+Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use a ready-made remote or a Flipper Zero file instead.
+
+## Build from source
+
+You need [Android Studio](https://developer.android.com/studio), or JDK 17 and the Android SDK.
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/VoidedKN0X/BeamCtrl.git
+   cd BeamCtrl
+   ```
+2. Build the app:
+   ```bash
+   ./gradlew assembleDebug
+   ```
+   On Windows, use `gradlew.bat assembleDebug`.
+3. The APK is in `app/build/outputs/apk/debug/`. Copy it to your phone and install it.
+
+Or open the folder in Android Studio and press **Run** with your phone connected.
+
+## Support the project
+
+BeamCtrl is free and open source. If it's useful to you, you can support development on [GitHub Sponsors](https://github.com/sponsors/VoidedKN0X). Starring the repo and [reporting bugs](https://github.com/VoidedKN0X/BeamCtrl/issues) helps too.
+
+## The Ctrl series
+
+Native Android apps for self-hosted services and everyday tools, all with the same Material You design.
+
+| App | What it's for |
 | --- | --- |
-| `KEYSTORE_BASE64` | Secret: the keystore, base64 encoded |
-| `KEYSTORE_PASSWORD` | Secret |
-| `KEY_PASSWORD` | Secret |
-| `KEY_ALIAS` | Variable (or secret) |
+| **BeamCtrl** (this app) | TV remote for phones with an IR blaster |
+| [CraftyCtrl](https://github.com/VoidedKN0X/CraftyCtrl) | Manage Minecraft servers on Crafty Controller |
+| [ElementCtrl](https://github.com/VoidedKN0X/ElementCtrl) | Matrix chat client for matrix.org and self-hosted Synapse |
+| [FilesCtrl](https://github.com/VoidedKN0X/FilesCtrl) | File manager with NFS, SMB, SFTP, FTP and WebDAV |
+| [FrigateCtrl](https://github.com/VoidedKN0X/FrigateCtrl) | Watch and review your Frigate NVR cameras |
+| [ImmichCtrl](https://github.com/VoidedKN0X/ImmichCtrl) | Photos and backup for your Immich server |
+| [JellyCtrl](https://github.com/VoidedKN0X/JellyCtrl) | Movies, shows, music and Live TV from Jellyfin |
+| [NaviCtrl](https://github.com/VoidedKN0X/NaviCtrl) | Music player for Navidrome servers |
+| [SeerrCtrl](https://github.com/VoidedKN0X/SeerrCtrl) | Request movies and shows on Seerr / Jellyseerr |
 
-Without them, CI fails instead of publishing a debug-signed release (local builds still fall back to the debug key).
+## License
 
-Locally: `./gradlew assembleRelease` (JDK 17, Android SDK 36).
+BeamCtrl is licensed under the [GNU General Public License v3.0](LICENSE). © VKNXWorks
