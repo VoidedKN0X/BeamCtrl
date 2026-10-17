@@ -93,7 +93,7 @@ class Blaster(context: Context) {
         _beams.tryEmit(Unit)
         // Some phones return from transmit() straight away, others block until it's sent.
         // Either way, wait out the signal (plus a gap if it ends with the LED on) before the next one.
-        val durationMs = pattern.sum() / 1000L + if (pattern.size % 2 == 1) 40 else 0
+        val durationMs = pattern.fold(0L) { acc, v -> acc + v } / 1000L + if (pattern.size % 2 == 1) 40 else 0
         val remaining = durationMs - (SystemClock.uptimeMillis() - start)
         if (remaining > 0) delay(remaining)
         return true

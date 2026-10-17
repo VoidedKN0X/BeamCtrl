@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vknxworks.beamctrl.BuildConfig
 import com.vknxworks.beamctrl.container
+import com.vknxworks.beamctrl.data.readTextCapped
 import com.vknxworks.beamctrl.data.settings.AppSettings
 import com.vknxworks.beamctrl.data.settings.ThemeChoice
 import com.vknxworks.beamctrl.ui.components.Group
@@ -71,9 +72,9 @@ fun SettingsScreen() {
         if (uri == null) return@rememberLauncherForActivityResult
         scope.launch {
             val text = withContext(Dispatchers.IO) {
-                runCatching { context.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() } }.getOrNull()
+                runCatching { context.contentResolver.openInputStream(uri)?.use { it.readTextCapped() } }.getOrNull()
             }
-            val added = text?.let { t -> runCatching { c.remotes.importJson(t) }.getOrNull() }
+            val added = text?.let { t -> withContext(Dispatchers.Default) { runCatching { c.remotes.importJson(t) }.getOrNull() } }
             Toast.makeText(
                 context,
                 when (added) {
@@ -142,7 +143,7 @@ fun SettingsScreen() {
             }
         }
 
-        Group("Backup", footer = "Remotes are also included in your phone's Android backup.") {
+        Group("Backup", footer = "Remotes are also included in your phone's Android backup, but only when it's end-to-end encrypted (a screen lock is set).") {
             GroupRow(
                 "Export all remotes",
                 if (remotes.isEmpty()) "Nothing to export yet" else "${remotes.size} remotes to a JSON file",

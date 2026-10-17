@@ -46,6 +46,23 @@ sealed interface IrCode {
     data class Raw(val frequency: Int, val timings: List<Int>) : IrCode
 }
 
+/**
+ * Bounds for codes that come from files or other people. Android refuses patterns longer than
+ * two seconds anyway; these stop a hostile or broken file from using up memory before that.
+ */
+object IrLimits {
+    const val MIN_FREQUENCY = 10_000
+    const val MAX_FREQUENCY = 500_000
+    /** On/off periods in one raw code. Real remotes use well under 300. */
+    const val MAX_TIMINGS = 2_048
+    /** One on or off period, in microseconds. */
+    const val MAX_TIMING_US = 1_000_000
+    /** Whole pattern, in microseconds (Android's own limit for one transmission). */
+    const val MAX_PATTERN_US = 2_000_000L
+    /** Characters in a Pronto hex code. */
+    const val MAX_PRONTO_CHARS = 16_384
+}
+
 /** Timings ready for the blaster. [once] is sent for a tap; [repeat] keeps going while a button is held. */
 class IrSignal(val frequency: Int, val once: IntArray, val repeat: IntArray)
 
@@ -68,7 +85,7 @@ val IrCode.summary: String
         is IrCode.Sirc -> "$protocolLabel  ${hex(address, 2)} · ${hex(command, 2)}"
         is IrCode.Rc5 -> "$protocolLabel  ${hex(address, 2)} · ${hex(command, 2)}"
         is IrCode.Rc6 -> "$protocolLabel  ${hex(address, 2)} · ${hex(command, 2)}"
-        is IrCode.Pronto -> "$protocolLabel  ${hex.trim().split(Regex("\\s+")).size} words"
+        is IrCode.Pronto -> "$protocolLabel  ${hex.take(IrLimits.MAX_PRONTO_CHARS).trim().split(Regex("\\s+")).size} words"
         is IrCode.Raw -> "$protocolLabel  ${timings.size} timings at ${frequency / 1000} kHz"
     }
 
@@ -86,9 +103,12 @@ fun IrCode.encode(toggle: Boolean = false): IrSignal = when (this) {
     is IrCode.Rc6 -> Protocols.rc6(address, command, toggle)
     is IrCode.Pronto -> Pronto.decode(hex)
     is IrCode.Raw -> {
+        require(timings.size <= IrLimits.MAX_TIMINGS) { "Too many timings (at most ${IrLimits.MAX_TIMINGS})" }
         val t = timings.filter { it > 0 }.toIntArray()
         require(t.isNotEmpty()) { "No timings" }
-        require(frequency in 10_000..500_000) { "Frequency out of range" }
+        require(t.all { it <= IrLimits.MAX_TIMING_US }) { "A timing is longer than one second" }
+        require(t.fold(0L) { acc, v -> acc + v } <= IrLimits.MAX_PATTERN_US) { "The code is longer than two seconds" }
+        require(frequency in IrLimits.MIN_FREQUENCY..IrLimits.MAX_FREQUENCY) { "Frequency out of range" }
         IrSignal(frequency, t, t)
     }
 }

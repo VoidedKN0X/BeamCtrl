@@ -27,7 +27,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.data.DeviceType
+import com.vknxworks.beamctrl.data.FileTooBigException
 import com.vknxworks.beamctrl.data.Remote
+import com.vknxworks.beamctrl.data.readTextCapped
 import com.vknxworks.beamctrl.ir.CodeLibrary
 import com.vknxworks.beamctrl.ir.FlipperIr
 import com.vknxworks.beamctrl.ir.protocolLabel
@@ -57,7 +59,7 @@ fun AddScreen() {
         scope.launch {
             val result = withContext(Dispatchers.IO) {
                 runCatching {
-                    val text = context.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() }.orEmpty()
+                    val text = context.contentResolver.openInputStream(uri)?.use { it.readTextCapped() }.orEmpty()
                     val name = displayName(context, uri)?.substringBeforeLast('.')?.replace('_', ' ')?.trim()
                     name to FlipperIr.parse(text)
                 }
@@ -78,7 +80,8 @@ fun AddScreen() {
                 ).show()
                 nav.openRemote(remote.id, fromAdd = true)
             }.onFailure {
-                Toast.makeText(context, "Couldn't read that file", Toast.LENGTH_SHORT).show()
+                val message = if (it is FileTooBigException) "That file is too big to be a remote" else "Couldn't read that file"
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.vknxworks.beamctrl.data
 
 import android.content.Context
+import com.vknxworks.beamctrl.ir.encode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.InputStream
+import java.util.UUID
 
 /** A backup of every remote, as written by "Export all remotes". */
 @Serializable
@@ -34,7 +37,11 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
         scope.launch(Dispatchers.IO) {
             val loaded = runCatching {
                 if (file.exists()) json.decodeFromString(listSerializer, file.readText()) else emptyList()
-            }.getOrElse { emptyList() }
+            }.getOrElse {
+                // Keep an unreadable file aside instead of overwriting it with the next save.
+                runCatching { file.renameTo(File(file.parentFile, "remotes.json.unreadable")) }
+                emptyList()
+            }
             _remotes.value = loaded
             _ready.value = true
         }
@@ -43,7 +50,8 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
     fun get(id: String): Remote? = _remotes.value.firstOrNull { it.id == id }
 
     fun add(remote: Remote): Remote {
-        val named = remote.copy(name = uniqueName(remote.name))
+        val clean = sanitize(remote, _remotes.value.map { it.id }.toSet())
+        val named = clean.copy(name = uniqueName(clean.name))
         change { it + named }
         return named
     }
@@ -74,9 +82,10 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
     /** Adds the remotes in a backup, giving new ids to any that already exist here. Returns how many were added. */
     fun importJson(text: String): Int {
         val backup = json.decodeFromString(Backup.serializer(), text)
-        val existing = _remotes.value.map { it.id }.toSet()
-        val incoming = backup.remotes.map { r ->
-            if (r.id in existing) r.copy(id = java.util.UUID.randomUUID().toString()) else r
+        require(backup.app == "BeamCtrl") { "Not a BeamCtrl backup" }
+        val taken = _remotes.value.map { it.id }.toMutableSet()
+        val incoming = backup.remotes.take(MAX_REMOTES).map { r ->
+            sanitize(r, taken).also { taken += it.id }
         }
         change { it + incoming }
         return incoming.size
@@ -100,7 +109,41 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
         }
     }
 
+    /**
+     * Makes a remote from a file safe to keep: one-line names of a sane length, a bounded number of
+     * buttons, only codes the blaster can send, and ids that don't clash with [takenIds] or each other.
+     */
+    private fun sanitize(remote: Remote, takenIds: Set<String>): Remote {
+        val buttonIds = mutableSetOf<String>()
+        val buttons = remote.buttons.asSequence()
+            .take(MAX_BUTTONS)
+            .filter { b -> runCatching { b.code.encode() }.isSuccess }
+            .map { b ->
+                val id = b.id.takeIf { it.isSaneId() && it !in buttonIds } ?: UUID.randomUUID().toString()
+                buttonIds += id
+                b.copy(id = id, label = b.label.clean(MAX_LABEL))
+            }
+            .toList()
+        return remote.copy(
+            id = remote.id.takeIf { it.isSaneId() && it !in takenIds } ?: UUID.randomUUID().toString(),
+            name = remote.name.clean(MAX_NAME).ifEmpty { "Remote" },
+            brand = remote.brand?.clean(MAX_NAME)?.ifEmpty { null },
+            buttons = buttons,
+        )
+    }
+
+    private fun String.clean(max: Int): String = filterNot { it.isISOControl() }.trim().take(max).trim()
+
+    private fun String.isSaneId(): Boolean = length in 1..64 && all { it.isLetterOrDigit() || it == '-' }
+
     companion object {
+        /** Bigger files than this are refused before they're read into memory. */
+        const val MAX_IMPORT_BYTES = 4L * 1024 * 1024
+        private const val MAX_REMOTES = 500
+        private const val MAX_BUTTONS = 500
+        private const val MAX_NAME = 80
+        private const val MAX_LABEL = 60
+
         private val listSerializer = ListSerializer(Remote.serializer())
 
         val json = Json {
@@ -110,3 +153,20 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
         }
     }
 }
+
+/** Reads at most [maxBytes] as UTF-8 text; a longer stream fails with [FileTooBigException] instead of filling memory. */
+fun InputStream.readTextCapped(maxBytes: Long = RemoteRepository.MAX_IMPORT_BYTES): String {
+    val out = java.io.ByteArrayOutputStream()
+    val buf = ByteArray(16 * 1024)
+    var total = 0L
+    while (true) {
+        val n = read(buf)
+        if (n < 0) break
+        total += n
+        if (total > maxBytes) throw FileTooBigException()
+        out.write(buf, 0, n)
+    }
+    return out.toByteArray().decodeToString()
+}
+
+class FileTooBigException : java.io.IOException("That file is too big")
