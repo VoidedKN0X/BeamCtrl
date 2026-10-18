@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -48,6 +49,18 @@ class Blaster(context: Context) {
     /** Sends [code] once. */
     fun send(code: IrCode) {
         press(code, repeat = false).release()
+    }
+
+    /**
+     * Sends [code] once and returns when it has finished going out, for sending a series of codes
+     * one after another (universal power-off). Runs on the same thread as button presses, so it
+     * never overlaps them. Returns false if nothing could be sent; codes that can't be encoded
+     * are skipped quietly instead of showing an error for each one.
+     */
+    suspend fun sendAndWait(code: IrCode): Boolean = withContext(dispatcher) {
+        if (!available) return@withContext false
+        val signal = runCatching { code.encode() }.getOrNull() ?: return@withContext false
+        transmit(signal.frequency, signal.once)
     }
 
     /**

@@ -4,7 +4,7 @@
 
 [![Latest release](https://img.shields.io/github/v/release/VoidedKN0X/BeamCtrl?label=download)](https://github.com/VoidedKN0X/BeamCtrl/releases/latest) ![Android 13+](https://img.shields.io/badge/Android-13%2B-3DDC84?logo=android&logoColor=white) [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE) [![Sponsor](https://img.shields.io/badge/sponsor-GitHub-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/VoidedKN0X)
 
-BeamCtrl is a remote control app for Android phones with an infrared (IR) blaster. Pick your TV brand or import a Flipper Zero file, and control your TV from your phone.
+BeamCtrl is a remote control app for Android phones with an infrared (IR) blaster. Find your device in the built-in code library, pick your TV brand or import a Flipper Zero file, and control it from your phone.
 
 Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 
@@ -12,8 +12,10 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 
 ## Features
 
-- **Ready-made remotes** for Samsung, LG, Sony, Philips and Vizio TVs, with test buttons before you save
-- **Find my TV** tries each brand's power code until your TV responds
+- **Code library with 8,500+ remotes** for TVs, soundbars, projectors, air conditioners, fans, lights and more, built into the app, so it works offline
+- **Try every button before you save** a remote
+- **Turn off any TV**: sends every TV power code in turn until the TV switches off
+- **Ready-made remotes** for Samsung, LG, Sony, Philips and Vizio TVs, and **Find my TV** to work out which one yours uses
 - **Import Flipper Zero `.ir` files** (for example from Flipper-IRDB), or build a remote button by button
 - **Full TV layout**: power, input, d-pad, volume, channels, playback keys and a number pad
 - **Hold to repeat** volume, channel and arrow keys
@@ -44,13 +46,13 @@ If the Obtainium button doesn't open the app, add `https://github.com/VoidedKN0X
 
 ## Getting started
 
-1. Open the **Add** tab and pick your TV brand, or tap **Find my TV**.
-2. Test a few buttons, then save the remote.
+1. Open the **Add** tab and tap **Search all remotes**, then search for your device's brand or model. For a TV you can also pick its brand, or tap **Find my TV**.
+2. Point your phone at the device, test a few buttons, then save the remote.
 3. Your remote now appears on the **Remotes** tab. Tap it to use it.
 
 ## Tips and troubleshooting
 
-Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use a ready-made remote or a Flipper Zero file instead.
+Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use the code library, a ready-made remote or a Flipper Zero file instead.
 
 ## Build from source
 
@@ -93,3 +95,5 @@ Native Android apps for self-hosted services and everyday tools, all with the sa
 ## License
 
 BeamCtrl is licensed under the [GNU General Public License v3.0](LICENSE). © VKNXWorks
+
+The built-in code library comes from [Flipper-IRDB](https://github.com/Lucaslhm/Flipper-IRDB) (CC0 1.0), packed with `tools/irdb/pack_irdb.py`.

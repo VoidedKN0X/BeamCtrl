@@ -10,3 +10,10 @@ import kotlinx.serialization.Serializable
 @Serializable data class RemoteRoute(val id: String, val edit: Boolean = false)
 @Serializable data class BrandRoute(val id: String)
 @Serializable data object FindBrandRoute
+
+// Code library
+@Serializable data class LibraryRoute(val query: String = "")
+@Serializable data class LibraryCategoryRoute(val category: Int)
+@Serializable data class LibraryBrandRoute(val category: Int, val brand: String)
+@Serializable data class LibraryDeviceRoute(val id: Int)
+@Serializable data object PowerOffRoute
