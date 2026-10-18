@@ -55,6 +55,8 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.data.RemoteButton
 import com.vknxworks.beamctrl.ui.components.ScreenTopBar
@@ -111,8 +113,11 @@ fun PowerOffScreen() {
         job = null
     }
 
-    // Sending stops when you leave, and the screen stays on while it runs.
+    // Sending stops when you leave, and the screen stays on while it runs. Going to the home
+    // screen, switching apps or locking the phone also stops it, so the blaster never keeps
+    // going where you can't see it or tap Stop.
     DisposableEffect(Unit) { onDispose { job?.cancel() } }
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP) { stop() }
     if (running) {
         DisposableEffect(Unit) {
             val window = (context as? Activity)?.window
