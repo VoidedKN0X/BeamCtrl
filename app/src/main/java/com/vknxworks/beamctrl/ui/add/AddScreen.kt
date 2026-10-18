@@ -13,6 +13,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LibraryBooks
+import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tv
@@ -40,6 +43,9 @@ import com.vknxworks.beamctrl.ui.components.NameDialog
 import com.vknxworks.beamctrl.ui.components.TabTitle
 import com.vknxworks.beamctrl.ui.nav.BrandRoute
 import com.vknxworks.beamctrl.ui.nav.FindBrandRoute
+import com.vknxworks.beamctrl.ui.nav.LibraryRoute
+import com.vknxworks.beamctrl.ui.nav.PowerOffRoute
+import com.vknxworks.beamctrl.ui.library.rememberLibrarySize
 import com.vknxworks.beamctrl.ui.nav.LocalNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -95,6 +101,21 @@ fun AddScreen() {
     ) {
         TabTitle("Add a remote")
 
+        val librarySize = rememberLibrarySize()
+        Group(
+            "Code library",
+            footer = "Remotes from the Flipper-IRDB community database: TVs, soundbars, projectors, air conditioners, " +
+                "fans, lights and much more. It's built into the app, so nothing is downloaded.",
+        ) {
+            GroupRow(
+                "Search all remotes",
+                librarySize?.let { "${java.text.NumberFormat.getIntegerInstance().format(it)} devices by brand or model" } ?: "Loading…",
+                icon = Icons.Filled.LibraryBooks,
+                showChevron = true,
+                onClick = { nav.navigate(LibraryRoute()) },
+            )
+        }
+
         Group(footer = "Point your phone at the TV and try each brand's power code until one works.") {
             GroupRow(
                 "Find my TV",
@@ -102,6 +123,14 @@ fun AddScreen() {
                 icon = Icons.Filled.Search,
                 showChevron = true,
                 onClick = { nav.navigate(FindBrandRoute) },
+            )
+            GroupRow(
+                "Turn off any TV",
+                "Sends every TV power code in turn until the TV switches off",
+                icon = Icons.Filled.PowerSettingsNew,
+                iconTint = MaterialTheme.colorScheme.error,
+                showChevron = true,
+                onClick = { nav.navigate(PowerOffRoute) },
             )
         }
 
@@ -119,9 +148,8 @@ fun AddScreen() {
 
         Group(
             "Build your own",
-            footer = "Phones can send infrared but not learn it from another remote, so codes come from the brand list, " +
-                "a Flipper Zero .ir file (for example from the Flipper-IRDB collection), or typing them in: NEC, Samsung, " +
-                "Sony, RC5, RC6, Pronto hex or raw timings.",
+            footer = "Phones can send infrared but not learn it from another remote, so codes come from the library, " +
+                "a Flipper Zero .ir file, or typing them in: NEC, Samsung, Sony, RC5, RC6, Pronto hex or raw timings.",
         ) {
             GroupRow(
                 "Import a Flipper .ir file",

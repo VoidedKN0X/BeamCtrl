@@ -56,6 +56,11 @@ import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.ui.add.AddScreen
 import com.vknxworks.beamctrl.ui.add.BrandScreen
 import com.vknxworks.beamctrl.ui.add.FindBrandScreen
+import com.vknxworks.beamctrl.ui.library.LibraryBrandScreen
+import com.vknxworks.beamctrl.ui.library.LibraryCategoryScreen
+import com.vknxworks.beamctrl.ui.library.LibraryDeviceScreen
+import com.vknxworks.beamctrl.ui.library.LibraryScreen
+import com.vknxworks.beamctrl.ui.poweroff.PowerOffScreen
 import com.vknxworks.beamctrl.ui.components.LocalBottomClearance
 import com.vknxworks.beamctrl.ui.components.LocalHazeState
 import com.vknxworks.beamctrl.ui.remote.RemoteScreen
@@ -192,5 +197,14 @@ private fun AppNavHost(navController: NavHostController) {
         }
         composable<BrandRoute> { BrandScreen(it.toRoute<BrandRoute>().id) }
         composable<FindBrandRoute> { FindBrandScreen() }
+
+        composable<LibraryRoute> { LibraryScreen(it.toRoute<LibraryRoute>().query) }
+        composable<LibraryCategoryRoute> { LibraryCategoryScreen(it.toRoute<LibraryCategoryRoute>().category) }
+        composable<LibraryBrandRoute> {
+            val r = it.toRoute<LibraryBrandRoute>()
+            LibraryBrandScreen(r.category, r.brand)
+        }
+        composable<LibraryDeviceRoute> { LibraryDeviceScreen(it.toRoute<LibraryDeviceRoute>().id) }
+        composable<PowerOffRoute> { PowerOffScreen() }
     }
 }

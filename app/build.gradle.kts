@@ -22,8 +22,8 @@ android {
         minSdk = 33
         targetSdk = 36
         // Bump both to publish a new release (see CHANGELOG.md).
-        versionCode = 6
-        versionName = "0.1.6"
+        versionCode = 7
+        versionName = "0.2.0"
     }
 
     signingConfigs {
@@ -65,6 +65,12 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    androidResources {
+        // The code library is read straight from the APK at an offset, so it's stored uncompressed
+        // (its contents are compressed already).
+        noCompress += "bin"
     }
 
     packaging {

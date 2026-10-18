@@ -4,6 +4,7 @@ import android.content.Context
 import com.vknxworks.beamctrl.data.RemoteRepository
 import com.vknxworks.beamctrl.data.settings.SettingsRepository
 import com.vknxworks.beamctrl.ir.Blaster
+import com.vknxworks.beamctrl.ir.IrLibrary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,6 +16,7 @@ class AppContainer(val context: Context) {
     val settings = SettingsRepository(context, appScope)
     val remotes = RemoteRepository(context, appScope)
     val blaster = Blaster(context)
+    val library = IrLibrary(context)
 }
 
 val Context.container: AppContainer

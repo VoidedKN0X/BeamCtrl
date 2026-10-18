@@ -4,6 +4,29 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.2.0 (2026-10-18)
+
+A built-in code library with thousands of remotes, and a way to turn off any TV.
+
+### New
+
+- **Code library with 8,581 remotes.** Open **Add → Search all remotes** to find a remote by brand or model, or browse by device type: TVs, soundbars, AV receivers, projectors, streaming boxes, cable boxes, air conditioners, fans, lights and about 40 more. The remotes come from the [Flipper-IRDB](https://github.com/Lucaslhm/Flipper-IRDB) community database.
+- **Try before you save.** Each remote in the library opens as the finished remote, with the same layout you'll get after saving, and every button already works. Point your phone at the device, try a few buttons, then give it a name and save it.
+- **Picking a brand with only one remote opens it straight away**, and brands with several list every model with how many buttons it has. A small power icon marks remotes that have a power button.
+- **Turn off any TV.** Open **Add → Turn off any TV** and tap Start. BeamCtrl sends the power code of every TV in the library, 368 in all, with the most common TVs first. A full run takes about a minute; tap Stop as soon as the TV switches off.
+- **Find the code that worked.** After stopping, the last eight codes sent are listed with a Test button each, so you can find which one switched your TV off. The search button next to each opens that brand's remotes in the library.
+- The screen stays on while codes are being sent, and sending stops when you leave the screen.
+
+### Changed
+
+- **Still fully offline.** The library is built into the app (about 5 MB), so BeamCtrl still has no internet access. New remotes from the database arrive with app updates.
+- Remotes from the library go through the same checks as imported Flipper files. Buttons that use a code format BeamCtrl can't send yet (for example Panasonic's Kaseikyo) are left out, and the remote says how many.
+- **Vizio** remotes now have the d-pad, OK, back, home, menu, exit, info and playback buttons as well as power, volume, channels, input and numbers.
+
+### Fixed
+
+- **Philips:** channel up and down sent the wrong codes. They now use the standard Philips channel codes.
+
 ## v0.1.6 (2026-10-18)
 
 A security check of the whole app. Remotes, buttons and settings work exactly as before.

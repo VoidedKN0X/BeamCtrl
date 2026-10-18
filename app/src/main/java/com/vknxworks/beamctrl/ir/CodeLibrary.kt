@@ -89,7 +89,7 @@ object CodeLibrary {
         keys = buildList<Pair<KeyRole, IrCode>> {
             fun k(role: KeyRole, cmd: Int) = add(role to IrCode.Rc6(0x00, cmd))
             k(KeyRole.POWER, 0x0C); k(KeyRole.INPUT, 0x38); k(KeyRole.MUTE, 0x0D)
-            k(KeyRole.VOL_UP, 0x10); k(KeyRole.VOL_DOWN, 0x11); k(KeyRole.CH_UP, 0x4C); k(KeyRole.CH_DOWN, 0x4D)
+            k(KeyRole.VOL_UP, 0x10); k(KeyRole.VOL_DOWN, 0x11); k(KeyRole.CH_UP, 0x20); k(KeyRole.CH_DOWN, 0x21)
             k(KeyRole.UP, 0x58); k(KeyRole.DOWN, 0x59); k(KeyRole.LEFT, 0x5A); k(KeyRole.RIGHT, 0x5B); k(KeyRole.OK, 0x5C)
             k(KeyRole.BACK, 0x0A); k(KeyRole.HOME, 0x54); k(KeyRole.INFO, 0x0F)
             addAll(digits { IrCode.Rc6(0x00, it) })
@@ -100,11 +100,14 @@ object CodeLibrary {
         id = "vizio-tv",
         brand = "Vizio",
         type = DeviceType.TV,
-        note = "Vizio TVs (power, volume, channels, input and numbers)",
+        note = "Vizio TVs, including SmartCast models",
         keys = buildList<Pair<KeyRole, IrCode>> {
             fun k(role: KeyRole, cmd: Int) = add(role to IrCode.Nec(0x04, cmd))
             k(KeyRole.POWER, 0x08); k(KeyRole.INPUT, 0x2F); k(KeyRole.MUTE, 0x09)
             k(KeyRole.VOL_UP, 0x02); k(KeyRole.VOL_DOWN, 0x03); k(KeyRole.CH_UP, 0x00); k(KeyRole.CH_DOWN, 0x01)
+            k(KeyRole.UP, 0x45); k(KeyRole.DOWN, 0x46); k(KeyRole.LEFT, 0x47); k(KeyRole.RIGHT, 0x48); k(KeyRole.OK, 0x44)
+            k(KeyRole.BACK, 0x4A); k(KeyRole.HOME, 0x2D); k(KeyRole.MENU, 0x4F); k(KeyRole.EXIT, 0x49); k(KeyRole.INFO, 0x1B)
+            k(KeyRole.PLAY, 0x33); k(KeyRole.PAUSE, 0x37); k(KeyRole.STOP, 0x30)
             addAll(digits { IrCode.Nec(0x04, 0x10 + it) })
         },
     )

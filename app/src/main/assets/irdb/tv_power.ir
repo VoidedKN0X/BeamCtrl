@@ -1,0 +1,2046 @@
+Filetype: IR signals file
+Version: 1
+#
+name: LG
+type: parsed
+protocol: NEC
+address: 04 00 00 00
+command: 08 00 00 00
+#
+name: Samsung
+type: parsed
+protocol: Samsung32
+address: 07 00 00 00
+command: 02 00 00 00
+#
+name: Sony
+type: parsed
+protocol: SIRC
+address: 01 00 00 00
+command: 15 00 00 00
+#
+name: Telefunken
+type: parsed
+protocol: RC5
+address: 01 00 00 00
+command: 0C 00 00 00
+#
+name: Philips
+type: parsed
+protocol: RC5
+address: 00 00 00 00
+command: 0C 00 00 00
+#
+name: Philips
+type: parsed
+protocol: RC6
+address: 00 00 00 00
+command: 0C 00 00 00
+#
+name: Toshiba
+type: parsed
+protocol: NEC
+address: 40 00 00 00
+command: 12 00 00 00
+#
+name: Samsung
+type: parsed
+protocol: Samsung32
+address: 07 00 00 00
+command: E6 00 00 00
+#
+name: Element
+type: parsed
+protocol: NECext
+address: 02 7D 00 00
+command: 46 B9 00 00
+#
+name: Hisense
+type: parsed
+protocol: NECext
+address: 00 BF 00 00
+command: 0D F2 00 00
+#
+name: Dynex
+type: parsed
+protocol: NECext
+address: 86 05 00 00
+command: 0F F0 00 00
+#
+name: TCL
+type: parsed
+protocol: NECext
+address: EA C7 00 00
+command: 17 E8 00 00
+#
+name: LG
+type: parsed
+protocol: NECext
+address: 04 00 00 00
+command: 08 00 00 00
+#
+name: Philips
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 0C 00 00 00
+#
+name: Crown
+type: parsed
+protocol: NEC
+address: 20 00 00 00
+command: 52 00 00 00
+#
+name: Sharp
+type: parsed
+protocol: NECext
+address: 00 7F 00 00
+command: 0A F5 00 00
+#
+name: ContinentalEdison
+type: parsed
+protocol: NECext
+address: 00 7F 00 00
+command: 15 EA 00 00
+#
+name: OKI
+type: parsed
+protocol: RC5
+address: 10 00 00 00
+command: 0C 00 00 00
+#
+name: Baird
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 10 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: RC5
+address: 03 00 00 00
+command: 0C 00 00 00
+#
+name: Samsung
+type: parsed
+protocol: Samsung32
+address: 07 00 00 00
+command: 98 00 00 00
+#
+name: Sanyo
+type: parsed
+protocol: NEC
+address: 38 00 00 00
+command: 12 00 00 00
+#
+name: Sanyo
+type: parsed
+protocol: NECext
+address: 38 00 00 00
+command: 12 00 00 00
+#
+name: RCA
+type: parsed
+protocol: NECext
+address: 0F 00 00 00
+command: 2A 00 00 00
+#
+name: GE
+type: parsed
+protocol: NECext
+address: 0F 00 00 00
+command: 3A 00 00 00
+#
+name: GE
+type: parsed
+protocol: NECext
+address: 0F 00 00 00
+command: 3B 00 00 00
+#
+name: Marantz
+type: parsed
+protocol: NECext
+address: 18 00 00 00
+command: 08 00 00 00
+#
+name: Marantz
+type: parsed
+protocol: NECext
+address: 18 18 00 00
+command: C0 00 00 00
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 1193 596 596 596 596 596 596 596 596 25644
+#
+name: Bauhn
+type: parsed
+protocol: NECext
+address: 01 72 00 00
+command: 1E E1 00 00
+#
+name: ContinentalEdison
+type: parsed
+protocol: NECext
+address: 00 7F 00 00
+command: 1E E1 00 00
+#
+name: Emerson
+type: parsed
+protocol: NECext
+address: 84 E0 00 00
+command: 20 DF 00 00
+#
+name: JVC
+type: parsed
+protocol: Samsung32
+address: 0E 00 00 00
+command: 0C 00 00 00
+#
+name: RCA
+type: parsed
+protocol: NEC
+address: A0 00 00 00
+command: 5F 00 00 00
+#
+name: Soniq
+type: parsed
+protocol: NECext
+address: 72 DD 00 00
+command: 0E F1 00 00
+#
+name: Mitsubishi
+type: parsed
+protocol: NECext
+address: 47 00 00 00
+command: 02 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NECext
+address: 50 00 00 00
+command: 3E 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NECext
+address: 50 00 00 00
+command: 3F 00 00 00
+#
+name: JVC
+type: parsed
+protocol: NECext
+address: 03 00 00 00
+command: 17 00 00 00
+#
+name: AKAI
+type: parsed
+protocol: NECext
+address: FD 02 00 00
+command: B7 48 00 00
+#
+name: DYON
+type: parsed
+protocol: NECext
+address: FB 00 00 00
+command: C7 38 00 00
+#
+name: JVC
+type: raw
+frequency: 38029
+data: 8415 4155 526 1578 526 1578 526 526 526 526 526 526 526 526 526 526 526 526 526 1578 526 1578 526 1578 526 526 526 1578 526 526 526 526 526 526 526 23377
+#
+name: Mitsubishi
+type: raw
+frequency: 32898
+data: 304 2128 304 2128 304 2128 304 912 304 912 304 912 304 2128 304 912 304 912 304 2128 304 912 304 912 304 912 304 912 304 912 304 912 304 27722
+#
+name: Sharp
+type: raw
+frequency: 39478
+data: 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 760 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 1773 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 760 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 1773 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 1773 253 760 253 723010
+#
+name: Sharp
+type: raw
+frequency: 39478
+data: 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 760 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 760 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 42049 253 1773 253 760 253 1773 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 1773 253 760 253 760 253 1773 253 1773 253 760 253 723010
+#
+name: AWA
+type: parsed
+protocol: NECext
+address: 00 DF 00 00
+command: 1C E3 00 00
+#
+name: ContinentalEdison
+type: parsed
+protocol: NEC
+address: 40 00 00 00
+command: 0B 00 00 00
+#
+name: DYON
+type: parsed
+protocol: NECext
+address: 40 40 00 00
+command: 0A F5 00 00
+#
+name: Emerson
+type: parsed
+protocol: NECext
+address: 87 22 00 00
+command: E0 1F 00 00
+#
+name: Enseo
+type: parsed
+protocol: NEC
+address: 6E 00 00 00
+command: 02 00 00 00
+#
+name: Hotels
+type: parsed
+protocol: NECext
+address: 69 69 00 00
+command: 01 FE 00 00
+#
+name: Magnavox
+type: parsed
+protocol: NECext
+address: 83 7A 00 00
+command: 08 00 00 00
+#
+name: Beko
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 20 00 00 00
+#
+name: Dwin
+type: parsed
+protocol: NECext
+address: 0F 00 00 00
+command: 75 00 00 00
+#
+name: Dwin
+type: parsed
+protocol: NECext
+address: 0F 00 00 00
+command: 77 00 00 00
+#
+name: Fujitsu
+type: parsed
+protocol: NECext
+address: 84 00 00 00
+command: 01 00 00 00
+#
+name: Fujitsu
+type: parsed
+protocol: NECext
+address: 84 00 00 00
+command: 02 00 00 00
+#
+name: Hewlett Packard
+type: parsed
+protocol: NECext
+address: 02 11 00 00
+command: 00 00 00 00
+#
+name: Hewlett Packard
+type: parsed
+protocol: NECext
+address: 02 11 00 00
+command: 01 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NECext
+address: 50 AD 00 00
+command: 01 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NECext
+address: 50 AD 00 00
+command: 02 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NECext
+address: 50 00 00 00
+command: 17 00 00 00
+#
+name: JVC
+type: parsed
+protocol: NECext
+address: 1F 00 00 00
+command: DA 00 00 00
+#
+name: JVC
+type: parsed
+protocol: NECext
+address: 1F 00 00 00
+command: DD 00 00 00
+#
+name: LG
+type: parsed
+protocol: NECext
+address: 04 00 00 00
+command: C4 00 00 00
+#
+name: LG
+type: parsed
+protocol: NECext
+address: 04 00 00 00
+command: C5 00 00 00
+#
+name: Mitsubishi
+type: parsed
+protocol: NECext
+address: 01 00 00 00
+command: 16 00 00 00
+#
+name: Panasonic
+type: parsed
+protocol: NECext
+address: 80 00 00 00
+command: 3D 00 00 00
+#
+name: Samsung
+type: parsed
+protocol: NECext
+address: 07 07 00 00
+command: 02 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 01 00 00 00
+command: 2E 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 01 00 00 00
+command: 2F 00 00 00
+#
+name: TELEFUNKEN
+type: parsed
+protocol: NECext
+address: 07 00 00 00
+command: 1D 00 00 00
+#
+name: BENQ
+type: parsed
+protocol: NECext
+address: F9 06 00 00
+command: FF 00 00 00
+#
+name: Vizio
+type: raw
+frequency: 38000
+data: 9219 4484 662 469 661 469 661 1627 660 471 658 474 656 499 631 499 631 499 631 1657 630 1657 631 500 630 1657 631 1657 631 1657 630 1657 631 1657 631 500 630 500 630 500 630 1657 630 500 631 500 630 500 631 500 630 1657 630 1658 630 1657 631 500 630 1657 631 1658 630 1658 630 1658 630 40107 9106 2202 631
+#
+name: FLUID
+type: raw
+frequency: 38000
+data: 8918 4446 546 546 546 546 546 546 546 1664 546 546 546 546 546 546 546 546 546 1664 546 1664 546 1664 546 546 546 1664 546 1664 546 1664 546 1664 546 1664 546 546 546 1664 546 546 546 546 546 546 546 546 546 546 546 546 546 1664 546 546 546 1664 546 1664 546 1664 546 1664 546 1664 546 39572 8918 2236 546 95264
+#
+name: Mitsubishi
+type: raw
+frequency: 33977
+data: 294 2119 294 2119 294 2119 294 942 294 942 294 942 294 2119 294 942 294 942 294 2119 294 942 294 942 294 942 294 942 294 942 294 942 294 25547
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 1193 596 596 596 596 596 596 596 596 25668
+#
+name: Sony
+type: raw
+frequency: 56000
+data: 2362 591 1181 591 591 591 1181 591 591 591 1181 591 591 591 591 591 1181 591 591 591 591 591 591 591 591 25419
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 596 596 1193 596 1193 596 596 596 596 25171 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 596 596 1193 596 1193 596 596 596 596 25171 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 596 596 1193 596 1193 596 596 596 596 814208
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 1193 596 596 596 596 596 596 596 596 25569 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 1193 596 596 596 596 596 596 596 596 25569 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 1193 596 596 596 596 596 596 596 596 814208
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2410 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 1193 596 596 596 596 596 596 596 596 25519
+#
+name: Sony
+type: raw
+frequency: 39857
+data: 2409 602 1204 602 602 602 1204 602 602 602 1204 602 602 602 602 602 1204 602 602 602 602 602 602 602 602 25792
+#
+name: Toshiba
+type: raw
+frequency: 38381
+data: 8937 4455 573 573 573 573 573 573 573 573 573 573 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 573 573 1667 573 573 573 573 573 1667 573 573 573 573 573 573 573 1667 573 573 573 1667 573 1667 573 573 573 1667 573 1667 573 1667 573 39499 8937 2215 573 95282
+#
+name: Android
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 40 00 00 00
+#
+name: BGH
+type: parsed
+protocol: NECext
+address: 00 BF 00 00
+command: 03 FC 00 00
+#
+name: Blitzwolf
+type: parsed
+protocol: NECext
+address: A0 B7 00 00
+command: E9 16 00 00
+#
+name: Bose
+type: parsed
+protocol: NECext
+address: BA A0 00 00
+command: 4C B3 00 00
+#
+name: Bush
+type: parsed
+protocol: NEC
+address: 08 00 00 00
+command: D7 00 00 00
+#
+name: CCE
+type: parsed
+protocol: NEC
+address: 04 00 00 00
+command: 40 00 00 00
+#
+name: Daewoo
+type: parsed
+protocol: NEC
+address: 80 00 00 00
+command: 82 00 00 00
+#
+name: Fetch
+type: parsed
+protocol: NECext
+address: 64 46 00 00
+command: 5D A2 00 00
+#
+name: Fetch
+type: parsed
+protocol: NECext
+address: 64 46 00 00
+command: 01 FE 00 00
+#
+name: Gigabyte
+type: parsed
+protocol: NEC
+address: 00 00 00 00
+command: 1A 00 00 00
+#
+name: Grandin
+type: parsed
+protocol: NEC
+address: 80 00 00 00
+command: 12 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NEC
+address: 50 00 00 00
+command: 12 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NEC
+address: 50 00 00 00
+command: 17 00 00 00
+#
+name: Kraft
+type: parsed
+protocol: NECext
+address: 01 3E 00 00
+command: 0A F5 00 00
+#
+name: LG
+type: parsed
+protocol: NECext
+address: 04 F4 00 00
+command: 08 F7 00 00
+#
+name: LodgeNet
+type: parsed
+protocol: NECext
+address: 85 7C 00 00
+command: 80 7F 00 00
+#
+name: Manta
+type: parsed
+protocol: NECext
+address: 00 BF 00 00
+command: 00 FF 00 00
+#
+name: Medion
+type: parsed
+protocol: NEC
+address: 19 00 00 00
+command: 18 00 00 00
+#
+name: Mivar
+type: parsed
+protocol: NECext
+address: 00 FB 00 00
+command: 0A F5 00 00
+#
+name: NEC
+type: parsed
+protocol: NEC
+address: 38 00 00 00
+command: 01 00 00 00
+#
+name: Panasonic
+type: parsed
+protocol: Samsung32
+address: 3E 00 00 00
+command: 0C 00 00 00
+#
+name: Philips
+type: parsed
+protocol: NECext
+address: 00 BD 00 00
+command: 01 FE 00 00
+#
+name: Sharp
+type: parsed
+protocol: NEC
+address: 28 00 00 00
+command: 0B 00 00 00
+#
+name: Silver
+type: parsed
+protocol: NECext
+address: 00 F7 00 00
+command: 0C F3 00 00
+#
+name: Soniq
+type: parsed
+protocol: NECext
+address: 72 DD 00 00
+command: 10 EF 00 00
+#
+name: Sony
+type: parsed
+protocol: SIRC
+address: 01 00 00 00
+command: 2E 00 00 00
+#
+name: Sony
+type: parsed
+protocol: SIRC
+address: 01 00 00 00
+command: 2F 00 00 00
+#
+name: Strong
+type: parsed
+protocol: NEC
+address: A0 00 00 00
+command: 1C 00 00 00
+#
+name: Strong
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 1C 00 00 00
+#
+name: Syntax-Brillian
+type: parsed
+protocol: NECext
+address: 04 B9 00 00
+command: 00 FF 00 00
+#
+name: TCL
+type: parsed
+protocol: NECext
+address: EA C7 00 00
+command: 97 68 00 00
+#
+name: Tevion
+type: parsed
+protocol: NEC
+address: 00 00 00 00
+command: 1C 00 00 00
+#
+name: Vitec
+type: parsed
+protocol: NECext
+address: AD ED 00 00
+command: B5 4A 00 00
+#
+name: User Created
+type: parsed
+protocol: Samsung32
+address: 07 00 00 00
+command: 99 00 00 00
+#
+name: ADS
+type: parsed
+protocol: NECext
+address: 02 00 00 00
+command: 5B 00 00 00
+#
+name: AOC
+type: parsed
+protocol: NECext
+address: 00 BD 00 00
+command: 01 00 00 00
+#
+name: Apple
+type: parsed
+protocol: NECext
+address: EE 87 00 00
+command: 02 00 00 00
+#
+name: Coby
+type: parsed
+protocol: NECext
+address: 00 7F 00 00
+command: 0A 00 00 00
+#
+name: Dell
+type: parsed
+protocol: NECext
+address: 00 1C 00 00
+command: 01 00 00 00
+#
+name: Emerson
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 1F 00 00 00
+#
+name: Emerson
+type: parsed
+protocol: NECext
+address: 87 22 00 00
+command: E0 00 00 00
+#
+name: Fujitsu
+type: parsed
+protocol: NECext
+address: 84 00 00 00
+command: 00 00 00 00
+#
+name: Fujitsu
+type: parsed
+protocol: NECext
+address: 84 8A 00 00
+command: 00 00 00 00
+#
+name: Fujitsu
+type: parsed
+protocol: NECext
+address: 84 8A 00 00
+command: 01 00 00 00
+#
+name: Fujitsu
+type: parsed
+protocol: NECext
+address: 84 8A 00 00
+command: 02 00 00 00
+#
+name: Fujitsu
+type: parsed
+protocol: NECext
+address: 84 8B 00 00
+command: 00 00 00 00
+#
+name: Gericom
+type: parsed
+protocol: NECext
+address: 03 00 00 00
+command: 11 00 00 00
+#
+name: Gigabyte
+type: parsed
+protocol: NECext
+address: 86 6B 00 00
+command: 02 00 00 00
+#
+name: Grundig
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 02 00 00 00
+#
+name: Hewlett Packard
+type: parsed
+protocol: NECext
+address: 12 11 00 00
+command: 0C 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NECext
+address: 50 AD 00 00
+command: 00 00 00 00
+#
+name: Hitachi
+type: parsed
+protocol: NECext
+address: 0C FB 00 00
+command: 95 00 00 00
+#
+name: InFocus
+type: parsed
+protocol: NECext
+address: 07 00 00 00
+command: 87 00 00 00
+#
+name: Insignia
+type: parsed
+protocol: NECext
+address: 86 05 00 00
+command: 0F 00 00 00
+#
+name: JVC
+type: parsed
+protocol: NECext
+address: 03 00 00 00
+command: 1A 00 00 00
+#
+name: JVC
+type: parsed
+protocol: NECext
+address: 03 00 00 00
+command: 1D 00 00 00
+#
+name: KAWA
+type: parsed
+protocol: NECext
+address: 0B 0B 00 00
+command: 0A 00 00 00
+#
+name: Kworld
+type: parsed
+protocol: NECext
+address: 86 6B 00 00
+command: 1D 00 00 00
+#
+name: LG
+type: parsed
+protocol: NECext
+address: 01 01 00 00
+command: 1C 00 00 00
+#
+name: Loewe
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 0E 00 00 00
+#
+name: Loewe
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 12 00 00 00
+#
+name: Loewe
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 16 00 00 00
+#
+name: Loewe
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 19 00 00 00
+#
+name: Loewe
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 22 00 00 00
+#
+name: Marantz
+type: parsed
+protocol: NECext
+address: 18 F7 00 00
+command: 08 00 00 00
+#
+name: Marantz
+type: parsed
+protocol: NECext
+address: 18 F7 00 00
+command: 14 00 00 00
+#
+name: Marantz
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 3F 00 00 00
+#
+name: Maxx
+type: parsed
+protocol: NECext
+address: 20 40 00 00
+command: 00 00 00 00
+#
+name: Maxx
+type: parsed
+protocol: NECext
+address: 60 00 00 00
+command: 00 00 00 00
+#
+name: Mitsubishi
+type: parsed
+protocol: NECext
+address: 47 00 00 00
+command: 42 00 00 00
+#
+name: Mitsubishi
+type: parsed
+protocol: NECext
+address: 47 00 00 00
+command: 4A 00 00 00
+#
+name: NET TV
+type: parsed
+protocol: NECext
+address: 02 00 00 00
+command: 0E 00 00 00
+#
+name: Now Broadband TV
+type: parsed
+protocol: NECext
+address: 80 6E 00 00
+command: 03 00 00 00
+#
+name: Now Broadband TV
+type: parsed
+protocol: NECext
+address: 80 6E 00 00
+command: 0D 00 00 00
+#
+name: Now Broadband TV
+type: parsed
+protocol: NECext
+address: 80 6E 00 00
+command: 0E 00 00 00
+#
+name: Now Broadband TV
+type: parsed
+protocol: NECext
+address: 40 40 00 00
+command: 0A 00 00 00
+#
+name: Now Broadband TV
+type: parsed
+protocol: NECext
+address: 40 40 00 00
+command: 43 00 00 00
+#
+name: Now Broadband TV
+type: parsed
+protocol: NECext
+address: 40 40 00 00
+command: 46 00 00 00
+#
+name: orion
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 00 00 00 00
+#
+name: Panasonic
+type: parsed
+protocol: NECext
+address: 80 00 00 00
+command: 3E 00 00 00
+#
+name: Panasonic
+type: parsed
+protocol: NECext
+address: 80 00 00 00
+command: 3F 00 00 00
+#
+name: Pioneer
+type: parsed
+protocol: NECext
+address: AA 00 00 00
+command: 1C 00 00 00
+#
+name: Proton
+type: parsed
+protocol: NECext
+address: 11 00 00 00
+command: 08 00 00 00
+#
+name: Proton
+type: parsed
+protocol: NECext
+address: 03 00 00 00
+command: 00 00 00 00
+#
+name: Samsung
+type: parsed
+protocol: NECext
+address: 07 07 00 00
+command: 98 00 00 00
+#
+name: Samsung
+type: parsed
+protocol: NECext
+address: 07 07 00 00
+command: 99 00 00 00
+#
+name: Seleco
+type: parsed
+protocol: NECext
+address: 00 00 00 00
+command: 01 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 54 00 00 00
+command: 2E 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 54 00 00 00
+command: 2F 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 01 00 00 00
+command: 15 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 02 00 00 00
+command: 15 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 02 00 00 00
+command: 2E 00 00 00
+#
+name: Sony
+type: parsed
+protocol: NECext
+address: 02 00 00 00
+command: 2F 00 00 00
+#
+name: Supportplus
+type: parsed
+protocol: NECext
+address: 0A 00 00 00
+command: 0C 00 00 00
+#
+name: Symphonic
+type: parsed
+protocol: NECext
+address: 29 00 00 00
+command: 20 00 00 00
+#
+name: TELEFUNKEN
+type: parsed
+protocol: NECext
+address: 05 00 00 00
+command: 1D 00 00 00
+#
+name: Tesla
+type: parsed
+protocol: NECext
+address: 01 00 00 00
+command: 0C 00 00 00
+#
+name: Tesla
+type: parsed
+protocol: NECext
+address: 01 00 00 00
+command: 23 00 00 00
+#
+name: Toshiba
+type: parsed
+protocol: NECext
+address: 40 00 00 00
+command: 12 00 00 00
+#
+name: Toshiba
+type: parsed
+protocol: NECext
+address: 40 00 00 00
+command: 7E 00 00 00
+#
+name: Toshiba
+type: parsed
+protocol: NECext
+address: 40 00 00 00
+command: 7F 00 00 00
+#
+name: Trutech
+type: parsed
+protocol: NECext
+address: 00 01 00 00
+command: 12 00 00 00
+#
+name: WD
+type: parsed
+protocol: NECext
+address: 84 79 00 00
+command: 12 00 00 00
+#
+name: Yamaha
+type: parsed
+protocol: NECext
+address: 50 00 00 00
+command: 00 00 00 00
+#
+name: Yamaha
+type: parsed
+protocol: NECext
+address: 50 00 00 00
+command: 01 00 00 00
+#
+name: Yamaha
+type: parsed
+protocol: NECext
+address: 50 00 00 00
+command: 02 00 00 00
+#
+name: Zenith
+type: parsed
+protocol: NECext
+address: 05 01 00 00
+command: 0E 00 00 00
+#
+name: AVOL
+type: parsed
+protocol: NECext
+address: FE 01 00 00
+command: BE 41 00 00
+#
+name: BENQ
+type: parsed
+protocol: NECext
+address: F9 06 00 00
+command: 3F C0 00 00
+#
+name: BEXA
+type: parsed
+protocol: NECext
+address: F7 08 00 00
+command: 17 E8 00 00
+#
+name: BLAUPUNKT
+type: parsed
+protocol: NECext
+address: FE 00 00 00
+command: AF 50 00 00
+#
+name: BPL
+type: parsed
+protocol: RC5
+address: 18 00 00 00
+command: 0C 00 00 00
+#
+name: DIAMOND VISION
+type: parsed
+protocol: NECext
+address: FF 00 00 00
+command: 24 DB 00 00
+#
+name: EASY LIVING
+type: parsed
+protocol: NECext
+address: DF 00 00 00
+command: F7 08 00 00
+#
+name: EASY LIVING
+type: parsed
+protocol: NECext
+address: DF 00 00 00
+command: AF 50 00 00
+#
+name: EMERSON
+type: parsed
+protocol: NECext
+address: A0 61 00 00
+command: 0F F0 00 00
+#
+name: HANNSPREE
+type: parsed
+protocol: NECext
+address: BD 00 00 00
+command: 7F 80 00 00
+#
+name: HANTAREX
+type: parsed
+protocol: NECext
+address: EF 10 00 00
+command: EF 10 00 00
+#
+name: HANTAREX
+type: parsed
+protocol: NECext
+address: 2D D2 00 00
+command: EF 10 00 00
+#
+name: HITEKER
+type: parsed
+protocol: NECext
+address: 0E 0E 00 00
+command: BF 40 00 00
+#
+name: HITEKER
+type: parsed
+protocol: NECext
+address: DF 20 00 00
+command: CF 30 00 00
+#
+name: JAYTECH
+type: parsed
+protocol: NECext
+address: EF 10 00 00
+command: 14 EB 00 00
+#
+name: JENSEN
+type: parsed
+protocol: NECext
+address: 7E 01 00 00
+command: 17 E8 00 00
+#
+name: LG
+type: parsed
+protocol: NECext
+address: DF 20 00 00
+command: EF 10 00 00
+#
+name: NEC
+type: parsed
+protocol: NECext
+address: E7 18 00 00
+command: EF 10 00 00
+#
+name: NEO
+type: parsed
+protocol: NECext
+address: EF 10 00 00
+command: B7 48 00 00
+#
+name: SAGEM
+type: parsed
+protocol: NECext
+address: 70 61 00 00
+command: B7 48 00 00
+#
+name: STRONG
+type: parsed
+protocol: NECext
+address: 0E 0E 00 00
+command: F3 0C 00 00
+#
+name: TERRATEC
+type: parsed
+protocol: NECext
+address: D6 61 00 00
+command: AF 50 00 00
+#
+name: TV SAMSUNG
+type: parsed
+protocol: NECext
+address: E0 E0 00 00
+command: BF 40 00 00
+#
+name: UMC
+type: parsed
+protocol: NECext
+address: FD 02 00 00
+command: DF 20 00 00
+#
+name: UPSTAR
+type: parsed
+protocol: NECext
+address: 7C 80 00 00
+command: AF 50 00 00
+#
+name: UPSTAR
+type: parsed
+protocol: NECext
+address: FD 00 00 00
+command: C7 38 00 00
+#
+name: VDC
+type: parsed
+protocol: NECext
+address: EF 10 00 00
+command: CF 30 00 00
+#
+name: XIAOMI
+type: parsed
+protocol: NEC
+address: 3C 00 00 00
+command: CC 00 00 00
+#
+name: Marantz
+type: parsed
+protocol: RC5
+address: 17 00 00 00
+command: 06 00 00 00
+#
+name: Brandt
+type: raw
+frequency: 38000
+data: 9292 4518 635 522 635 522 635 523 634 523 662 494 664 494 663 1625 661 519 662 1602 660 1626 660 1650 636 1650 636 1651 635 1651 635 522 634 1653 633 524 633 1655 631 526 631 527 630 1657 630 527 630 527 630 527 630 1658 630 527 630 1658 630 1658 630 527 631 1658 629 1658 629 1658 629 40773 9295 2239 630 98164 9297 2241 630
+#
+name: Brandt
+type: raw
+frequency: 38000
+data: 9028 4480 593 1667 589 541 597 532 596 534 594 562 566 564 564 539 589 567 571 558 570 1663 594 1666 591 1696 571 1662 595 1666 591 1669 598 1662 595 562 566 563 565 539 589 567 571 1661 596 561 567 563 565 564 564 1669 598 1662 595 1691 566 1668 599 558 570 1663 594 1692 565 575 1669
+#
+name: GPX
+type: raw
+frequency: 38000
+data: 337 1695 339 664 340 664 339 665 338 664 339 693 310 1695 339 1696 338 693 310 1697 337 666 337 693 310 693 310 1723 311 692 311 44457 309 1723 310 692 311 692 311 692 311 693 310 1723 310 694 334 669 334 1700 333 672 331 1703 330 1727 306 1704 330 697 306 1727 306 42378 309 1724 333 670 333 670 333 672 331 673 330 673 330 1704 329 1704 329 674 329 1727 306 698 305 698 305 698 305 1728 305 698 305 44436 309 1724 334 670 333 671 332 672 331 697 306 1728 306 674 329 697 306 1728 306 698 306 1728 306 1727 306 1728 305 698 305 1727 306 42378 309 1724 334 669 334 671 332 672 330 673 330 697 306 1703 330 1727 306 697 306 1727 306 697 306 698 305 697 306 1728 305 697 306 44431 309 1724 334 670 333 670 333 672 331 696 306 1727 306 697 306 697 306 1727 306 697 306 1727 306 1727 306 1727 306 697 306 1728 305 42373 309 1724 334 670 333 670 333 671 332 697 306 697 306 1727 305 1727 306 697 306 1728 305 697 306 697 306 697 306 1727 306 697 306 44427 309 1724 334 669 334 670 333 672 331 697 306 1728 306 697 306 697 306 1727 306 697 306 1727 306 1727 306 1727 306 697 306 1728 305
+#
+name: Grundig
+type: raw
+frequency: 38000
+data: 970 719 972 718 1822 718 944 747 920 771 921 799 893 802 893 799 893 1644 893 799 1767 770 918 86138 893 798 894 798 1768 772 915 778 913 779 913 804 888 807 888 804 888 1627 911 805 1737 801 888 86143 893 798 918 774 1766 775 913 780 912 780 912 779 913 783 912 780 912 1625 913 780 1763 777 912 86141 892 798 918 774 1766 776 912 780 911 780 912 780 912 783 912 780 912 1626 912 780 1762 801 888 86137 892 799 917 774 1766 775 913 780 912 780 912 779 913 783 912 781 911 1650 888 805 1738 801 887 86148 892 799 918 775 1765 800 888 804 888 804 888 804 888 808 888 804 888 1651 888 805 1738 801 888 86133 944 772 919 773 1767 774 914 778 914 778 914 778 914 781 915 777 915 1624 914 778 1766 774 914
+#
+name: Grundig
+type: raw
+frequency: 38000
+data: 872 800 873 797 1723 808 875 798 875 827 873 772 900 799 873 799 873 1614 873 800 1718 816 867 86386 844 828 844 828 1744 786 845 828 845 828 845 828 845 828 844 828 845 1643 844 828 1693 838 844
+#
+name: Grundig
+type: raw
+frequency: 38000
+data: 568 2595 570 485 569 485 570 485 570 485 570 486 569 485 570 485 570 484 571 484 571 19818 570 2596 569 1013 1098 1011 570 486 569 485 570 485 570 487 568 484 571 485 570 116371 620 2545 620 962 1149 960 621 434 621 434 621 434 621 435 620 436 618 435 620 116332 621 2543 621 433 622 433 622 434 621 433 621 434 621 435 620 432 622 432 623 433 621
+#
+name: Grundig
+type: raw
+frequency: 38000
+data: 604 2557 605 452 604 451 605 451 605 454 602 452 604 450 606 450 606 452 604 452 604 19746 603 2558 604 976 1132 974 604 452 604 452 604 451 605 451 605 451 606 451 605 116246 602 2559 603 453 603 454 602 453 603 453 604 452 604 452 604 453 603 453 603 453 603
+#
+name: Grundig
+type: raw
+frequency: 38000
+data: 926 751 1760 756 922 756 921 782 897 782 897 783 897 784 897 784 897 1624 897 784 1736 787 895 85521 921 780 1734 784 896 783 894 785 895 784 895 784 895 785 895 784 896 1625 895 785 1735 787 896 85546 894 783 1732 763 917 783 896 783 896 784 895 784 895 785 894 785 897 1624 897 784 1734 786 897
+#
+name: Hisense
+type: raw
+frequency: 38000
+data: 9021 4377 655 452 654 452 654 1567 654 453 653 453 653 453 652 454 651 455 651 1568 654 1569 653 455 651 1570 652 1570 652 1570 652 1571 651 1572 649 480 626 481 624 482 623 1599 623 483 623 484 622 484 622 484 622 1601 621 1601 621 1601 621 484 622 1601 621 1601 621 1601 621 1601 621 39912 8910 2137 622 95435 8933 2137 622 95434 8934 2137 622 95434 8934 2137 622 95434 8934 2137 622 95434 8933 2137 622 95434 8933 2138 621 95436 8932 2138 621 95435 8933 2138 621 95435 8933 2137 622
+#
+name: Hisense
+type: raw
+frequency: 38000
+data: 976 723 1776 796 925 804 897 804 897 803 897 803 897 803 897 803 922 1610 919 783 1767 807 914 86103 921 778 1769 805 916 786 914 788 913 787 914 787 914 788 913 811 890 1617 914 787 1764 832 889 86082 920 778 1768 804 916 786 914 786 914 786 914 786 914 786 915 786 915 1616 915 786 1763 809 913
+#
+name: JVC
+type: raw
+frequency: 38000
+data: 8510 4237 528 1592 528 1592 528 526 529 526 529 526 529 526 529 526 529 527 528 1591 529 1591 529 1592 528 527 528 1590 530 526 529 526 529 525 528 22533 529 1590 529 1592 528 526 529 526 529 526 529 526 529 526 529 526 529 1592 528 1591 555 1564 556 500 555 1565 554 500 529 526 529 524 529
+#
+name: NEC
+type: raw
+frequency: 38000
+data: 8073 3997 524 502 495 505 492 1508 498 503 494 1505 501 1500 495 1504 491 1510 496 3988 522 502 495 1505 501 501 496 504 493 1507 499 502 495 1505 501 501 496 18806 8072 3997 524 502 495 505 492 1507 499 502 495 1505 490 1509 497 1504 491 1510 496 3988 522 502 495 1505 501 500 497 503 494 1506 500 501 496 1504 491 510 498 18806 8072 3998 523 503 494 506 491 1509 497 504 493 1506 499 1501 494 1506 500 1502 493 3989 522 504 493 1507 499 502 495 505 492 1508 498 503 494 1506 499 502 495 18807 8072 3998 523 503 494 506 491 1509 497 504 493 1506 500 1501 494 1506 500 1502 493 3989 521 503 494 1506 500 502 495 505 492 1508 498 503 494 1506 500 502 495 18807 8072 3998 523 502 495 505 492 1508 498 503 494 1505 501 1500 495 1504 491 1510 496 3988 523 502 495 1505 501 501 496 503 494 1506 500 501 496 1504 491 510 498
+#
+name: RCA
+type: raw
+frequency: 38000
+data: 182 7827 172 2332 177 2328 181 2323 176 2330 179 1309 175 1331 174 2331 178 1328 177 2328 181 1307 177 2327 182 1325 180 1326 179 1309 176 1331 174 1332 173 2333 176 2310 178 1328 177 2328 181 1325 180 2306 182 1325 180 2325 174 8340 183 7825 175 2330 179 2326 173 2333 176 2310 178 1328 177 1329 176 2329 180 1308 176 2329 180 1326 179 2326 173 1334 182 1306 179 1328 177 1329 176 1312 183 2322 177 2329 180 1326 179 2325 174 1315 180 2326 173 1333 183 2323 176 8339 183 7824 175 2330 179 2307 181 2324 175 2331 178 1328 177 1330 175 2311 177 1329 176 2329 180 1326 179 2327 182 1305 179 1328 177 1328 177 1311 173 1334 182 2323 176 2330 179 1326 571 1916 180 1327 178 2325 587 920 575 1930 579
+#
+name: RCA
+type: raw
+frequency: 38000
+data: 9047 4385 682 474 682 1578 708 476 679 1581 706 477 679 1582 705 1582 705 1582 678 1583 679 1607 679 1582 678 478 679 478 678 477 679 1582 705 1582 679 1583 679 1608 704 1582 705 478 678 1582 705 478 678 478 678 478 679 477 679 478 679 478 678 1582 705 478 678 1583 704 1582 705 1582 679 39574 9073 4387 679 478 678 1583 679 503 677 1584 705 478 678 1582 705 1582 705 1582 705 1582 705 1582 705 1582 678 479 677 479 678 479 677 1583 679 1608 704 1582 705 1582 705 1582 705 478 678 1583 704 478 678 478 678 1582 680 478 703 453 704 453 703 1557 703 480 676 1584 704 1583 704 478 678
+#
+name: Samsung
+type: raw
+frequency: 38000
+data: 4499 4472 566 1662 565 1664 563 1665 562 565 538 564 539 562 541 560 543 558 545 1683 544 1658 569 1686 541 559 544 557 536 565 538 563 540 561 542 559 544 1684 543 558 545 556 537 564 539 562 541 560 543 558 545 1684 543 558 545 1683 544 1684 543 1660 567 1688 539 1689 538 1664 563 565 538 563 540 561 542 559 544 42973 4495 4472 566 1662 565 1663 564 1664 563 564 539 562 541 560 543 558 545 556 537 1691 536 1691 536 1666 572 555 538 564 539 561 542 559 544 557 536 565 538 1689 538 563 540 560 543 558 545 555 538 563 540 561 542 1686 541 559 544 1684 543 1684 543 1658 569 1685 542 1686 541 1660 567 559 544 557 536 565 538 563 540 42959 4499 4466 562 1666 572 1656 571 1656 571 556 537 564 539 562 541 559 544 556 537 1691 536 1690 537 1664 563 564 539 562 541 560 543 557 536 565 538 563 540 1688 539 561 542 559 544 556 537 564 539 562 541 560 543 1684 543 558 545 1682 545 1683 544 1657 570 1684 543 1659 568 1659 568 559 544 557 536 565 538 563 540 42955 4503 4463 565 1663 564 1663 564 1664 563 563 540 561 542 558 545 556 537 564 539 1688 539 1688 539 1662 565 562 541 559 544 557 536 565 538 563 540 560 543 1685 542 559 544 556 537 564 539 562 541 559 544 557 536 1692 535 565 538 1690 537 1690 537 1664 563 1691 536 1666 572 1656 571 556 537 564 539 562 541 559 544
+#
+name: Samsung
+type: raw
+frequency: 38000
+data: 4567 4475 732 1555 703 1608 705 1608 705 478 676 460 669 507 651 506 649 508 621 1640 672 1616 673 1639 674 508 648 508 648 508 647 485 644 511 647 508 648 1639 674 508 649 508 647 485 645 511 647 508 648 509 647 1639 674 509 647 1613 673 1641 673 1640 673 1640 672 1617 671 1640 673 48544 4566 4505 648 1639 674 1639 674 1639 647 510 648 508 648 509 648 508 648 508 648 1639 647 1642 673 1639 674 508 648 509 648 508 647 485 645 511 647 509 647 1640 673 509 647 509 646 486 643 511 647 509 647 509 647 1640 673 509 647 1615 672 1640 673 1640 673
+#
+name: Sharp
+type: raw
+frequency: 38000
+data: 264 1848 264 792 264 792 264 792 264 792 264 792 264 1848 264 1848 264 792 264 1848 264 792 264 792 264 792 264 1848 264 792 264 43560 264 1848 264 792 264 792 264 792 264 792 264 1848 264 792 264 792 264 1848 264 792 264 1848 264 1848 264 1848 264 792 264 1848 264 43560
+#
+name: Sharp
+type: raw
+frequency: 38000
+data: 3381 1656 439 401 438 1239 439 401 438 1240 439 401 438 1239 440 401 438 1239 440 400 439 1238 440 401 438 1239 440 1240 438 426 438 1240 439 400 439 1240 439 1240 438 1240 438 1240 438 401 438 401 438 402 437 1242 436 402 437 1242 437 402 437 403 436 1242 437 402 437 403 436 403 436 403 436 1242 437 1242 437 403 436 1242 437 403 436 403 436 403 436 1242 437 403 436 403 436 403 436 1243 436 403 436 1242 437 1242 437
+#
+name: Sharp
+type: raw
+frequency: 38000
+data: 278 1811 277 788 246 794 250 764 280 786 248 792 252 1813 275 1815 273 791 253 1812 276 789 255 785 249 791 253 1812 276 789 255 45322 280 1809 279 786 248 766 278 788 246 794 250 1815 273 792 252 788 246 1819 280 785 249 1817 271 1819 280 1810 278 787 247 1818 281 43217 274 1818 270 794 250 764 280 786 248 792 252 788 256 1809 279 1811 277 788 246 1819 280 785 249 766 278 762 272 1819 280 785 248
+#
+name: Sharp
+type: raw
+frequency: 38000
+data: 352 1747 353 694 354 694 353 694 354 694 354 693 354 1747 354 1745 355 693 355 1746 354 693 355 691 357 691 356 1745 355 689 356 46388 358 1740 359 689 358 688 360 689 358 689 359 1741 358 688 359 689 359 1741 358 691 356 1743 356 1743 356 1742 357 690 357 1741 356 44286 261 1839 260 786 262 786 262 785 263 785 263 786 262 1838 262 1838 262 786 262 1839 261 786 262 784 264 787 261 1837 263 783 262 46491 261 1839 261 786 262 786 262 786 261 786 262 1839 261 786 262 786 262 1839 261 786 262 1838 262 1838 262 1838 262 786 262 1835 262
+#
+name: Sharp
+type: raw
+frequency: 38000
+data: 195 1833 300 766 280 760 275 790 276 737 309 731 304 1801 301 1804 309 731 304 1801 270 795 282 758 277 762 273 1832 270 769 246 45851 326 1780 302 739 307 785 282 732 303 736 310 1795 307 732 303 763 303 1775 307 733 334 1798 273 1832 270 1810 251 814 273 1780 281 43762 302 1804 309 758 277 737 330 762 284 730 305 734 301 1803 310 1796 306 733 302 1829 273 767 279 734 301 791 275 1804 278 762 253 45870 307 1798 304 763 272 767 279 787 279 760 275 1829 284 730 305 734 301 1804 309 757 278 1827 275 1804 278 1828 274 765 270 1835 278 43740 303 1776 306 787 279 760 275 765 281 759 307 758 277 1775 307 1799 303 736 299 1832 281 759 276 763 304 736 299 1832 281 733 302 45820 306 1800 302 764 282 758 277 788 278 762 284 1821 281 732 303 736 310 1796 307 733 302 1829 273 1806 276 1830 272 767 268 1837 245 43772 302 1778 304 789 277 762 284 756 279 786 249 765 301 1777 336 1770 301 764 282 1824 278 761 274 765 301 738 308 1824 278 761 274
+#
+name: Sharp
+type: raw
+frequency: 38000
+data: 277 1806 274 775 281 776 279 770 275 774 281 768 277 1814 277 1806 274 775 280 1803 277 780 276 773 282 766 279 1831 249 781 274 45962 281 1803 277 771 274 783 273 802 253 770 275 1834 257 801 255 768 277 1807 273 775 280 1811 280 1804 276 1806 274 774 282 1811 280 43887 275 1809 282 767 278 779 276 799 256 766 279 771 274 1843 248 1810 281 767 278 1806 274 782 274 776 279 796 249 1807 273 784 282 45962 279 1804 276 772 273 784 282 768 277 798 247 1836 255 802 253 796 249 1808 283 766 279 1813 278 1805 275 1808 272 776 279 1813 278 43890 282 1801 279 769 276 781 274 775 280 769 276 773 283 1834 257 1801 279 769 276 1808 272 784 282 767 278 772 273 1810 281 776 279
+#
+name: Symphonic
+type: raw
+frequency: 36700
+data: 3488 3488 872 2616 872 872 872 872 872 2616 872 872 872 2616 872 872 872 872 872 872 872 872 872 872 872 2616 872 872 872 2616 872 2616 872 872 872 2616 872 872 872 2616 872 2616 872 2616 872 2616 872 2616 872 872 872 34008
+#
+name: Telekom
+type: raw
+frequency: 38000
+data: 328 605 321 283 643 290 313 589 316 287 639 596 642 589 316 285 318 285 641 591 637 294 309 587 328
+#
+name: Vizio
+type: raw
+frequency: 38000
+data: 9016 4408 603 512 602 512 629 1599 686 428 630 483 630 484 629 485 628 492 627 1604 625 1605 624 491 623 1630 599 1631 598 1631 598 1631 598 1636 599 515 599 515 599 515 599 1631 599 515 599 515 599 515 599 521 599 1631 599 1631 599 1631 598 515 599 1631 598 1631 598 1631 598 1632 598 39999 9016 2166 626 95735 9012 2168 625 95735 9013 2167 626
+#
+name: Zenith
+type: raw
+frequency: 38000
+data: 611 386 612 3984 612 4984 612 387 611 3985 612 387 611 3986 611 4985 611 387 611 3986 611 4985 611 387 611 3986 610 4987 609 4985 611 389 609
+#
+name: Zenith
+type: raw
+frequency: 38000
+data: 561 442 562 4055 591 5032 592 413 591 4026 593 411 593 4026 593 5030 618 387 617 4001 592 5032 591 440 564 4028 591 5033 590 5034 589 440 563
+#
+name: EHP
+type: raw
+frequency: 38000
+data: 528 1870 433 380 432 386 426 392 431 780 428 390 433 386 426 392 431 387 425 392 431 95569 536 1862 430 382 431 389 423 421 402 783 425 394 429 389 434 386 426 418 405 387 425 95574 531 1868 424 389 434 386 426 392 431 781 427 392 431 388 424 395 428 416 407 411 402 95573 532 1867 425 388 424 395 428 391 432 779 430 390 433 412 400 418 405 389 423 419 404 95571 533 1866 426 387 425 394 429 415 408 804 404 390 423 421 402 392 431 388 424 419 404 95571 534 1864 428 385 427 392 431 388 424 787 432 388 424 395 428 392 431 388 424 394 429
+#
+name: One For All
+type: raw
+frequency: 38000
+data: 2762 793 534 358 530 358 530 794 534 794 981 379 533 354 532 356 530 357 505 383 505 382 506 382 506 383 505 383 505 384 503 385 502 386 501 388 499 389 498 390 497 391 943 389 495 834 495 394 494 122265 2760 796 529 384 503 385 502 825 502 826 947 385 498 391 496 392 496 392 496 392 496 393 495 393 495 393 495 393 495 393 495 393 495 393 495 393 495 393 495 393 495 393 942 389 495 834 495 394 494
+#
+name: AEG
+type: raw
+frequency: 38000
+data: 2409 602 1204 602 602 602 1204 602 602 602 1204 602 602 602 602 602 1204 602 602 602 602 602 602 602 602 25892
+#
+name: BAUHN
+type: raw
+frequency: 38000
+data: 8993 4497 579 1657 579 552 552 552 579 552 579 552 579 552 552 552 579 552 579 552 552 1683 552 552 579 552 579 1657 579 1657 579 1657 579 552 552 579 552 1657 579 1657 579 1657 579 1657 579 552 579 552 579 552 552 1683 552 552 579 552 579 552 552 552 579 1657 579 1657 579 1657 579 43546 9019 2235 552 43546
+#
+name: BAUHN
+type: raw
+frequency: 38000
+data: 8993 4497 552 552 579 1657 579 1657 579 552 579 552 552 552 579 552 579 1657 579 1657 579 552 552 1683 552 579 552 552 579 552 579 552 552 552 579 1657 579 1657 579 1657 579 1657 579 552 579 552 552 552 579 552 579 552 552 579 552 552 579 552 579 1657 579 1657 579 1657 579 1657 579 43388 8967 2235 579 43388
+#
+name: BOSE
+type: raw
+frequency: 38000
+data: 9009 4440 542 542 542 1678 542 542 542 1678 542 1678 542 1678 542 542 542 1678 542 1678 542 1678 542 542 542 1678 542 542 542 542 542 1678 542 542 542 542 542 542 542 1678 542 1678 542 542 542 542 542 542 542 1678 542 1678 542 1678 542 542 542 542 542 1678 542 1678 542 1678 542 542 542 4440
+#
+name: CAT
+type: raw
+frequency: 38000
+data: 4497 4497 579 552 552 1683 579 1683 552 1683 552 1683 579 552 579 552 552 579 552 552 579 1683 552 1683 552 1683 579 1683 552 579 552 552 579 552 552 579 552 552 579 1683 552 1683 552 579 552 552 579 552 579 552 552 1683 579 1683 552 552 579 552 552 1683 579 1683 552 1683 579 1683 552 48989 4497 4497 552 1683 552 48989
+#
+name: DIGITREX
+type: raw
+frequency: 38000
+data: 9019 4497 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 552 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 552 552 552 552 1683 552 1683 552 552 552 552 552 552 552 552 552 1683 552 1683 552 552 552 552 552 1683 552 1683 552 1683 552 1683 552 40022 9019 2261 552 96348
+#
+name: ELENBERG
+type: raw
+frequency: 38000
+data: 3000 3000 500 1500 500 1500 500 1500 500 1500 500 1500 500 1500 500 2500 500 1500 500 1500 500 1500 500 1500 500 1500 500 2500 500 1500 500 2500 500 2500 500 4000 500
+#
+name: EMERSON
+type: raw
+frequency: 38000
+data: 9023 4498 545 1690 545 1690 545 1690 545 545 545 545 545 545 545 545 545 1690 545 545 545 1690 545 545 545 545 545 545 545 1690 545 545 545 545 545 545 545 545 545 545 545 545 545 545 545 1690 545 1690 545 1690 545 1690 545 1690 545 1690 545 1690 545 1690 545 545 545 545 545 545 545 42254 9023 2263 545 96285
+#
+name: FLUID
+type: raw
+frequency: 38000
+data: 8918 4472 546 546 546 546 546 546 546 1664 546 546 546 546 546 546 546 546 546 1664 546 1664 546 1664 546 546 546 1664 546 1664 546 1664 546 1664 546 1664 546 546 546 1664 546 546 546 546 546 546 546 546 546 546 546 546 546 1664 546 546 546 1664 546 1664 546 1664 546 1664 546 1664 546 39936 8918 2210 546 32318
+#
+name: FLUID
+type: raw
+frequency: 38000
+data: 8918 4446 546 546 546 546 546 1664 546 546 546 546 546 546 546 546 546 546 546 1664 546 1664 546 546 546 1664 546 1664 546 1664 546 1664 546 1664 546 546 546 546 546 546 546 1664 546 546 546 546 546 546 546 546 546 1664 546 1664 546 1664 546 546 546 1664 546 1664 546 1664 546 1664 546 39572 8918 2236 546 95264
+#
+name: FUSION
+type: raw
+frequency: 38000
+data: 9019 4497 552 552 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 1683 552 1683 552 552 552 1683 552 552 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 552 552 1683 552 552 552 552 552 40022 9019 2261 552 96348
+#
+name: GPX
+type: raw
+frequency: 38000
+data: 8967 4470 552 1683 552 552 552 552 552 1683 552 552 552 552 552 552 552 1683 552 552 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 552 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 552 552 1683 552 39891 8967 2235 552 96111
+#
+name: HISENSE
+type: raw
+frequency: 38000
+data: 9049 4538 557 557 557 557 557 1698 557 557 557 557 557 557 557 557 557 557 557 1698 557 1698 557 557 557 1698 557 1698 557 1698 557 1698 557 1698 557 557 557 557 557 557 557 1698 557 557 557 557 557 557 557 557 557 1698 557 1698 557 1698 557 557 557 1698 557 1698 557 1698 557 1698 557 40204 9049 2256 557 96860
+#
+name: JVC
+type: raw
+frequency: 38000
+data: 8388 4234 526 1578 526 1578 526 526 526 526 526 526 526 526 526 526 526 526 526 1578 526 1578 526 1578 526 526 526 1578 526 526 526 526 526 526 526 22457
+#
+name: METZ
+type: raw
+frequency: 38000
+data: 496 2710 496 496 496 496 496 496 496 496 496 496 496 496 496 496 496 496 496 496 496 20491 496 2710 496 496 496 496 496 992 496 496 992 496 496 992 496 496 496 496 496 119842
+#
+name: MIRAI
+type: raw
+frequency: 38000
+data: 2409 602 1204 602 602 602 1204 602 602 602 1204 602 602 602 602 602 1204 627 602 602 602 602 602 602 602 25767
+#
+name: Mitsubishi
+type: raw
+frequency: 38000
+data: 304 2128 304 2128 304 2128 304 912 304 912 304 912 304 2128 304 912 304 912 304 2128 304 912 304 912 304 912 304 912 304 912 304 912 304 28452
+#
+name: Mitsubishi
+type: raw
+frequency: 38000
+data: 304 2128 304 2128 304 2128 304 912 304 912 304 912 304 2128 304 912 304 912 304 2128 304 912 304 912 304 912 304 912 304 2128 304 912 304 28452
+#
+name: ODYS
+type: raw
+frequency: 38000
+data: 8993 4523 579 552 579 552 579 552 552 552 579 552 579 552 552 552 579 552 579 1657 579 1657 579 1657 579 1657 579 1657 579 1657 579 1657 579 1657 579 552 552 552 579 552 579 552 579 552 552 552 579 552 579 552 552 1683 552 1709 552 1683 552 1709 552 1683 552 1683 552 1683 552 1709 552 40285 8993 2261 579 40285
+#
+name: ORION
+type: raw
+frequency: 38000
+data: 9131 4399 613 520 580 533 572 561 584 531 587 537 586 537 587 527 603 1655 589 1652 561 1680 585 539 585 536 587 541 585 1654 576 1668 583 501 605 1680 585 1657 626 1619 586 1655 588 539 590 536 587 537 586 538 588 536 585 537 586 537 587 535 586 1653 588 1633 616 1655 585 1672 567
+#
+name: PANASONIC
+type: raw
+frequency: 38000
+data: 3489 1745 436 436 436 1336 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 1336 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 1336 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 1336 436 436 436 1336 436 1336 436 1336 436 1336 436 436 436 436 436 1336 436 436 436 1336 436 1336 436 1336 436 1336 436 436 436 1336 436 74095
+#
+name: PANASONIC
+type: raw
+frequency: 38000
+data: 3489 1717 436 436 436 1309 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 1309 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 1309 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 1309 436 1309 436 1309 436 1309 436 1309 436 436 436 436 436 436 436 1309 436 1309 436 1309 436 1309 436 1309 436 436 436 1309 436 73931
+#
+name: PANASONIC
+type: raw
+frequency: 38000
+data: 3573 1704 394 504 429 1318 487 412 462 329 482 448 458 413 481 378 461 422 459 376 459 412 512 423 437 384 487 438 434 1338 414 397 477 457 462 411 463 350 495 356 516 452 394 464 428 385 505 402 457 1305 472 387 482 371 543 411 410 412 435 412 464 445 446 434 462 387 461 1337 435 414 458 1317 435 1359 446 1347 433 1259 539 413 434 436 435 1338 424 389 458 1317 493 1336 462 1312 460 1262 480 443 436 1314 484 15000 3573 1704 394 504 429 1318 487 412 462 329 482 448 458 413 481 378 461 422 459 376 459 412 512 423 437 384 487 438 434 1338 414 397 477 457 462 411 463 350 495 356 516 452 394 464 428 385 505 402 457 1305 472 387 482 371 543 411 410 412 435 412 464 445 446 434 462 387 461 1337 435 414 458 1317 435 1359 446 1347 433 1259 539 413 434 436 435 1338 424 389 458 1317 493 1336 462 1312 460 1262 480 443 436 1314 484 15000 3573 1704 394 504 429 1318 487 412 462 329 482 448 458 413 481 378 461 422 459 376 459 412 512 423 437 384 487 438 434 1338 414 397 477 457 462 411 463 350 495 356 516 452 394 464 428 385 505 402 457 1305 472 387 482 371 543 411 410 412 435 412 464 445 446 434 462 387 461 1337 435 414 458 1317 435 1359 446 1347 433 1259 539 413 434 436 435 1338 424 389 458 1317 493 1336 462 1312 460 1262 480 443 436 1314 484 15000 3573 1704 394 504 429 1318 487 412 462 329 482 448 458 413 481 378 461 422 459 376 459 412 512 423 437 384 487 438 434 1338 414 397 477 457 462 411 463 350 495 356 516 452 394 464 428 385 505 402 457 1305 472 387 482 371 543 411 410 412 435 412 464 445 446 434 462 387 461 1337 435 414 458 1317 435 1359 446 1347 433 1259 539 413 434 436 435 1338 424 389 458 1317 493 1336 462 1312 460 1262 480 443 436 1314 484
+#
+name: PANAVOX
+type: raw
+frequency: 38000
+data: 8572 4455 495 547 495 1563 495 547 495 547 495 547 495 547 495 547 495 547 495 4012 495 547 495 1563 495 1563 495 1563 495 547 495 547 495 547 495 547 495 27748
+#
+name: PIONEER
+type: raw
+frequency: 38000
+data: 9032 4516 552 552 552 1681 552 552 552 1681 552 552 552 1681 552 552 552 1681 552 1681 552 552 552 1681 552 552 552 1681 552 552 552 1681 552 552 552 552 552 552 552 1681 552 1681 552 1681 552 552 552 552 552 552 552 1681 552 1681 552 552 552 552 552 552 552 1681 552 1681 552 1681 552 24814
+#
+name: PIONEER
+type: raw
+frequency: 38000
+data: 9032 4516 552 552 552 1681 552 552 552 1681 552 552 552 1681 552 552 552 1681 552 1681 552 552 552 1681 552 552 552 1681 552 552 552 1681 552 552 552 552 552 1681 552 552 552 1681 552 1681 552 552 552 552 552 552 552 1681 552 552 552 1681 552 552 552 552 552 1681 552 1681 552 1681 552 24814
+#
+name: REFLEXION
+type: raw
+frequency: 38000
+data: 8918 4472 546 546 546 546 546 546 546 1664 546 546 546 546 546 546 546 546 546 1664 546 1664 546 1664 546 546 546 1664 546 1664 546 1664 546 1664 546 1664 546 1664 546 1664 546 546 546 1664 546 546 546 1664 546 1664 546 546 546 546 546 546 546 1664 546 546 546 1664 546 546 546 546 546 39936 8918 2210 546 32292
+#
+name: SABA
+type: raw
+frequency: 38000
+data: 510 1980 510 1980 510 4470 510 4470 510 1980 510 1980 510 1980 510 4470 510 4470 510 4470 510 1980 510 1980 510 36630
+#
+name: SABA
+type: raw
+frequency: 38000
+data: 510 1980 510 1980 510 4470 510 4470 510 1980 510 1980 510 1980 510 1980 510 1980 510 1980 510 1980 510 1980 510 36630
+#
+name: SANYO
+type: raw
+frequency: 38000
+data: 9019 4497 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 1683 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 40022 9019 2261 552 96348
+#
+name: SCEPTRE
+type: raw
+frequency: 38000
+data: 2362 566 1157 566 566 566 1157 566 566 566 1157 566 566 566 566 566 1157 566 566 566 566 566 566 566 566 25665
+#
+name: SEIKI
+type: raw
+frequency: 38000
+data: 8993 4497 552 552 552 1657 552 552 552 552 552 552 552 552 552 552 552 552 552 1657 552 552 552 1657 552 1657 552 1657 552 1657 552 1657 552 552 552 552 552 1657 552 1657 552 552 552 552 552 552 552 1657 552 552 552 1657 552 552 552 552 552 1657 552 1657 552 1657 552 552 552 1657 552 41390 8993 2235 552 32581
+#
+name: SEIKI
+type: raw
+frequency: 38000
+data: 8967 4497 552 552 552 1683 552 552 552 552 552 552 552 552 552 552 552 552 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 552 552 552 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 552 552 1683 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 1683 552 40969 8967 2261 552 95980
+#
+name: SEIKI
+type: raw
+frequency: 38000
+data: 9019 4497 552 552 552 1683 552 552 552 552 552 552 552 552 552 552 552 552 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 552 552 552 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 552 552 1683 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 1683 552 41127 9019 2261 552 96348
+#
+name: SHARP
+type: raw
+frequency: 38000
+data: 261 1850 261 782 261 782 261 782 261 782 261 782 261 1850 261 1850 261 782 261 1850 261 782 261 782 261 782 261 1850 261 782 261 46325 261 1850 261 782 261 782 261 782 261 782 261 1850 261 782 261 782 261 1850 261 782 261 1850 261 1850 261 1850 261 782 261 1850 261 44241
+#
+name: SOYO
+type: raw
+frequency: 38000
+data: 2998 2998 500 1499 500 1499 500 1499 500 1499 500 1499 500 1499 500 2446 500 1499 500 1499 500 1499 500 1499 500 1499 500 2446 500 1499 500 2446 500 2498 500 3997 500 22983
+#
+name: SOYO
+type: raw
+frequency: 38000
+data: 9041 4507 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 1694 573 1694 573 1694 573 1694 573 1694 573 1694 573 1694 573 1694 573 573 573 1694 573 573 573 573 573 573 573 573 573 573 573 573 573 1694 573 573 573 1694 573 1694 573 1694 573 1694 573 1694 573 1694 573 39785 9041 2267 573 96193
+#
+name: SOYO
+type: raw
+frequency: 38000
+data: 9041 4507 573 1694 573 1694 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 1694 573 1694 573 573 573 1694 573 573 573 1694 573 1694 573 1694 573 1694 573 1694 573 1694 573 573 573 1694 573 573 573 573 573 573 573 573 573 573 573 573 573 1694 573 573 573 1694 573 42026 9041 2267 573 96193
+#
+name: SYLVANIA
+type: raw
+frequency: 38000
+data: 8866 4420 546 572 546 546 572 1638 572 546 572 546 546 546 572 546 572 1638 572 546 546 546 572 546 572 546 572 546 546 1664 546 1664 546 1664 546 546 572 546 572 546 546 546 572 546 572 1638 572 546 546 546 572 1638 572 1638 572 1638 572 1638 572 1638 572 546 572 1638 572 1638 572 42770 8840 2210 572 42770
+#
+name: TCL
+type: raw
+frequency: 38000
+data: 4004 4004 494 2002 494 2002 494 2002 494 2002 494 988 494 988 494 2002 494 988 494 2002 494 988 494 2002 494 988 494 988 494 988 494 988 494 988 494 2002 494 2002 494 988 494 2002 494 988 494 2002 494 988 494 2002 494 8008
+#
+name: TEAC
+type: raw
+frequency: 38000
+data: 8993 4497 552 552 552 552 552 552 552 552 552 552 552 552 552 552 552 1657 552 1657 552 1657 552 1657 552 1657 552 1657 552 1657 552 1657 552 552 552 552 552 1657 552 552 552 552 552 552 552 552 552 552 552 1657 552 1657 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 552 552 40154 8993 2235 552 40154
+#
+name: VIDEOCON
+type: raw
+frequency: 38000
+data: 8918 4446 546 546 546 546 546 1664 546 1664 546 1664 546 546 546 546 546 546 546 1664 546 1664 546 546 546 546 546 546 546 1664 546 1664 546 1664 546 546 546 1664 546 546 546 546 546 1664 546 546 546 546 546 546 546 1664 546 546 546 1664 546 1664 546 546 546 1664 546 1664 546 1664 546 39572 8918 2236 546 95264
+#
+name: VIZIO
+type: raw
+frequency: 38000
+data: 9019 4523 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 552 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 40075 9019 2261 552 96506
+#
+name: VIZIO
+type: raw
+frequency: 38000
+data: 9019 4523 552 579 552 579 552 1709 552 579 552 579 552 579 552 579 552 579 552 1709 552 1709 552 579 552 1709 552 1709 552 1709 552 1709 552 1709 552 579 552 1709 552 579 552 1709 552 579 552 1709 552 579 552 579 552 1709 552 579 552 1709 552 579 552 1709 552 579 552 1709 552 1709 552 43993 9019 2261 552 98136
+#
+name: WESTERN DIGITAL
+type: raw
+frequency: 38000
+data: 8993 4497 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 1683 552 1683 552 552 552 552 552 1683 552 1683 552 1683 552 1683 552 552 552 552 552 1683 552 552 552 552 552 1683 552 552 552 552 552 552 552 1683 552 552 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 40995 8993 2261 552 96032
+#
+name: 3M
+type: raw
+frequency: 38381
+data: 8911 4481 573 573 573 573 573 573 573 573 573 1667 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 573 573 573 573 573 573 573 573 573 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 39629 8911 2215 573 95438
+#
+name: Ampro
+type: raw
+frequency: 39105
+data: 3273 1637 409 409 409 409 409 1227 409 409 409 1227 409 409 409 409 409 409 409 1227 409 1227 409 409 409 409 409 409 409 1227 409 1227 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 1227 409 1227 409 409 409 409 409 409 409 409 409 1227 409 409 409 1227 409 1227 409 409 409 409 409 409 409 409 409 1227 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 409 51477
+#
+name: Ampro
+type: raw
+frequency: 38029
+data: 3313 1630 421 421 421 421 421 1236 421 421 421 1236 421 421 421 421 421 421 421 1236 421 1236 421 421 421 421 421 421 421 1236 421 1236 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 1236 421 1236 421 421 421 421 421 421 421 421 421 1236 421 421 421 1236 421 1236 421 421 421 421 421 421 421 421 421 1236 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 421 41311
+#
+name: Ampro
+type: raw
+frequency: 38381
+data: 3257 1615 417 417 417 417 417 1225 417 417 417 1225 417 417 417 417 417 417 417 1225 417 1225 417 417 417 417 417 417 417 1225 417 1225 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 1225 417 1225 417 417 417 417 417 417 417 417 417 1225 417 417 417 1225 417 1225 417 417 417 417 417 417 417 417 417 1225 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 40723
+#
+name: Denon
+type: raw
+frequency: 38029
+data: 8967 4444 579 579 579 579 579 579 579 579 579 1657 579 579 579 1657 579 579 579 1657 579 1657 579 1657 579 1657 579 579 579 1657 579 579 579 1657 579 1657 579 1657 579 1657 579 579 579 1657 579 579 579 579 579 579 579 579 579 579 579 579 579 1657 579 579 579 1657 579 1657 579 1657 579 39601 8941 2235 579 95453
+#
+name: Dream
+type: raw
+frequency: 36045
+data: 888 888 1776 888 888 888 888 888 888 888 888 888 888 888 888 888 888 1776 888 888 1776 888 888 90664
+#
+name: Fujitsu
+type: raw
+frequency: 38381
+data: 3257 1615 417 417 417 417 417 1225 417 417 417 1225 417 417 417 417 417 417 417 1225 417 1225 417 417 417 417 417 417 417 1225 417 1225 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 1225 417 417 417 417 417 417 417 417 417 1225 417 417 417 417 417 1225 417 417 417 417 417 417 417 417 417 1225 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 417 46247
+#
+name: Hitachi
+type: raw
+frequency: 38381
+data: 8885 4429 573 573 573 573 573 573 573 573 573 1667 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 573 573 573 573 573 573 573 573 573 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 39421 8885 2215 573 94943
+#
+name: Hitachi
+type: raw
+frequency: 38740
+data: 8802 4440 568 568 568 568 568 568 568 568 568 1652 568 568 568 1652 568 568 568 1652 568 1652 568 1652 568 1652 568 568 568 1652 568 568 568 1652 568 1652 568 1652 568 1652 568 568 568 1652 568 568 568 568 568 568 568 568 568 568 568 568 568 1652 568 568 568 1652 568 1652 568 1652 568 39262 8802 2220 568 94553 8802 2220 568 94553 8802 2220 568 94553 8802 2220 568 572199
+#
+name: JVC
+type: raw
+frequency: 38381
+data: 8364 4169 521 1537 521 1537 521 521 521 521 521 521 521 521 521 521 521 521 521 1537 521 1537 521 1537 521 521 521 1537 521 521 521 521 521 521 521 20739
+#
+name: LG
+type: raw
+frequency: 38381
+data: 8859 4429 547 547 547 547 547 1667 547 547 547 547 547 547 547 547 547 547 547 1667 547 1667 547 547 547 1667 547 1667 547 1667 547 1667 547 1667 547 547 547 547 547 1667 547 547 547 547 547 547 547 1667 547 1667 547 1667 547 1667 547 547 547 1667 547 1667 547 1667 547 547 547 547 547 40176 8859 2215 547 95386
+#
+name: LG
+type: raw
+frequency: 38381
+data: 8859 4429 547 547 547 547 547 1667 547 547 547 547 547 547 547 547 547 547 547 1667 547 1667 547 547 547 1667 547 1667 547 1667 547 1667 547 1667 547 1667 547 547 547 1667 547 547 547 547 547 547 547 1667 547 1667 547 547 547 1667 547 547 547 1667 547 1667 547 1667 547 547 547 547 547 40176 8859 2215 547 95386
+#
+name: Mitsubishi
+type: raw
+frequency: 33700
+data: 297 2136 297 2136 297 2136 297 920 297 920 297 920 297 2136 297 920 297 920 297 2136 297 920 297 920 297 920 297 920 297 2136 297 920 297 26528
+#
+name: Mitsubishi
+type: raw
+frequency: 32898
+data: 304 2128 304 2128 304 2128 304 912 304 912 304 912 304 2128 304 912 304 912 304 2128 304 912 304 2128 304 912 304 912 304 2128 304 912 304 26506
+#
+name: Mitsubishi
+type: raw
+frequency: 32898
+data: 334 2067 334 2067 334 2067 334 882 334 2067 334 882 334 2067 334 882 334 882 334 2067 334 882 334 882 334 882 334 882 334 882 334 882 334 27145
+#
+name: Monovision
+type: raw
+frequency: 38381
+data: 8311 4169 521 521 521 1563 521 521 521 521 521 521 521 521 521 521 521 521 521 4169 521 521 521 1563 521 1563 521 1563 521 521 521 521 521 521 521 521 521 24100
+#
+name: NAD
+type: raw
+frequency: 38029
+data: 8941 4470 579 1683 579 1683 579 1683 579 579 579 579 579 579 579 579 579 1683 579 579 579 579 579 1683 579 1683 579 1683 579 1683 579 1683 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 579 579 38523 8941 2235 579 95453
+#
+name: NEC
+type: raw
+frequency: 38381
+data: 8911 4481 573 573 573 573 573 1667 573 573 573 573 573 573 573 573 573 573 573 1667 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 573 573 573 573 573 573 573 573 573 573 1667 573 573 573 573 573 1667 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 39577 8937 2241 573 95386
+#
+name: NEC
+type: raw
+frequency: 38381
+data: 8937 4455 573 573 573 573 573 1667 573 573 573 573 573 573 573 573 573 573 573 1667 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 573 573 573 573 573 573 573 573 1667 573 573 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 573 573 1667 573 39577 8911 2241 573 95360
+#
+name: Pace Sky Manual
+type: raw
+frequency: 38029
+data: 8967 4470 579 579 579 579 579 1657 579 579 579 579 579 579 579 579 579 1657 579 579 579 579 579 1657 579 1657 579 1657 579 1657 579 579 579 579 579 1657 579 579 579 579 579 579 579 579 579 1657 579 579 579 579 579 579 579 1657 579 1657 579 1657 579 1657 579 579 579 1657 579 1657 579 41889 8967 2235 579 95559
+#
+name: Panasonic
+type: raw
+frequency: 56000
+data: 3352 3352 834 834 834 834 834 834 834 834 834 834 834 834 834 834 834 834 834 834 834 834 834 2501 834 2501 834 2501 834 2501 834 2501 834 2501 834 2501 834 2501 834 2501 834 2501 834 2501 834 834 834 36685
+#
+name: Panasonic
+type: raw
+frequency: 37010
+data: 3459 1729 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 1297 432 1297 432 1297 432 1297 432 432 432 432 432 1297 432 432 432 1297 432 1297 432 1297 432 1297 432 432 432 1297 432 70846 3459 1729 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 1297 432 1297 432 1297 432 1297 432 432 432 432 432 1297 432 432 432 1297 432 1297 432 1297 432 1297 432 432 432 1297 432 70846
+#
+name: Panasonic
+type: raw
+frequency: 37683
+data: 3450 1725 425 425 425 1247 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 1247 425 425 425 425 425 425 425 425 425 425 425 425 425 1247 425 425 425 425 425 1247 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 1247 425 425 425 1247 425 1247 425 1247 425 1247 425 425 425 425 425 1247 425 425 425 1247 425 1247 425 425 425 1247 425 425 425 1247 425 70854 3476 1698 425 425 425 1247 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 1247 425 425 425 425 425 425 425 425 425 425 425 425 425 1247 425 425 425 425 425 1247 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 425 1247 425 425 425 1247 425 1247 425 1247 425 1247 425 425 425 425 425 1247 425 425 425 1247 425 1247 425 425 425 1247 425 425 425 1247 425 70854
+#
+name: Panasonic
+type: raw
+frequency: 37010
+data: 3432 1702 432 432 432 1270 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1270 432 432 432 432 432 432 432 432 432 432 432 432 432 1270 432 432 432 432 432 1270 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1270 432 432 432 1270 432 1270 432 1270 432 1270 432 432 432 432 432 1270 432 432 432 1270 432 1270 432 432 432 1270 432 432 432 1270 432 73629
+#
+name: Panasonic
+type: raw
+frequency: 37010
+data: 3459 1675 432 432 432 1270 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1270 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1270 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1270 432 432 432 1270 432 1270 432 1270 432 1270 432 432 432 432 432 1270 432 432 432 1270 432 1270 432 1270 432 1270 432 432 432 1270 432 73710
+#
+name: Panasonic
+type: raw
+frequency: 36683
+data: 3489 1690 436 436 436 1281 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 1281 436 436 436 436 436 436 436 436 436 436 436 436 436 1281 436 436 436 436 436 1281 436 436 436 436 436 436 436 436 436 436 436 1281 436 436 436 436 436 1281 436 436 436 1281 436 1281 436 1281 436 1281 436 436 436 436 436 1281 436 436 436 1281 436 1281 436 436 436 436 436 436 436 1281 436 74285
+#
+name: Philips
+type: raw
+frequency: 36045
+data: 888 888 888 888 1776 888 888 888 888 888 888 888 888 888 888 888 888 1776 888 888 1776 888 888 90942
+#
+name: Philips
+type: raw
+frequency: 36683
+data: 872 872 1745 872 872 872 872 872 872 872 872 872 872 872 872 872 872 1745 872 872 1745 872 872 89115
+#
+name: Philips
+type: raw
+frequency: 36683
+data: 872 872 1745 872 872 872 872 872 872 872 872 872 872 1745 872 872 872 872 872 872 872 872 872 872 872 88215
+#
+name: Pioneer
+type: raw
+frequency: 40244
+data: 8498 4224 547 547 547 1590 547 547 547 1590 547 547 547 1590 547 547 547 1590 547 1590 547 547 547 1590 547 547 547 1590 547 547 547 1590 547 547 547 547 547 547 547 1590 547 1590 547 1590 547 547 547 547 547 547 547 1590 547 1590 547 547 547 547 547 547 547 1590 547 1590 547 1590 547 25147
+#
+name: Pioneer
+type: raw
+frequency: 40244
+data: 8473 4224 522 522 522 1565 522 522 522 1565 522 522 522 1565 522 522 522 1565 522 1565 522 522 522 1565 522 522 522 1565 522 522 522 1565 522 522 522 522 522 522 522 1565 522 1565 522 1565 522 522 522 522 522 522 522 1565 522 1565 522 522 522 522 522 522 522 1565 522 1565 522 1565 522 23730
+#
+name: Pioneer
+type: raw
+frequency: 40639
+data: 8391 4232 517 517 517 1599 517 517 517 1599 517 517 517 1599 517 517 517 1599 517 1599 517 517 517 1599 517 517 517 1599 517 517 517 1599 517 517 517 1599 517 1599 517 517 517 1599 517 1599 517 517 517 517 517 517 517 517 517 517 517 1599 517 517 517 517 517 1599 517 1599 517 1599 517 35016
+#
+name: Pioneer
+type: raw
+frequency: 40639
+data: 8391 4232 517 517 517 1599 517 517 517 1599 517 517 517 1599 517 517 517 1599 517 1599 517 517 517 1599 517 517 517 1599 517 517 517 1599 517 517 517 517 517 1599 517 517 517 1599 517 1599 517 517 517 517 517 517 517 1599 517 517 517 1599 517 517 517 517 517 1599 517 1599 517 1599 517 35016
+#
+name: Proscan
+type: raw
+frequency: 56000
+data: 3943 3891 504 1980 504 1980 504 1980 504 1980 504 938 504 938 504 1980 504 1980 504 1980 504 938 504 1980 504 1980 504 938 504 938 504 938 504 938 504 1980 504 1980 504 938 504 938 504 938 504 1980 504 938 504 938 504 8338
+#
+name: Proton
+type: raw
+frequency: 38381
+data: 8963 4455 573 573 573 573 573 1667 573 573 573 573 573 573 573 573 573 573 573 1667 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 1667 573 573 573 573 573 573 573 1667 573 573 573 573 573 573 573 573 573 1667 573 1667 573 1667 573 573 573 1667 573 1667 573 1667 573 1667 573 39655 8937 2241 573 95516
+#
+name: Proxima
+type: raw
+frequency: 38029
+data: 8941 4444 579 579 579 579 579 579 579 579 579 1683 579 1683 579 579 579 579 579 1683 579 1683 579 1683 579 1683 579 579 579 579 579 1683 579 1683 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 91272 8914 4470 579 579 579 579 579 579 579 579 579 1683 579 1683 579 579 579 579 579 579 579 1683 579 1683 579 1683 579 579 579 579 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 1683 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 579 782666
+#
+name: RCA
+type: raw
+frequency: 56000
+data: 3960 3978 486 1980 486 1980 486 1980 486 1980 486 1007 486 1007 486 1980 486 1980 486 1980 486 1007 486 1980 486 1980 486 1007 486 1007 486 1007 486 1007 486 1980 486 1980 486 1007 486 1007 486 1007 486 1980 486 1007 486 1007 486 8146
+#
+name: RCA
+type: raw
+frequency: 56000
+data: 3854 3820 480 1936 480 1936 480 1936 480 1936 480 925 480 925 480 1936 480 1936 480 1936 480 925 480 1936 480 1936 480 925 480 925 480 925 480 925 480 1936 480 1936 480 925 480 925 480 925 480 1936 480 925 480 925 480 8119
+#
+name: RCA
+type: raw
+frequency: 56000
+data: 19958 3769 504 1945 504 1945 504 1945 504 1945 504 955 504 955 504 1945 504 1945 504 1945 504 955 504 1945 504 955 504 955 504 955 504 955 504 955 504 1945 504 1945 504 955 504 955 504 955 504 1945 504 955 504 1945 1094 7955 3891 3891
+#
+name: RCA
+type: raw
+frequency: 56000
+data: 20027 3769 504 1928 504 1928 504 1928 504 1928 504 955 504 955 504 1928 504 1928 504 1928 504 955 504 1928 504 1928 504 955 504 955 504 955 504 955 504 1928 504 1928 504 955 504 955 504 955 504 1928 504 955 504 955 1094 7938 3891 3891
+#
+name: Replay TV
+type: raw
+frequency: 36683
+data: 2617 872 436 436 436 436 436 872 436 872 872 436 436 436 436 436 436 436 436 436 436 436 436 436 872 872 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 872 436 436 872 872 107407
+#
+name: Replay TV
+type: raw
+frequency: 36683
+data: 2617 872 436 436 436 436 436 872 436 872 872 436 436 436 436 436 436 436 436 436 436 436 436 436 872 872 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 436 872 436 436 436 436 872 436 107407
+#
+name: RFT
+type: raw
+frequency: 35734
+data: 896 896 896 896 1791 896 896 896 896 896 896 896 896 896 896 896 896 1791 896 896 1791 896 896 89858
+#
+name: RFT
+type: raw
+frequency: 35734
+data: 896 896 1791 896 896 896 896 896 896 896 896 896 896 896 896 896 896 1791 896 896 1791 896 896 89858
+#
+name: Runco
+type: raw
+frequency: 40244
+data: 522 5019 497 5019 497 497 497 4050 497 497 497 4050 497 5019 497 497 497 4050 497 5019 497 497 497 4050 497 5019 497 5019 497 497 497 4050 497 5019 497 497 497 4050 497 497 497 4050 497 102276
+#
+name: Samsung
+type: raw
+frequency: 38029
+data: 4444 4418 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 552 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 552 552 552 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 1683 552 47175 4418 4418 552 552 552 97136
+#
+name: Sanyo
+type: raw
+frequency: 38381
+data: 8937 4455 573 573 573 573 573 573 573 573 573 1667 573 1667 573 573 573 573 573 1667 573 1667 573 1667 573 1667 573 573 573 573 573 1667 573 1667 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 91165 8937 4455 573 573 573 573 573 573 573 573 573 1667 573 1667 573 573 573 573 573 573 573 1667 573 1667 573 1667 573 573 573 573 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 1667 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 573 783148
+#
+name: Sanyo
+type: raw
+frequency: 38740
+data: 8906 4466 568 568 568 568 568 568 568 568 568 1652 568 1652 568 568 568 568 568 1652 568 1652 568 1652 568 1652 568 568 568 568 568 1652 568 1652 568 568 568 568 568 568 568 568 568 568 568 568 568 568 568 568 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 91043 8906 4466 568 568 568 568 568 568 568 568 568 1652 568 1652 568 568 568 568 568 568 568 1652 568 1652 568 1652 568 568 568 568 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 1652 568 568 568 568 568 568 568 568 568 568 568 568 568 568 568 568 568 783660
+#
+name: Sharp
+type: raw
+frequency: 38029
+data: 289 263 263 789 263 789 263 789 263 789 263 789 263 1841 263 1841 263 789 263 1841 263 789 263 789 263 789 263 1841 263 789 263 45649 263 263 263 789 263 789 263 789 263 789 263 1841 263 789 263 789 263 1841 263 789 263 1841 263 1841 263 1841 263 789 263 1841 263 45649
+#
+name: Sharp
+type: raw
+frequency: 38740
+data: 284 1807 258 774 258 1807 258 1807 258 774 258 774 258 1807 258 1807 258 774 258 1807 258 774 258 774 258 774 258 1807 258 774 258 42901 258 1807 258 774 258 1807 258 1807 258 774 258 1807 258 774 258 774 258 1807 258 774 258 1807 258 1807 258 1807 258 774 258 1807 258 42901 258 1807 258 774 258 1807 258 1807 258 774 258 774 258 1807 258 1807 258 774 258 1807 258 774 258 774 258 774 258 1807 258 774 258 42901 258 1807 258 774 258 1807 258 1807 258 774 258 1807 258 774 258 774 258 1807 258 774 258 1807 258 1807 258 1807 258 774 258 1807 258 42901 258 1807 258 774 258 1807 258 1807 258 774 258 774 258 1807 258 1807 258 774 258 1807 258 774 258 774 258 774 258 1807 258 774 258 716959
+#
+name: Sharp
+type: raw
+frequency: 38029
+data: 263 1841 263 789 263 1841 263 1841 263 789 263 789 263 1841 263 1841 263 789 263 1841 263 789 263 789 263 789 263 1841 263 789 263 42652 263 1841 263 789 263 1841 263 1841 263 789 263 1841 263 789 263 789 263 1841 263 789 263 1841 263 1841 263 1841 263 789 263 1841 263 42652 263 1841 263 789 263 1841 263 1841 263 789 263 789 263 1841 263 1841 263 789 263 1841 263 789 263 789 263 789 263 1841 263 789 263 42652 263 1841 263 789 263 1841 263 1841 263 789 263 1841 263 789 263 789 263 1841 263 789 263 1841 263 1841 263 1841 263 789 263 1841 263 42652 263 1841 263 789 263 1841 263 1841 263 789 263 789 263 1841 263 1841 263 789 263 1841 263 789 263 789 263 789 263 1841 263 789 263 716637
+#
+name: Sharp
+type: raw
+frequency: 38381
+data: 261 1850 261 782 261 782 261 782 261 1850 261 1850 261 1850 261 782 261 1850 261 782 261 782 261 1850 261 782 261 1850 261 782 261 43641 261 1850 261 782 261 782 261 782 261 1850 261 782 261 782 261 1850 261 782 261 1850 261 1850 261 782 261 1850 261 782 261 1850 261 43641
+#
+name: Sharp
+type: raw
+frequency: 38381
+data: 261 1850 261 782 261 782 261 782 261 1850 261 782 261 1850 261 782 261 1850 261 782 261 782 261 1850 261 782 261 1850 261 782 261 43641 261 1850 261 782 261 782 261 782 261 1850 261 1850 261 782 261 1850 261 782 261 1850 261 1850 261 782 261 1850 261 782 261 1850 261 43641
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 596 596 596 596 596 596 596 596 1193 25668
+#
+name: Sony
+type: raw
+frequency: 56000
+data: 2362 591 1181 591 591 591 1181 591 591 591 1181 591 591 591 591 591 591 591 591 591 591 591 591 591 1181 25419
+#
+name: Sony
+type: raw
+frequency: 38029
+data: 4444 4444 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 552 552 552 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 552 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 46780
+#
+name: Sony
+type: raw
+frequency: 40639
+data: 2362 591 1181 591 591 591 1181 591 591 591 1181 591 591 591 591 591 1181 591 1181 591 1181 591 591 591 1181 591 1181 591 591 591 1181 18997
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2361 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 596 596 596 596 596 596 596 596 1193 25569
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2410 596 596 596 596 596 1218 596 1218 596 1218 596 1218 596 1218 596 1218 596 1218 596 1218 596 596 596 1218 596 1218 596 1218 596 596 17841
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 596 596 1193 596 1193 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 596 596 596 25022
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 1193 596 1193 596 1193 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 596 596 596 24426
+#
+name: Sony
+type: raw
+frequency: 38029
+data: 10098 2524 5049 2524 2524 2524 5049 2524 2524 2524 5049 2524 2524 2524 2524 2524 5049 2524 2524 2524 2524 2524 2524 2524 2524 108444
+#
+name: Sony
+type: raw
+frequency: 38029
+data: 10098 2524 2524 2524 5049 2524 5049 2524 5049 2524 2524 2524 5049 2524 2524 2524 5049 2524 2524 2524 2524 2524 2524 2524 2524 105919
+#
+name: Sony
+type: raw
+frequency: 38029
+data: 10098 2524 5049 2524 5049 2524 5049 2524 5049 2524 2524 2524 5049 2524 2524 2524 5049 2524 2524 2524 2524 2524 2524 2524 2524 103395
+#
+name: Sony
+type: raw
+frequency: 40244
+data: 2385 596 1193 596 596 596 1193 596 596 596 1193 596 596 596 596 596 1193 596 596 596 596 596 596 596 596 25022
+#
+name: Sony
+type: raw
+frequency: 40639
+data: 2362 591 591 591 1181 591 1181 591 1181 591 591 591 1181 591 591 591 1181 591 591 591 591 591 591 591 591 24927
+#
+name: Sony
+type: raw
+frequency: 40639
+data: 2362 591 1181 591 1181 591 1181 591 1181 591 591 591 1181 591 591 591 1181 591 591 591 591 591 591 591 591 24336
+#
+name: Technics
+type: raw
+frequency: 37010
+data: 3459 1729 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 1297 432 1297 432 1297 432 1297 432 432 432 432 432 1297 432 432 432 1297 432 1297 432 1297 432 1297 432 432 432 1297 432 74169
+#
+name: Technics
+type: raw
+frequency: 37010
+data: 3459 1729 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 1297 432 432 432 432 432 432 432 432 432 432 432 432 432 1297 432 432 432 432 432 1297 432 74169
+#
+name: Technics
+type: raw
+frequency: 38381
+data: 8937 4403 625 469 625 469 625 469 625 1615 625 1615 625 469 625 469 625 469 625 1615 625 1615 625 1615 625 469 625 1615 625 1615 625 1615 625 1615 625 469 625 469 625 469 625 1615 625 469 625 469 625 469 625 469 625 1615 625 1615 625 1615 625 469 625 1615 625 1615 625 1615 625 1615 625 38352 8937 2189 625 95151
+#
+name: Toshiba
+type: raw
+frequency: 38029
+data: 8993 4444 579 579 579 579 579 579 579 579 579 579 579 579 579 1657 579 579 579 1657 579 1657 579 1657 579 1657 579 1657 579 1657 579 579 579 1657 579 579 579 1657 579 579 579 579 579 1657 579 579 579 579 579 579 579 1657 579 579 579 1657 579 1657 579 579 579 1657 579 1657 579 1657 579 39496 8993 2209 579 94796
+#
+name: Toshiba
+type: raw
+frequency: 38029
+data: 8941 4470 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 552 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 1683 552 552 552 552 552 552 552 1683 552 552 552 552 552 552 552 552 552 1683 552 1683 552 1683 552 552 552 1683 552 1683 552 1683 552 1683 552 40758 8941 2235 552 96321
+#
+name: ToteVision
+type: raw
+frequency: 38381
+data: 8885 4455 573 573 573 573 573 573 573 1694 573 573 573 573 573 573 573 573 573 1694 573 1694 573 1694 573 573 573 1694 573 1694 573 1694 573 1694 573 1694 573 573 573 1694 573 573 573 1694 573 573 573 573 573 573 573 573 573 1694 573 573 573 1694 573 573 573 1694 573 1694 573 1694 573 39499 8885 2241 573 95125
+#
+name: Western Digital
+type: raw
+frequency: 38381
+data: 8911 4429 573 573 573 573 573 1667 573 573 573 573 573 573 573 573 573 1667 573 1667 573 573 573 573 573 1667 573 1667 573 1667 573 1667 573 573 573 573 573 573 573 1667 573 1667 573 573 573 573 573 573 573 573 573 1667 573 1667 573 573 573 573 573 1667 573 1667 573 1667 573 1667 573 39785 8911 2241 573 94995 8911 2241 573 94995
+#
+name: Zenith
+type: raw
+frequency: 38029
+data: 447 10992 447 10992 447 10992 447 7363 447 10992 447 23219
