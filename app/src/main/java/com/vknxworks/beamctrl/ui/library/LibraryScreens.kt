@@ -67,11 +67,14 @@ import com.vknxworks.beamctrl.ui.theme.Gutter
 import kotlinx.coroutines.delay
 import java.text.NumberFormat
 
-/** Loads something from the library, keyed so it reloads when [key] changes. Null while loading. */
+/**
+ * Loads something from the library, keyed so it reloads when [key] changes. Null while loading,
+ * and if the library can't be read (an error here would otherwise close the app).
+ */
 @Composable
 private fun <T> rememberLibrary(key: Any?, block: suspend IrLibrary.() -> T): T? {
     val library = LocalContext.current.container.library
-    val state by produceState<T?>(null, key) { value = library.block() }
+    val state by produceState<T?>(null, key) { value = runCatching { library.block() }.getOrNull() }
     return state
 }
 

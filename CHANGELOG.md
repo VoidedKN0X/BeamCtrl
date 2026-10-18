@@ -4,6 +4,21 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.2.1 (2026-10-18)
+
+A security check of the new code library and Turn off any TV. Everything works as before, with one change to when Turn off any TV stops.
+
+### Security
+
+- **Turn off any TV now stops when you leave the app.** Before, going to the home screen, switching to another app or locking the phone while it was running kept the IR blaster sending power codes in the background for up to about a minute and a half, with no way to tap Stop. It now stops straight away in all of those cases, just as it already did when you went back from the screen. When you come back, tap Continue to carry on from where it stopped.
+- **A damaged entry in the code library can't close the app.** If a remote's entry in the built-in library is ever unreadable, it's left out of the list instead of stopping the whole library from opening, and the library screens show nothing rather than closing the app if the library can't be read.
+
+### Checked, no change needed
+
+- BeamCtrl still has no internet access: the released app asks only for the IR blaster permission, and the code library is read from inside the app.
+- Remotes from the library, files you import and backups you restore all go through the same checks (size, number of buttons, carrier frequency, signal length and names).
+- Turn off any TV can only be started from its own screen, never from outside the app, and always ends after the 368 codes in the list.
+
 ## v0.2.0 (2026-10-18)
 
 A built-in code library with thousands of remotes, and a way to turn off any TV.

@@ -75,16 +75,23 @@ class IrLibrary(private val context: Context) {
                     "BeamCtrl-IRDB" -> source = "Flipper-IRDB ${f.getOrNull(2).orEmpty()} (${f.getOrNull(3).orEmpty()})"
                     "C" -> names += f.getOrElse(1) { "Other" }
                     "D" -> if (f.size >= 8) {
-                        devices += LibraryDevice(
-                            id = devices.size,
-                            category = f[1].toInt(),
-                            brand = f[2],
-                            model = f[3],
-                            signalCount = f[4].toInt(),
-                            hasPower = f[5] == "1",
-                            offset = f[6].toLong(),
-                            length = f[7].toInt(),
-                        )
+                        // A damaged line is left out rather than stopping the whole library from opening.
+                        val category = f[1].toIntOrNull()?.takeIf { it >= 0 }
+                        val signals = f[4].toIntOrNull()?.takeIf { it >= 0 }
+                        val offset = f[6].toLongOrNull()?.takeIf { it >= 0 }
+                        val length = f[7].toIntOrNull()?.takeIf { it in 1..MAX_BLOB }
+                        if (category != null && signals != null && offset != null && length != null) {
+                            devices += LibraryDevice(
+                                id = devices.size,
+                                category = category,
+                                brand = f[2],
+                                model = f[3],
+                                signalCount = signals,
+                                hasPower = f[5] == "1",
+                                offset = offset,
+                                length = length,
+                            )
+                        }
                     }
                 }
             }
@@ -133,7 +140,7 @@ class IrLibrary(private val context: Context) {
 
     /** The device's buttons, through the same checks as an imported .ir file. */
     suspend fun load(device: LibraryDevice): FlipperIr.ImportResult = withContext(Dispatchers.IO) {
-        require(device.length in 1..MAX_BLOB) { "That remote is damaged" }
+        require(device.length in 1..MAX_BLOB && device.offset >= 0) { "That remote is damaged" }
         val packed = ByteArray(device.length)
         context.assets.openFd("$DIR/data.bin").use { afd ->
             require(device.offset + device.length <= afd.length) { "That remote is damaged" }
