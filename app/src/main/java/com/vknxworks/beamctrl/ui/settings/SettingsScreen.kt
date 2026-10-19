@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Dialpad
@@ -58,6 +59,7 @@ import java.util.Locale
 
 private const val SPONSOR_URL = "https://github.com/sponsors/VoidedKN0X"
 private const val REPO_URL = "https://github.com/VoidedKN0X/BeamCtrl"
+private const val ISSUES_URL = "https://github.com/VoidedKN0X/BeamCtrl/issues"
 private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.html"
 
 @Composable
@@ -197,6 +199,13 @@ fun SettingsScreen() {
                 onClick = { open(SPONSOR_URL) },
             )
             GroupRow(
+                stringResource(R.string.bugs_title),
+                stringResource(R.string.bugs_subtitle),
+                icon = Icons.Filled.BugReport,
+                showChevron = true,
+                onClick = { open(ISSUES_URL) },
+            )
+            GroupRow(
                 stringResource(R.string.source_title),
                 stringResource(R.string.source_subtitle),
                 icon = Icons.Filled.Code,
@@ -213,7 +222,7 @@ fun SettingsScreen() {
         }
 
         Text(
-            "BeamCtrl ${BuildConfig.VERSION_NAME}  ·  VKNXWorks",
+            stringResource(R.string.about_footer, BuildConfig.VERSION_NAME),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth().padding(16.dp),
