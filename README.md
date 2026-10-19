@@ -26,6 +26,10 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Vibrate on press**, keep the screen on while a remote is open, and show or hide the number pad
 - Light, dark and pure black themes, with an ember accent or your wallpaper's Material You colours; tablet and foldable layout
 
+## Screenshots
+
+Coming soon.
+
 ## Requirements
 
 - Android 13 or newer
