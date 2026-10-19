@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.TRANSMIT_IR" />
-    <!-- BeamCtrl never goes online. Make sure no library quietly adds network access. -->
-    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <!-- Used only for the opt-in anonymous usage stats (off unless the user says yes). Remotes and the
+         code library never need it. Network state isn't needed, so make sure no library adds it. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
     <uses-feature android:name="android.hardware.consumerir" android:required="false" />
 

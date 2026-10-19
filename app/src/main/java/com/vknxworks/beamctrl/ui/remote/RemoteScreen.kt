@@ -91,6 +91,8 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
     var renaming by remember { mutableStateOf(false) }
     var pickingType by remember { mutableStateOf(false) }
     var confirmDelete by remember { mutableStateOf(false) }
+    // Usage stats count a remote as used once per visit, by its device type only.
+    var usedCounted by remember(id) { mutableStateOf(false) }
 
     val exportIr = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
         val r = remote ?: return@rememberLauncherForActivityResult
@@ -125,7 +127,13 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
         holdToRepeat = settings.holdToRepeat,
         haptics = settings.haptics,
         onEdit = { button, role -> editTarget = EditTarget(button, role) },
-        onSent = { c.remotes.markUsed(id) },
+        onSent = {
+            c.remotes.markUsed(id)
+            if (!usedCounted) {
+                usedCounted = true
+                c.telemetry.track("remote_used", mapOf("type" to remote.type.name.lowercase()))
+            }
+        },
     )
 
     Column(Modifier.fillMaxSize()) {

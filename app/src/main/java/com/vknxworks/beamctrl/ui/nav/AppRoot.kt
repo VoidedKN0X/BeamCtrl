@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,6 +67,7 @@ import com.vknxworks.beamctrl.ui.components.LocalHazeState
 import com.vknxworks.beamctrl.ui.remote.RemoteScreen
 import com.vknxworks.beamctrl.ui.remotes.RemotesScreen
 import com.vknxworks.beamctrl.ui.settings.SettingsScreen
+import com.vknxworks.beamctrl.ui.settings.UsageStatsPrompt
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 
@@ -97,6 +99,15 @@ private fun MainScaffold() {
     val backStack by navController.currentBackStackEntryAsState()
     val dest = backStack?.destination
     val selectedIndex = topDestinations.indexOfFirst { top -> dest?.hierarchy?.any { it.hasRoute(top.route::class) } == true }
+
+    // Usage stats (only if the user opted in): the kind of screen, never its contents, a remote or a search.
+    val telemetry = LocalContext.current.container.telemetry
+    val entryId = backStack?.id
+    val screen = dest?.route?.let(::screenName)
+    LaunchedEffect(entryId) {
+        if (screen != null) telemetry.track("screen_viewed", mapOf("screen" to screen))
+    }
+    UsageStatsPrompt()
 
     fun selectTab(i: Int) {
         navController.navigate(topDestinations[i].route) {
@@ -183,6 +194,13 @@ private fun PhoneLayout(
         }
     }
 }
+
+/**
+ * "com.vknxworks.beamctrl.ui.nav.LibraryBrandRoute/{category}/{brand}" -> "LibraryBrand". Only the route's class
+ * name: arguments (remote IDs, brands, search text) are dropped.
+ */
+private fun screenName(route: String): String =
+    route.substringBefore('/').substringBefore('?').substringAfterLast('.').removeSuffix("Route")
 
 @Composable
 private fun AppNavHost(navController: NavHostController) {
