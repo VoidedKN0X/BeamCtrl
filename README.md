@@ -31,6 +31,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - Android 13 or newer
 - A phone with a built-in IR blaster (many Xiaomi, OPPO, Honor, Huawei and Vivo phones have one)
 - Permissions: the IR blaster, and internet only for the optional [usage stats](#usage-stats)
+- **Google-free:** works without Google Play services, contains no Google libraries that contact Google, and draws emoji with your phone's own emoji font
 
 ## Install
 
