@@ -89,7 +89,7 @@ Or open the folder in Android Studio and press **Run** with your phone connected
 
 ## Support the project
 
-BeamCtrl is free and open source. If it's useful to you, you can support development on [GitHub Sponsors](https://github.com/sponsors/VoidedKN0X), or tap **Support BeamCtrl** under **Settings → About** in the app. Starring the repo and [reporting bugs](https://github.com/VoidedKN0X/BeamCtrl/issues) helps too.
+BeamCtrl is free and open source. If it's useful to you, you can support development on [GitHub Sponsors](https://github.com/sponsors/VoidedKN0X). In the app, **Settings → About** has **Support BeamCtrl** and **Report a bug**, which opens the [issue tracker](https://github.com/VoidedKN0X/BeamCtrl/issues). Starring the repo helps too.
 
 ## The Ctrl series
 
