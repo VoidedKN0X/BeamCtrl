@@ -23,18 +23,20 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Edit any remote**: change a button's code, add buttons, or export it as a Flipper Zero file
 - **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Pronto hex and raw timings
 - **Backup and restore** all remotes as a single file
-- Light, dark and pure black themes with Material You colours; tablet and foldable layout
+- **Vibrate on press**, keep the screen on while a remote is open, and show or hide the number pad
+- Light, dark and pure black themes, with an ember accent or your wallpaper's Material You colours; tablet and foldable layout
 
 ## Requirements
 
 - Android 13 or newer
 - A phone with a built-in IR blaster (many Xiaomi, OPPO, Honor, Huawei and Vivo phones have one)
+- Permissions: the IR blaster, and internet only for the optional [usage stats](#usage-stats)
 
 ## Install
 
 1. Download the latest `.apk` file from the [Releases page](https://github.com/VoidedKN0X/BeamCtrl/releases/latest).
 2. Open it on your phone. Android may ask you to allow installing apps from your browser or file manager.
-3. Updates install over the old version. Your settings and login are kept.
+3. Updates install over the old version. Your remotes and settings are kept.
 
 **Automatic updates:** on your phone, tap one of the buttons below.
 

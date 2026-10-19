@@ -4,6 +4,12 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+### Changed
+
+- **README brought up to date with BeamCtrl 0.2.3.** The install steps no longer say your "login" is kept on update (BeamCtrl has no account); they now say your remotes and settings are kept. The feature list now also mentions the Vibrate on press, Keep screen on and Number pad settings, and that the colours are either BeamCtrl's ember accent or your wallpaper's Material You colours. Requirements now list the permissions the app asks for: the IR blaster, and internet only for the optional usage stats. No change to the app itself
+
 ## v0.2.3 (2026-10-19)
 
 A privacy review of the new optional usage stats. They're still off unless you said yes, and the review confirmed that they're the only thing in BeamCtrl that uses the internet: remotes, the code library, Turn off any TV, imports and backups never go online, and the stats only ever go to the stats server over HTTPS, without redirects, cookies or caching. This release makes switching them off take effect even more strictly.
