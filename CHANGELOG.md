@@ -4,6 +4,14 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.2.5 (2026-10-19)
+
+### New
+
+- **Support BeamCtrl** under Settings → About opens VKNXWorks' GitHub Sponsors page in your browser. BeamCtrl is free and open source, and this is the place to sponsor its development if you'd like to.
+- **New About group at the bottom of Settings.** Besides **Support BeamCtrl** it has **Source code and issues**, which opens BeamCtrl's GitHub page where you can read the code and report bugs, and **Licence**, which opens the GNU General Public License v3.0 that BeamCtrl is released under. The app version line stays underneath.
+- The README's **Support the project** section now also points to the **Support BeamCtrl** button.
+
 ## v0.2.4 (2026-10-19)
 
 BeamCtrl is now completely Google-free. Nothing changes in how you use it.

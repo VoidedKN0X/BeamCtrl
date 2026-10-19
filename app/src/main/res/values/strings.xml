@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BeamCtrl</string>
+    <string name="group_about">About</string>
+    <string name="support_title">Support BeamCtrl</string>
+    <string name="support_subtitle">BeamCtrl is free and open source. Sponsor development on GitHub</string>
+    <string name="source_title">Source code and issues</string>
+    <string name="source_subtitle">github.com/VoidedKN0X/BeamCtrl</string>
+    <string name="licence_title">Licence</string>
+    <string name="licence_subtitle">GNU General Public License v3.0</string>
 </resources>

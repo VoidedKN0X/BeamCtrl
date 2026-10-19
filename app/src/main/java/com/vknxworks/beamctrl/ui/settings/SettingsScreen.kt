@@ -1,5 +1,8 @@
 package com.vknxworks.beamctrl.ui.settings
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,8 +16,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Dialpad
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Repeat
@@ -29,10 +35,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vknxworks.beamctrl.BuildConfig
+import com.vknxworks.beamctrl.R
 import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.data.readTextCapped
 import com.vknxworks.beamctrl.data.settings.AppSettings
@@ -48,6 +56,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
+private const val SPONSOR_URL = "https://github.com/sponsors/VoidedKN0X"
+private const val REPO_URL = "https://github.com/VoidedKN0X/BeamCtrl"
+private const val LICENCE_URL = "https://www.gnu.org/licenses/gpl-3.0.html"
+
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
@@ -57,6 +69,12 @@ fun SettingsScreen() {
     val remotes by c.remotes.remotes.collectAsStateWithLifecycle()
     fun set(transform: (AppSettings) -> AppSettings) {
         scope.launch { c.settings.update(transform) }
+    }
+    fun open(url: String) {
+        try {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (_: ActivityNotFoundException) {
+        }
     }
 
     val exportBackup = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
@@ -168,6 +186,30 @@ fun SettingsScreen() {
                     icon = Icons.Filled.BarChart,
                 ) { v -> set { it.copy(usageStats = v, usageStatsAsked = true) } }
             }
+        }
+
+        Group(stringResource(R.string.group_about)) {
+            GroupRow(
+                stringResource(R.string.support_title),
+                stringResource(R.string.support_subtitle),
+                icon = Icons.Filled.Favorite,
+                showChevron = true,
+                onClick = { open(SPONSOR_URL) },
+            )
+            GroupRow(
+                stringResource(R.string.source_title),
+                stringResource(R.string.source_subtitle),
+                icon = Icons.Filled.Code,
+                showChevron = true,
+                onClick = { open(REPO_URL) },
+            )
+            GroupRow(
+                stringResource(R.string.licence_title),
+                stringResource(R.string.licence_subtitle),
+                icon = Icons.Filled.Gavel,
+                showChevron = true,
+                onClick = { open(LICENCE_URL) },
+            )
         }
 
         Text(
