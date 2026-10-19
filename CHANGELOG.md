@@ -4,13 +4,22 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
-## Unreleased
+## v0.2.2 (2026-10-19)
 
-README only; the app itself hasn't changed, so this doesn't make a new release.
+**BeamCtrl now has the internet permission, used only for optional anonymous usage stats.** Until now BeamCtrl had no internet access at all. It still works fully offline: your remotes, the code library, Turn off any TV, imports and backups never go online. The new permission is used for one thing only, the usage stats below, and they're **off unless you say yes**. If you say no (or never answer), BeamCtrl sends nothing.
+
+### New
+
+- **Optional anonymous usage stats.** When you first open this version, BeamCtrl asks once whether you'd like to share anonymous usage stats, so I can see how many people use the app and which features they use. Nothing is sent unless you tap **Share stats**, and you can switch it on or off any time in **Settings > Usage stats**
+- **What's shared:** which screens you open (for example "Remotes", "Library" or "Settings", never which remote), the kind of device a remote is for (TV, air conditioner, projector and so on) the first time you press one of its buttons on each visit, that you searched or browsed the code library and which device type you picked, that you saved a remote from the library, that you started Turn off any TV, whether your phone has an IR blaster, the app version, Android version, phone model, language, and phone or tablet
+- **What's never shared:** your remotes' names, brands, models or IR codes, what you search for, files you import or back up, or any ID that follows you between sessions. Each session gets a new random ID, and stats from before and after you switch them off and on again aren't linked
+- **Where it goes:** to VKNXWorks' own self-hosted server (Aptabase), not to Google or any analytics company. Builds you make from source can't send stats at all, and the setting doesn't appear in them
 
 ### Changed
 
+- **Internet permission added, for the usage stats only.** Earlier versions removed the internet permission entirely. This version asks for it so the optional stats can be sent; the network-state permission is still removed, and the IR blaster permission is unchanged
 - **PrintCtrl in the Ctrl series list.** The README's table of Ctrl apps now includes [PrintCtrl](https://github.com/VoidedKN0X/PrintCtrl), the app for Bambu Lab printers through a self-hosted Bambuddy server, and Spoolman spools.
+- The README has a new **Usage stats** section listing exactly what's collected, and explains that the app still works fully offline
 
 ## v0.2.1 (2026-10-18)
 
