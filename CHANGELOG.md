@@ -4,12 +4,17 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
-## Unreleased
+## v0.2.3 (2026-10-19)
 
-Not in a release yet; this goes out with the next version.
+A privacy review of the new optional usage stats. They're still off unless you said yes, and the review confirmed that they're the only thing in BeamCtrl that uses the internet: remotes, the code library, Turn off any TV, imports and backups never go online, and the stats only ever go to the stats server over HTTPS, without redirects, cookies or caching. This release makes switching them off take effect even more strictly.
+
+### Security
+
+- **Switching usage stats off now throws away anything not yet sent.** Before, a stat recorded just before you switched them off could still be waiting in the app, and if you switched stats back on within a few seconds it could have been sent after all. Now everything waiting is discarded the moment you switch stats off, so nothing recorded before that point can ever go out
 
 ### Changed
 
+- **README: the usage stats list is now exact.** It now also mentions that saving a remote from the code library is counted (with its device type), and that Turn off any TV records whether it carried on from where it stopped. Nothing new is collected; these were already listed in the 0.2.2 notes
 - **All Ctrl apps in the README.** The README's Ctrl series table now lists all 14 apps. New in the table: [ArrCtrl](https://github.com/VoidedKN0X/ArrCtrl) (Radarr, Sonarr, Prowlarr, Bazarr, qBittorrent, autobrr and Cleanuparr in one app), [PaperCtrl](https://github.com/VoidedKN0X/PaperCtrl) (scan and browse documents on Paperless-ngx), [ProxCtrl](https://github.com/VoidedKN0X/ProxCtrl) (manage your Proxmox VE server) and [TrueCtrl](https://github.com/VoidedKN0X/TrueCtrl) (monitor and manage your TrueNAS server). Every app in the table is also in the [CtrlF-Droid repo](https://voidedkn0x.github.io/CtrlF-Droid/) for automatic updates. No change to the app itself.
 
 ## v0.2.2 (2026-10-19)

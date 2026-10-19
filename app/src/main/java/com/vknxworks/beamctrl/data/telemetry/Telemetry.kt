@@ -57,7 +57,9 @@ class Telemetry(
             .put("deviceModel", Build.MODEL ?: "")
     }
 
-    private val queue = Channel<JSONObject>(capacity = 64, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val queue = Channel<Queued>(capacity = 64, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    /** Bumped when stats are switched off: anything queued before that is thrown away, never sent. */
+    @Volatile private var generation = 0
     @Volatile private var sessionId = newSessionId()
     @Volatile private var lastEventAt = 0L
 
@@ -79,12 +81,14 @@ class Telemetry(
                         firstRead && openPending && s.usageStats -> { openPending = false; trackOpened() }
                         // Switched on in Settings or the first-run question: start a fresh session.
                         !firstRead && !wasOptedIn && s.usageStats -> { resetSession(); trackOpened() }
+                        // Switched off: drop whatever is still waiting to be sent.
+                        !firstRead && wasOptedIn && !s.usageStats -> discardQueued()
                     }
                 }
             }
             // One event at a time, in order. Failures are dropped: stats are never stored or retried.
             scope.launch(Dispatchers.IO) {
-                for (event in queue) send(event)
+                for (item in queue) send(item)
             }
         }
     }
@@ -122,7 +126,13 @@ class Telemetry(
             .put("eventName", name)
             .put("systemProps", systemProps)
             .put("props", JSONObject(props))
-        queue.trySend(event)
+        queue.trySend(Queued(generation, event))
+    }
+
+    /** Throws away every event that hasn't been sent yet, so switching stats off takes effect at once. */
+    private fun discardQueued() {
+        generation++
+        while (queue.tryReceive().isSuccess) Unit
     }
 
     /** A fresh session after opting back in, so stats from before and after aren't linked. */
@@ -132,9 +142,10 @@ class Telemetry(
     }
 
     /** A minimal one-off HTTPS request: short timeouts, no redirects, no cookies or caching. */
-    private fun send(event: JSONObject) {
-        // The user may have opted out while this was queued.
-        if (!enabled) return
+    private fun send(item: Queued) {
+        // The user may have opted out (and maybe back in) while this was queued.
+        if (!enabled || item.generation != generation) return
+        val event = item.event
         runCatching {
             val url = URL("${BuildConfig.APTABASE_HOST.trimEnd('/')}/api/v0/event")
             val conn = url.openConnection() as HttpURLConnection
@@ -168,6 +179,8 @@ class Telemetry(
 
     private fun timestamp(ms: Long): String =
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }.format(Date(ms))
+
+    private class Queued(val generation: Int, val event: JSONObject)
 
     companion object {
         private const val TIMEOUT_MS = 10_000
