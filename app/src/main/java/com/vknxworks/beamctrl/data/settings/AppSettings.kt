@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 val Context.appDataStore: DataStore<Preferences> by preferencesDataStore(name = "beamctrl")
 
@@ -26,10 +27,6 @@ data class AppSettings(
     val showNumberPad: Boolean = true,
     val theme: ThemeChoice = ThemeChoice.SYSTEM,
     val dynamicColor: Boolean = false,
-    /** Opt-in anonymous usage stats (off until the user says yes). */
-    val usageStats: Boolean = false,
-    /** Whether the one-time usage stats question has been answered. */
-    val usageStatsAsked: Boolean = false,
 )
 
 class SettingsRepository(private val context: Context, scope: CoroutineScope) {
@@ -40,8 +37,18 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         val numbers = booleanPreferencesKey("number_pad")
         val theme = stringPreferencesKey("theme")
         val dynamic = booleanPreferencesKey("dynamic_color")
-        val usageStats = booleanPreferencesKey("usage_stats")
-        val usageStatsAsked = booleanPreferencesKey("usage_stats_asked")
+    }
+
+    init {
+        // BeamCtrl 0.2.7 removed the optional anonymous stats. Delete the two settings they used (their
+        // keys start with "usage_"), so nothing from them stays on the phone after the update.
+        scope.launch {
+            runCatching {
+                context.appDataStore.edit { p ->
+                    p.asMap().keys.filter { it.name.startsWith("usage_") }.forEach { p.remove(booleanPreferencesKey(it.name)) }
+                }
+            }
+        }
     }
 
     val settings: StateFlow<AppSettings> = context.appDataStore.data
@@ -58,8 +65,6 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         showNumberPad = this[K.numbers] ?: true,
         theme = this[K.theme]?.let { n -> ThemeChoice.entries.firstOrNull { it.name == n } } ?: ThemeChoice.SYSTEM,
         dynamicColor = this[K.dynamic] ?: false,
-        usageStats = this[K.usageStats] ?: false,
-        usageStatsAsked = this[K.usageStatsAsked] ?: false,
     )
 
     suspend fun update(transform: (AppSettings) -> AppSettings) {
@@ -71,8 +76,6 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
             p[K.numbers] = s.showNumberPad
             p[K.theme] = s.theme.name
             p[K.dynamic] = s.dynamicColor
-            p[K.usageStats] = s.usageStats
-            p[K.usageStatsAsked] = s.usageStatsAsked
         }
     }
 }

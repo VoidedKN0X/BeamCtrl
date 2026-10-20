@@ -4,11 +4,16 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
-## Unreleased
+## v0.2.7 (2026-10-20)
+
+### Privacy
+
+- **No more usage stats: BeamCtrl is now telemetry-free.** The optional anonymous usage stats are gone completely, along with the Usage stats setting and the one-time question. The app no longer contacts VKNXWorks' stats server at all, and the settings it used are deleted from your phone when you update
+- **No internet permission any more.** The stats were the only thing that used it, so BeamCtrl no longer asks for it and can never connect to the internet. Remotes, the code library, Turn off any TV, imports and backups always worked offline and still do
 
 ### Changed
 
-- **README**: a Screenshots section (screenshots are coming soon), and a link preview image (`.github/assets/social-preview.png`) with BeamCtrl's icon, name and summary, for when the repo is shared on Reddit, Discord or elsewhere
+- **README**: a Screenshots section (screenshots are coming soon), and a link preview image (`.github/assets/social-preview.png`) with BeamCtrl's icon, name and summary, for when the repo is shared on Reddit, Discord or elsewhere. It also gets a "Telemetry-free" badge and tag, and a Privacy section in place of the old Usage stats section, and the permissions list now says the IR blaster only
 
 ## v0.2.6 (2026-10-19)
 

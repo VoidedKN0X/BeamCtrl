@@ -2,7 +2,7 @@
 
 **Turn your phone's IR blaster into a TV remote.**
 
-[![Latest release](https://img.shields.io/github/v/release/VoidedKN0X/BeamCtrl?label=download)](https://github.com/VoidedKN0X/BeamCtrl/releases/latest) ![Android 13+](https://img.shields.io/badge/Android-13%2B-3DDC84?logo=android&logoColor=white) [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE) [![Sponsor](https://img.shields.io/badge/sponsor-GitHub-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/VoidedKN0X)
+[![Latest release](https://img.shields.io/github/v/release/VoidedKN0X/BeamCtrl?label=download)](https://github.com/VoidedKN0X/BeamCtrl/releases/latest) ![Android 13+](https://img.shields.io/badge/Android-13%2B-3DDC84?logo=android&logoColor=white) [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE) ![Telemetry-free](https://img.shields.io/badge/telemetry-none-brightgreen) [![Sponsor](https://img.shields.io/badge/sponsor-GitHub-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/VoidedKN0X)
 
 BeamCtrl is a remote control app for Android phones with an infrared (IR) blaster. Find your device in the built-in code library, pick your TV brand or import a Flipper Zero file, and control it from your phone.
 
@@ -13,7 +13,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 ## Features
 
 - **Code library with 8,500+ remotes** for TVs, soundbars, projectors, air conditioners, fans, lights and more, built into the app, so it works offline
-- **Works fully offline.** Nothing you do in BeamCtrl needs the internet; the only thing that can go online is the optional usage stats below, and only if you say yes
+- **Works fully offline.** BeamCtrl doesn't have the internet permission and never goes online
 - **Try every button before you save** a remote
 - **Turn off any TV**: sends every TV power code in turn until the TV switches off
 - **Ready-made remotes** for Samsung, LG, Sony, Philips and Vizio TVs, and **Find my TV** to work out which one yours uses
@@ -34,7 +34,7 @@ Coming soon.
 
 - Android 13 or newer
 - A phone with a built-in IR blaster (many Xiaomi, OPPO, Honor, Huawei and Vivo phones have one)
-- Permissions: the IR blaster, and internet only for the optional [usage stats](#usage-stats)
+- Permissions: the IR blaster only (no internet)
 - **Google-free:** works without Google Play services, contains no Google libraries that contact Google, and draws emoji with your phone's own emoji font
 
 ## Install
@@ -62,16 +62,12 @@ If the Obtainium button doesn't open the app, add `https://github.com/VoidedKN0X
 
 Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use the code library, a ready-made remote or a Flipper Zero file instead.
 
-## Usage stats
+## Privacy
 
-BeamCtrl can share anonymous usage stats, **only if you say yes**. It asks once when you first open the app, and you can change it any time in **Settings > Usage stats**. The app works exactly the same either way, fully offline.
+**Telemetry-free.** BeamCtrl has no analytics, crash reporting, usage stats or tracking of any kind. It has no internet permission, works fully offline and never connects to the internet.
 
-- **Why the app has the internet permission:** this is the only thing it's used for. Remotes, the code library, Turn off any TV, imports and backups never go online, and with stats off (the default) BeamCtrl sends nothing at all. Switching them off also throws away anything not yet sent.
-- **Shared:** which screens you open (the kind of screen, never which remote), the kind of device a remote is for (TV, air conditioner, projector and so on) when you use it, that you searched or browsed the code library, which device type you picked and that you saved a remote from it, that you used Turn off any TV (and whether it carried on from where it stopped), whether your phone has an IR blaster, the app version, Android version, phone model, language, and phone or tablet.
-- **Never shared:** your remotes' names, brands, models or IR codes, what you search for, files you import, or any ID that stays the same between sessions.
-- **Where:** VKNXWorks' own self-hosted [Aptabase](https://aptabase.com) server. Nothing goes to Google or analytics companies. Like any website, the server sees your IP address; Aptabase uses it only to work out the country and doesn't store it.
-
-Builds from source don't include the stats key, so they can't send anything and the setting is hidden. The code is in [`Telemetry.kt`](app/src/main/java/com/vknxworks/beamctrl/data/telemetry/Telemetry.kt).
+- Remotes, the code library, Turn off any TV, imports and backups all stay on your phone.
+- The Support, Report a bug, Source code and Licence links in Settings open in your browser, only when you tap them.
 
 ## Build from source
 

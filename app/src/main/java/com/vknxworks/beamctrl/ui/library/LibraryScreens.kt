@@ -93,15 +93,6 @@ fun LibraryScreen(initialQuery: String) {
     }
     val index = rememberLibrary(Unit) { index() }
     val results = rememberLibrary(debounced) { if (debounced.isBlank()) emptyList() else search(debounced) }
-    // Usage stats: only that a search happened (once per visit), never what was searched for.
-    val telemetry = LocalContext.current.container.telemetry
-    var searchCounted by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(debounced) {
-        if (debounced.isNotBlank() && !searchCounted) {
-            searchCounted = true
-            telemetry.track("library_browsed", mapOf("action" to "search"))
-        }
-    }
 
     Column(Modifier.fillMaxSize()) {
         ScreenTopBar("Code library")
@@ -156,14 +147,6 @@ fun LibraryCategoryScreen(categoryIndex: Int) {
     var filter by rememberSaveable { mutableStateOf("") }
     val c = LocalContext.current.container
     val library = c.library
-    // Usage stats: the device type of the category (tv, ac…), never a brand.
-    var categoryCounted by rememberSaveable(categoryIndex) { mutableStateOf(false) }
-    LaunchedEffect(category?.index) {
-        val cat = category ?: return@LaunchedEffect
-        if (categoryCounted) return@LaunchedEffect
-        categoryCounted = true
-        c.telemetry.track("library_browsed", mapOf("action" to "category", "type" to cat.type.name.lowercase()))
-    }
 
     Column(Modifier.fillMaxSize()) {
         ScreenTopBar(category?.name ?: "Code library")

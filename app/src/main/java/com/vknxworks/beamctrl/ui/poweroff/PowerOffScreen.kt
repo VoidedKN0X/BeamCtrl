@@ -92,8 +92,6 @@ fun PowerOffScreen() {
     fun start(from: Int) {
         val list = codes ?: return
         finished = false
-        // Usage stats: only that it was started, and whether it carried on from where it stopped.
-        c.telemetry.track("power_off_used", mapOf("resumed" to (from > 0).toString()))
         job = scope.launch {
             running = true
             try {
