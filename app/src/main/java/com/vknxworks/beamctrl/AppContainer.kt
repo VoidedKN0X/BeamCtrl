@@ -3,7 +3,6 @@ package com.vknxworks.beamctrl
 import android.content.Context
 import com.vknxworks.beamctrl.data.RemoteRepository
 import com.vknxworks.beamctrl.data.settings.SettingsRepository
-import com.vknxworks.beamctrl.data.telemetry.Telemetry
 import com.vknxworks.beamctrl.ir.Blaster
 import com.vknxworks.beamctrl.ir.IrLibrary
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +17,6 @@ class AppContainer(val context: Context) {
     val remotes = RemoteRepository(context, appScope)
     val blaster = Blaster(context)
     val library = IrLibrary(context)
-    val telemetry = Telemetry(context, settings, appScope, hasIr = blaster.available)
 }
 
 val Context.container: AppContainer

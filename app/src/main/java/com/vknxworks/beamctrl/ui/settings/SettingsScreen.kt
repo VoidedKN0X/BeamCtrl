@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backup
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DarkMode
@@ -177,17 +176,6 @@ fun SettingsScreen() {
                 icon = Icons.Filled.Restore,
                 onClick = { restoreBackup.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) },
             )
-        }
-
-        if (c.telemetry.available) {
-            Group("Usage stats", footer = USAGE_STATS_DESCRIPTION) {
-                GroupSwitch(
-                    "Share anonymous usage stats",
-                    "Helps decide what to improve next",
-                    checked = settings.usageStats,
-                    icon = Icons.Filled.BarChart,
-                ) { v -> set { it.copy(usageStats = v, usageStatsAsked = true) } }
-            }
         }
 
         Group(stringResource(R.string.group_about)) {

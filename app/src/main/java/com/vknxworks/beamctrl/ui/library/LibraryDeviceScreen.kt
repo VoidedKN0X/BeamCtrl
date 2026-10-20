@@ -128,7 +128,6 @@ fun LibraryDeviceScreen(id: Int) {
                                     val saved = c.remotes.add(
                                         preview.copy(id = java.util.UUID.randomUUID().toString(), name = name.trim().ifEmpty { s.device.title }),
                                     )
-                                    c.telemetry.track("library_browsed", mapOf("action" to "saved", "type" to type.name.lowercase()))
                                     nav.openRemote(saved.id, fromAdd = true)
                                 },
                                 icon = Icons.Filled.Check,
