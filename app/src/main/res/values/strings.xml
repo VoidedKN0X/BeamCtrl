@@ -38,23 +38,51 @@
     <string name="number_pad_subtitle">Show 0 to 9 on remotes that have them</string>
     <string name="keep_screen_on">Keep screen on</string>
     <string name="keep_screen_on_subtitle">While a remote is open</string>
-    <string name="backup_group">Backup</string>
-    <string name="backup_footer">Your remotes also move to a new phone in a direct phone-to-phone transfer. They aren\'t put in any cloud backup: keep an exported file somewhere safe.</string>
-    <string name="backup_export">Export all remotes</string>
-    <string name="backup_export_empty">Nothing to export yet</string>
-    <string name="backup_restore">Restore from backup</string>
-    <string name="backup_restore_subtitle">Adds the remotes in a backup file to the ones here</string>
-    <string name="backup_saved">Backup saved</string>
-    <string name="backup_save_failed">Couldn\'t save the backup</string>
-    <string name="cancel">Cancel</string>
-    <string name="backup_not_beamctrl">That isn\'t a BeamCtrl backup</string>
-    <plurals name="backup_export_subtitle">
-        <item quantity="one">%d remote to a JSON file</item>
-        <item quantity="other">%d remotes to a JSON file</item>
+    <!-- You page (tap the profile picture) -->
+    <string name="you_title">You</string>
+    <string name="you_and_settings">You and settings</string>
+    <string name="you_this_phone">This phone</string>
+    <string name="you_blaster_ready">IR blaster ready</string>
+    <string name="you_blaster_missing">No IR blaster found</string>
+    <plurals name="you_remote_count">
+        <item quantity="one">%d remote</item>
+        <item quantity="other">%d remotes</item>
     </plurals>
+    <string name="you_no_remotes">No remotes yet</string>
+    <string name="settings_subtitle">Appearance, privacy and security, IR blaster and buttons</string>
+
+    <!-- Backup (on the You page) -->
+    <string name="backup_group">Backup</string>
+    <string name="backup_footer">To move BeamCtrl to another phone, back up here, copy the file to the new phone, then tap Restore from a file in BeamCtrl there. The file holds every remote and setting, but never the app lock PIN or fingerprint: set the app lock up again on the new phone. The file isn't encrypted, so keep it somewhere private. BeamCtrl isn't in Android's cloud backup or phone-to-phone transfer, so this file is the only copy of your remotes off this phone.</string>
+    <string name="backup_to_file">Back up to a file</string>
+    <plurals name="backup_to_file_subtitle">
+        <item quantity="one">Your remote and all settings, saved where you choose</item>
+        <item quantity="other">All %d remotes and your settings, saved where you choose</item>
+    </plurals>
+    <string name="backup_to_file_subtitle_empty">Your settings, saved where you choose (no remotes yet)</string>
+    <string name="backup_restore">Restore from a file</string>
+    <string name="backup_restore_subtitle">Replaces the remotes and settings on this phone with a backup file, after asking first</string>
+    <string name="backup_file_name">beamctrl-backup-%1$s.json</string>
+    <string name="backup_saved">Backup saved</string>
+    <string name="backup_save_failed">Couldn't save the backup. Nothing was written.</string>
+    <string name="cancel">Cancel</string>
+    <string name="backup_restore_confirm_title">Restore this backup?</string>
+    <string name="backup_restore_confirm_body">This backup from %1$s has %2$s and all of BeamCtrl's settings. Restoring replaces every remote and setting on this phone (%3$s now). The app lock and its PIN stay as they are on this phone.</string>
+    <string name="backup_restore_confirm_body_v1">This older backup has %1$s and no settings. Restoring replaces every remote on this phone (%2$s now); your settings and the app lock stay as they are.</string>
+    <string name="backup_restore_confirm">Replace and restore</string>
+    <string name="backup_restore_failed_title">Can't restore this file</string>
+    <string name="backup_error_unreadable">BeamCtrl couldn't open that file. Nothing on this phone was changed.</string>
+    <string name="backup_error_too_big">That file is far bigger than any BeamCtrl backup, so it wasn't opened. Nothing on this phone was changed.</string>
+    <string name="backup_error_not_beamctrl">That isn't a BeamCtrl backup file. Nothing on this phone was changed.</string>
+    <string name="backup_error_newer">This backup was made by a newer version of BeamCtrl. Update BeamCtrl on this phone, then try again. Nothing was changed.</string>
+    <string name="backup_error_damaged">This backup file is damaged or was changed by hand, so none of it was restored. Nothing on this phone was changed.</string>
     <plurals name="backup_restored">
         <item quantity="one">Restored %d remote</item>
         <item quantity="other">Restored %d remotes</item>
+    </plurals>
+    <plurals name="backup_restored_all">
+        <item quantity="one">Restored %d remote and your settings</item>
+        <item quantity="other">Restored %d remotes and your settings</item>
     </plurals>
 
     <!-- Privacy and security: the shared Ctrl series app lock -->
@@ -79,7 +107,7 @@
     <string name="lock_too_many">Too many tries. Try again in %1$d s</string>
     <string name="lock_forgot">Forgot PIN?</string>
     <string name="lock_forgot_title">Forgot your PIN?</string>
-    <string name="lock_forgot_body">The PIN can\'t be recovered. BeamCtrl will delete every remote and setting on this phone and turn the app lock off. If you exported your remotes to a file, you can restore them from it afterwards.</string>
+    <string name="lock_forgot_body">The PIN can\'t be recovered. BeamCtrl will delete every remote and setting on this phone and turn the app lock off. If you backed up to a file, you can restore everything from it afterwards (tap your profile picture, then Restore from a file).</string>
     <string name="lock_forgot_confirm">Delete remotes and reset</string>
     <string name="lock_choose_pin">Choose an app PIN</string>
     <string name="lock_enable_intro">At least %1$d digits, different from your phone\'s PIN. If you forget it, the only way back in is to delete your remotes and start again.</string>
