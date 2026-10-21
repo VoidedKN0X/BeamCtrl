@@ -1,6 +1,8 @@
 package com.vknxworks.beamctrl.data.settings
 
 import android.content.Context
+import androidx.annotation.StringRes
+import com.vknxworks.beamctrl.R
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -17,7 +19,22 @@ import kotlinx.coroutines.launch
 
 val Context.appDataStore: DataStore<Preferences> by preferencesDataStore(name = "beamctrl")
 
-enum class ThemeChoice(val label: String) { SYSTEM("Follow system"), DARK("Dark"), LIGHT("Light"), BLACK("Pure black") }
+enum class ThemeChoice(@StringRes val label: Int) {
+    SYSTEM(R.string.theme_system),
+    DARK(R.string.theme_dark),
+    LIGHT(R.string.theme_light),
+    BLACK(R.string.theme_black),
+}
+
+/** How long BeamCtrl can be in the background before the app lock asks again (-1: only after a restart). */
+enum class LockTimeout(@StringRes val label: Int, val millis: Long) {
+    IMMEDIATELY(R.string.lock_again_immediately, 0L),
+    MINUTE_1(R.string.lock_again_1m, 60_000L),
+    MINUTES_5(R.string.lock_again_5m, 5 * 60_000L),
+    MINUTES_15(R.string.lock_again_15m, 15 * 60_000L),
+    HOUR_1(R.string.lock_again_1h, 60 * 60_000L),
+    RESTART(R.string.lock_again_restart, -1L),
+}
 
 data class AppSettings(
     val haptics: Boolean = true,
@@ -27,6 +44,10 @@ data class AppSettings(
     val showNumberPad: Boolean = true,
     val theme: ThemeChoice = ThemeChoice.SYSTEM,
     val dynamicColor: Boolean = false,
+    /** App lock: when it asks again after BeamCtrl was in the background. */
+    val lockTimeout: LockTimeout = LockTimeout.IMMEDIATELY,
+    /** FLAG_SECURE on the whole app: blank screenshots, screen recordings and Recents card. */
+    val hideContent: Boolean = false,
 )
 
 class SettingsRepository(private val context: Context, scope: CoroutineScope) {
@@ -37,6 +58,8 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         val numbers = booleanPreferencesKey("number_pad")
         val theme = stringPreferencesKey("theme")
         val dynamic = booleanPreferencesKey("dynamic_color")
+        val lockTimeout = stringPreferencesKey("lock_timeout")
+        val hideContent = booleanPreferencesKey("hide_content")
     }
 
     init {
@@ -65,6 +88,8 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         showNumberPad = this[K.numbers] ?: true,
         theme = this[K.theme]?.let { n -> ThemeChoice.entries.firstOrNull { it.name == n } } ?: ThemeChoice.SYSTEM,
         dynamicColor = this[K.dynamic] ?: false,
+        lockTimeout = this[K.lockTimeout]?.let { n -> LockTimeout.entries.firstOrNull { it.name == n } } ?: LockTimeout.IMMEDIATELY,
+        hideContent = this[K.hideContent] ?: false,
     )
 
     suspend fun update(transform: (AppSettings) -> AppSettings) {
@@ -76,6 +101,8 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
             p[K.numbers] = s.showNumberPad
             p[K.theme] = s.theme.name
             p[K.dynamic] = s.dynamicColor
+            p[K.lockTimeout] = s.lockTimeout.name
+            p[K.hideContent] = s.hideContent
         }
     }
 }
