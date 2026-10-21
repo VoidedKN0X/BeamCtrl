@@ -4,6 +4,25 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.4.0 (2026-10-21)
+
+Settings now open from your profile picture, like in every Ctrl app, and backing up to a file is now the way to move BeamCtrl to another phone.
+
+### New
+
+- **Your profile picture at the top right** of the Remotes and Add tabs opens the new **You** page. BeamCtrl has no accounts, so it shows the same round placeholder picture as the other Ctrl apps. The You page has a card for this phone (its name, how many remotes you have and whether the IR blaster is ready), then **Backup**, **Settings** and **About** with the version underneath
+- **Back up to a file** (tap your profile picture › Backup): saves **everything** in one file, using Android's file picker so you choose the name and the folder (Downloads, an SD card, a USB stick or any cloud storage app you have installed). The file holds every remote with all its buttons and codes, and every setting: theme, dynamic colour, vibrate on press, hold to repeat, number pad, keep screen on, lock again, hide in screenshots and hide in recent apps. It never holds the app lock's PIN or fingerprint keys (they belong to this phone's secure hardware), or whether the app lock is on. Works even before you've added a remote
+- **Restore from a file** (same place): pick a backup file, check what's in it, then confirm. The confirmation says when the backup was made, how many remotes it has and how many are on the phone now, and that restoring **replaces** every remote and setting on this phone. The app lock and its PIN stay exactly as they are on this phone. Works on another phone, so this is how you move your remotes to a new phone: back up on the old one, copy the file over, restore on the new one, then set up the app lock there if you want it
+- **Restoring checks the whole file first and refuses anything malformed**, instead of skipping or repairing parts of it: a file that isn't a BeamCtrl backup, one that's damaged or was edited by hand (unknown or missing fields, wrong values, duplicate remotes or buttons, names that are too long, codes the IR blaster can't send, more than 500 remotes or 500 buttons on a remote), one bigger than 4 MB, or one made by a newer BeamCtrl. You see why in a message, and nothing on the phone changes. A restore either brings back exactly what was backed up or changes nothing
+
+### Changed
+
+- **Settings moved to your profile picture**: there's no **Settings** tab any more, so the bottom bar only has **Remotes** and **Add**. Tap your profile picture at the top right, then **Settings** for Appearance, Privacy and security (app lock, hide in screenshots, hide in recent apps), IR blaster and Buttons. **Backup** and **About** (Support BeamCtrl, Report a bug, Source code, Licence) are on the You page itself
+- **"Export all remotes" is now "Back up to a file"** and also saves your settings. **"Restore from backup" is now "Restore from a file"** and replaces what's on the phone after asking first, instead of adding the file's remotes to the ones already there. Files exported by earlier versions still restore: they replace your remotes and leave your settings as they are
+- **No more phone-to-phone transfer through Android.** BeamCtrl was already left out of cloud backups; now it's also left out of Android's own phone-to-phone transfer (for example when setting up a new phone from the old one with a cable or over Wi-Fi), so nothing from BeamCtrl leaves the phone unless you back it up to a file yourself. Use **Back up to a file** and **Restore from a file** to move your remotes
+- **Forgot PIN?** on the lock screen now says you can restore everything from a backup file afterwards (tap your profile picture › Restore from a file)
+- **README**: Getting started, the App lock section and Support now say "tap your profile picture › Settings"; new Backup and moving to a new phone section; Privacy explains that BeamCtrl isn't in Android's cloud backup or phone-to-phone transfer
+
 ## v0.3.1 (2026-10-21)
 
 ### Changed

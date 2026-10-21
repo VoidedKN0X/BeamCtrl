@@ -11,16 +11,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.InputStream
 import java.util.UUID
-
-/** A backup of every remote, as written by "Export all remotes". */
-@Serializable
-data class Backup(val app: String = "BeamCtrl", val version: Int = 1, val remotes: List<Remote>)
 
 /** Saved remotes, kept in one JSON file in the app's private storage. */
 class RemoteRepository(context: Context, private val scope: CoroutineScope) {
@@ -80,19 +75,8 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
         return "$base $n"
     }
 
-    fun exportJson(): String = json.encodeToString(Backup.serializer(), Backup(remotes = _remotes.value))
-
-    /** Adds the remotes in a backup, giving new ids to any that already exist here. Returns how many were added. */
-    fun importJson(text: String): Int {
-        val backup = json.decodeFromString(Backup.serializer(), text)
-        require(backup.app == "BeamCtrl") { "Not a BeamCtrl backup" }
-        val taken = _remotes.value.map { it.id }.toMutableSet()
-        val incoming = backup.remotes.take(MAX_REMOTES).map { r ->
-            sanitize(r, taken).also { taken += it.id }
-        }
-        change { it + incoming }
-        return incoming.size
-    }
+    /** "Restore from a file": replaces every remote with [restored], already checked by [BackupFile.read]. */
+    fun replaceAll(restored: List<Remote>) = change { restored }
 
     private fun change(transform: (List<Remote>) -> List<Remote>) {
         _remotes.update(transform)
@@ -142,10 +126,9 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
     companion object {
         /** Bigger files than this are refused before they're read into memory. */
         const val MAX_IMPORT_BYTES = 4L * 1024 * 1024
-        private const val MAX_REMOTES = 500
-        private const val MAX_BUTTONS = 500
-        private const val MAX_NAME = 80
-        private const val MAX_LABEL = 60
+        private const val MAX_BUTTONS = BackupFile.MAX_BUTTONS
+        private const val MAX_NAME = BackupFile.MAX_NAME
+        private const val MAX_LABEL = BackupFile.MAX_LABEL
 
         private val listSerializer = ListSerializer(Remote.serializer())
 

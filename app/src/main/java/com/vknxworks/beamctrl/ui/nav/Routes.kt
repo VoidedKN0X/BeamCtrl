@@ -5,6 +5,9 @@ import kotlinx.serialization.Serializable
 // Tabs
 @Serializable data object RemotesRoute
 @Serializable data object AddRoute
+
+// Opened from the profile picture: the You page, and Settings from there
+@Serializable data object YouRoute
 @Serializable data object SettingsRoute
 
 @Serializable data class RemoteRoute(val id: String, val edit: Boolean = false)

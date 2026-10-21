@@ -25,6 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -50,12 +51,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.vknxworks.beamctrl.R
 import com.vknxworks.beamctrl.ui.nav.LocalNavigator
+import com.vknxworks.beamctrl.ui.nav.YouRoute
 import com.vknxworks.beamctrl.ui.theme.Gutter
 
 // ---------- Top bars ----------
@@ -81,15 +85,38 @@ fun ScreenTopBar(
     )
 }
 
-/** Big left-aligned title for the main tabs. */
+/** Big left-aligned title for the main tabs, with the profile picture at the end. */
 @Composable
-fun TabTitle(title: String, modifier: Modifier = Modifier, trailing: @Composable RowScope.() -> Unit = {}) {
+fun TabTitle(
+    title: String,
+    modifier: Modifier = Modifier,
+    showProfile: Boolean = true,
+    trailing: @Composable RowScope.() -> Unit = {},
+) {
     Row(
         modifier.fillMaxWidth().padding(start = Gutter, end = 8.dp, top = 12.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(title, style = MaterialTheme.typography.headlineLarge, modifier = Modifier.weight(1f))
         trailing()
+        if (showProfile) ProfileButton()
+    }
+}
+
+/**
+ * The profile picture; tapping it opens the You page with Settings, Backup and About (there is no
+ * Settings tab). BeamCtrl has no accounts, so it's the same placeholder avatar as in the other Ctrl apps.
+ */
+@Composable
+fun ProfileButton() {
+    val nav = LocalNavigator.current
+    IconButton(onClick = { nav.navigate(YouRoute) }) {
+        Box(
+            Modifier.size(34.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(Icons.Filled.AccountCircle, stringResource(R.string.you_and_settings), tint = MaterialTheme.colorScheme.primary)
+        }
     }
 }
 

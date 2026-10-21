@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Nothing goes into a cloud backup (allowBackup is off as well). Saved remotes and settings still
-     move to a new phone in a direct phone-to-phone transfer, without the app lock: its keys are tied to
-     this phone's secure hardware, so the lock is set up again on the new phone. Temporary and unreadable
-     copies of the remotes file are never included. -->
+<!-- BeamCtrl is left out of Android's own backups completely: nothing goes into a cloud backup and
+     nothing moves in a phone-to-phone transfer (allowBackup and fullBackupContent are off as well).
+     To move remotes to another phone, use "Back up to a file" and "Restore from a file" on the You page.
+     Every storage domain is excluded, including device-protected storage. -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="root" />
@@ -10,11 +10,20 @@
         <exclude domain="database" />
         <exclude domain="sharedpref" />
         <exclude domain="external" />
+        <exclude domain="device_root" />
+        <exclude domain="device_file" />
+        <exclude domain="device_database" />
+        <exclude domain="device_sharedpref" />
     </cloud-backup>
     <device-transfer>
-        <exclude domain="file" path="remotes.json.tmp" />
-        <exclude domain="file" path="remotes.json.unreadable" />
-        <exclude domain="sharedpref" path="app_lock_vault.xml" />
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
         <exclude domain="external" />
+        <exclude domain="device_root" />
+        <exclude domain="device_file" />
+        <exclude domain="device_database" />
+        <exclude domain="device_sharedpref" />
     </device-transfer>
 </data-extraction-rules>

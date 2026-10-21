@@ -22,7 +22,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Hold to repeat** volume, channel and arrow keys
 - **Edit any remote**: change a button's code, add buttons, or export it as a Flipper Zero file
 - **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Pronto hex and raw timings
-- **Backup and restore** all remotes as a single file
+- **Back up to a file** and **restore** every remote and setting, also on another phone
 - **Vibrate on press**, keep the screen on while a remote is open, and show or hide the number pad
 - **App lock** with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes
 - Light, dark and pure black themes, with an ember accent or your wallpaper's Material You colours; tablet and foldable layout
@@ -59,21 +59,32 @@ If the Obtainium button doesn't open the app, add `https://github.com/VoidedKN0X
 2. Point your phone at the device, test a few buttons, then save the remote.
 3. Your remote now appears on the **Remotes** tab. Tap it to use it.
 
+Settings, Backup and About are behind your profile picture at the top right of the Remotes and Add tabs: tap it to open the You page, then **Settings**.
+
+## Backup and moving to a new phone
+
+Tap your profile picture at the top right. Under **Backup**:
+
+- **Back up to a file** saves everything in one file, in a place you choose with Android's file picker (Downloads, an SD card, a USB stick or a cloud storage app you've installed). The file holds every remote with all its buttons and codes, and every setting. It never holds the app lock's PIN or fingerprint keys, or whether the lock is on.
+- **Restore from a file** reads a backup file, checks all of it, and asks before it **replaces** every remote and setting on the phone. The app lock and its PIN stay as they are on that phone. A file that isn't a BeamCtrl backup, is damaged or was edited by hand, or was made by a newer BeamCtrl is refused with a message, and nothing changes. Files exported by BeamCtrl 0.3.1 and older still restore (remotes only).
+
+**To move to a new phone:** back up on the old phone, copy the file to the new one, install BeamCtrl there and tap **Restore from a file**. Then turn the app lock on again if you use it. BeamCtrl isn't included in Android's cloud backup or its phone-to-phone transfer, so the backup file is the only way your remotes move. The file isn't encrypted (it only holds remotes and settings), so keep it somewhere private.
+
 ## Tips and troubleshooting
 
 Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use the code library, a ready-made remote or a Flipper Zero file instead.
 
 ## App lock
 
-Turn it on under **Settings > Privacy and security > App lock**. It's off until you turn it on.
+Turn it on under **Settings > Privacy and security > App lock** (tap your profile picture at the top right, then **Settings**). It's off until you turn it on.
 
 - **Its own app PIN** of at least 6 digits, separate from your phone's screen lock. Very obvious PINs such as 111111 or 123456 are refused.
 - **Unlock with fingerprint** (optional) only accepts strong biometrics, such as the fingerprint sensor, checked by the phone's secure hardware. Face unlock that only uses the camera isn't accepted. The PIN is still needed after the phone restarts and at least every 72 hours, and adding a new fingerprint to the phone turns fingerprint unlock off until you turn it on again.
 - **The PIN is never stored.** It's stretched with 600,000 rounds of PBKDF2 and mixed with a key held in the phone's secure hardware, so a copy of the app's files isn't enough to guess it on a computer.
 - **Wrong PINs:** after 5 tries you wait 30 seconds, doubling up to 15 minutes. Restarting the app or the phone, or changing the clock, doesn't skip the wait.
-- **Lock again:** as soon as you leave the app (the default), after 1, 5 or 15 minutes or 1 hour away, or only when the app restarts. Exporting or restoring a backup file and opening a link in your browser don't count as leaving, unless you stay away for more than 5 minutes.
+- **Lock again:** as soon as you leave the app (the default), after 1, 5 or 15 minutes or 1 hour away, or only when the app restarts. Backing up to a file, restoring from one and opening a link in your browser don't count as leaving, unless you stay away for more than 5 minutes.
 - **Change app PIN** asks for your current PIN first, and turning the app lock off asks for the PIN too.
-- **Forgot your PIN?** It can't be recovered. The lock screen offers to delete every remote and setting on the phone and turn the lock off; if you exported your remotes to a file, you can restore them afterwards.
+- **Forgot your PIN?** It can't be recovered. The lock screen offers to delete every remote and setting on the phone and turn the lock off; if you backed up to a file, you can restore everything from it afterwards.
 - **BeamCtrl has no servers or passwords**, so the app lock only keeps the app closed until it's unlocked.
 
 **Hide in screenshots** and **Hide in recent apps** (the last two switches in the same section, also without the app lock, both off by default): the first keeps BeamCtrl out of screenshots and screen recordings (and blanks its recent-apps preview), the second shows a blank card for BeamCtrl in the recent-apps view while screenshots still work. With the app lock on, the recent-apps view always shows a blank card. The lock screen and the PIN screens are always kept out of screenshots.
@@ -82,8 +93,8 @@ Turn it on under **Settings > Privacy and security > App lock**. It's off until 
 
 **Telemetry-free.** BeamCtrl has no analytics, crash reporting, usage stats or tracking of any kind. It has no internet permission, works fully offline and never connects to the internet.
 
-- Remotes, the code library, Turn off any TV, imports and backups all stay on your phone. Nothing goes into a cloud backup; your remotes only move to a new phone in a direct phone-to-phone transfer (the app lock is set up again there), or with a backup file you export.
-- The Support, Report a bug, Source code and Licence links in Settings open in your browser, only when you tap them.
+- Remotes, the code library, Turn off any TV, imports and backups all stay on your phone. BeamCtrl is left out of Android's cloud backup **and** its phone-to-phone transfer, so nothing leaves the phone unless you tap **Back up to a file** and choose where the file goes.
+- The Support, Report a bug, Source code and Licence links on the You page (tap your profile picture) open in your browser, only when you tap them.
 
 ## Build from source
 
@@ -105,7 +116,7 @@ Or open the folder in Android Studio and press **Run** with your phone connected
 
 ## Support the project
 
-BeamCtrl is free and open source. If it's useful to you, you can support development on [GitHub Sponsors](https://github.com/sponsors/VoidedKN0X). In the app, **Settings → About** has **Support BeamCtrl** and **Report a bug**, which opens the [issue tracker](https://github.com/VoidedKN0X/BeamCtrl/issues). Starring the repo helps too.
+BeamCtrl is free and open source. If it's useful to you, you can support development on [GitHub Sponsors](https://github.com/sponsors/VoidedKN0X). In the app, tap your profile picture: **About** at the bottom of the You page has **Support BeamCtrl** and **Report a bug**, which opens the [issue tracker](https://github.com/VoidedKN0X/BeamCtrl/issues). Starring the repo helps too.
 
 ## The Ctrl series
 

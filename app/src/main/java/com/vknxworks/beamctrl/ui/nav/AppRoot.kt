@@ -18,10 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SettingsRemote
 import androidx.compose.material.icons.outlined.AddCircleOutline
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SettingsRemote
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -67,6 +65,7 @@ import com.vknxworks.beamctrl.ui.components.LocalHazeState
 import com.vknxworks.beamctrl.ui.remote.RemoteScreen
 import com.vknxworks.beamctrl.ui.remotes.RemotesScreen
 import com.vknxworks.beamctrl.ui.settings.SettingsScreen
+import com.vknxworks.beamctrl.ui.settings.YouScreen
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 
@@ -85,10 +84,10 @@ fun AppRoot() {
 
 private data class TopDest(val route: Any, val item: TabItem)
 
+/** Only content tabs: Settings, Backup and About open from the profile picture. */
 private val topDestinations = listOf(
     TopDest(RemotesRoute, TabItem("Remotes", Icons.Outlined.SettingsRemote, Icons.Filled.SettingsRemote)),
     TopDest(AddRoute, TabItem("Add", Icons.Outlined.AddCircleOutline, Icons.Filled.AddCircle)),
-    TopDest(SettingsRoute, TabItem("Settings", Icons.Outlined.Settings, Icons.Filled.Settings)),
 )
 
 @Composable
@@ -190,6 +189,7 @@ private fun AppNavHost(navController: NavHostController) {
     NavHost(navController, startDestination = RemotesRoute) {
         composable<RemotesRoute> { RemotesScreen() }
         composable<AddRoute> { AddScreen() }
+        composable<YouRoute> { YouScreen() }
         composable<SettingsRoute> { SettingsScreen() }
 
         composable<RemoteRoute> {
