@@ -1,6 +1,7 @@
 package com.vknxworks.beamctrl.ir
 
 import android.content.Context
+import com.vknxworks.beamctrl.R
 import android.hardware.ConsumerIrManager
 import android.os.SystemClock
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +26,7 @@ fun interface Press {
  * are sent in order and never overlap.
  */
 class Blaster(context: Context) {
+    private val appContext: Context = context.applicationContext
     private val ir: ConsumerIrManager? = context.getSystemService(ConsumerIrManager::class.java)
     private val dispatcher = Executors.newSingleThreadExecutor { r -> Thread(r, "beamctrl-ir") }.asCoroutineDispatcher()
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
@@ -73,14 +75,14 @@ class Blaster(context: Context) {
         val pressedAt = SystemClock.uptimeMillis()
         scope.launch {
             if (!available) {
-                _errors.tryEmit("This phone doesn't have an IR blaster")
+                _errors.tryEmit(appContext.getString(R.string.blaster_none))
                 return@launch
             }
             val signal = try {
                 if (code.usesToggle) toggle = !toggle
                 code.encode(toggle)
             } catch (e: Exception) {
-                _errors.tryEmit("Can't send this code: ${e.message ?: "invalid"}")
+                _errors.tryEmit(appContext.getString(R.string.blaster_cant_send, irErrorText(appContext, e)))
                 return@launch
             }
             if (!transmit(signal.frequency, signal.once)) return@launch
@@ -100,7 +102,7 @@ class Blaster(context: Context) {
         try {
             manager.transmit(fitFrequency(frequency), pattern)
         } catch (e: Exception) {
-            _errors.tryEmit("The IR blaster refused that signal")
+            _errors.tryEmit(appContext.getString(R.string.blaster_refused))
             return false
         }
         _beams.tryEmit(Unit)

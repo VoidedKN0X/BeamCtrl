@@ -1,6 +1,8 @@
 package com.vknxworks.beamctrl.ui.remote
 
 import android.app.Activity
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.stringResource
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -101,7 +103,7 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                     context.contentResolver.openOutputStream(uri, "wt")?.use { it.write(FlipperIr.write(r).toByteArray()) }
                 }.isSuccess
             }
-            Toast.makeText(context, if (ok) "Saved ${r.name}" else "Couldn't save the file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, if (ok) context.getString(R.string.export_saved, r.name) else context.getString(R.string.export_failed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -137,26 +139,26 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                 TextButton(onClick = { editing = false }) {
                     Icon(Icons.Filled.Check, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Done")
+                    Text(stringResource(R.string.done))
                 }
             } else {
-                IconButton(onClick = { editing = true }) { Icon(Icons.Filled.Edit, "Edit buttons") }
+                IconButton(onClick = { editing = true }) { Icon(Icons.Filled.Edit, stringResource(R.string.edit_buttons)) }
             }
             Box {
-                IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, "More") }
+                IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, stringResource(R.string.more)) }
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(
-                        text = { Text("Rename") },
+                        text = { Text(stringResource(R.string.rename)) },
                         leadingIcon = { Icon(Icons.Filled.DriveFileRenameOutline, null) },
                         onClick = { menu = false; renaming = true },
                     )
                     DropdownMenuItem(
-                        text = { Text("Device type") },
+                        text = { Text(stringResource(R.string.device_type)) },
                         leadingIcon = { Icon(Icons.Filled.Category, null) },
                         onClick = { menu = false; pickingType = true },
                     )
                     DropdownMenuItem(
-                        text = { Text("Export as Flipper .ir file") },
+                        text = { Text(stringResource(R.string.export_flipper)) },
                         leadingIcon = { Icon(Icons.Filled.FileDownload, null) },
                         onClick = {
                             menu = false
@@ -164,7 +166,7 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                         },
                     )
                     DropdownMenuItem(
-                        text = { Text("Delete remote", color = MaterialTheme.colorScheme.error) },
+                        text = { Text(stringResource(R.string.delete_remote), color = MaterialTheme.colorScheme.error) },
                         leadingIcon = { Icon(Icons.Filled.Delete, null, tint = MaterialTheme.colorScheme.error) },
                         onClick = { menu = false; confirmDelete = true },
                     )
@@ -183,7 +185,7 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                 if (!c.blaster.available) NoBlasterBanner()
                 if (editing) {
                     Text(
-                        "Tap a key to set its code, or a dimmed spot to add one.",
+                        stringResource(R.string.edit_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = Gutter, vertical = 4.dp),
@@ -194,9 +196,9 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                     Box(Modifier.fillMaxWidth().height(420.dp)) {
                         MessageView(
                             Icons.Filled.Edit,
-                            "No buttons yet",
-                            "Add the codes for this remote's buttons, by protocol or as a Pronto or raw code.",
-                            actionLabel = "Add buttons",
+                            stringResource(R.string.no_buttons),
+                            stringResource(R.string.no_buttons_body),
+                            actionLabel = stringResource(R.string.add_buttons),
                             onAction = { editing = true },
                         )
                     }
@@ -240,14 +242,14 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
     }
 
     if (renaming) {
-        NameDialog("Rename remote", remote.name, onDismiss = { renaming = false }) { name ->
+        NameDialog(stringResource(R.string.rename_remote), remote.name, onDismiss = { renaming = false }) { name ->
             c.remotes.update(id) { it.copy(name = name) }
             renaming = false
         }
     }
 
     if (pickingType) {
-        ChoiceSheet("Device type", DeviceType.entries.map { it to it.label }, remote.type, onDismiss = { pickingType = false }) { t ->
+        ChoiceSheet(stringResource(R.string.device_type), DeviceType.entries.map { it to stringResource(it.label) }, remote.type, onDismiss = { pickingType = false }) { t ->
             c.remotes.update(id) { it.copy(type = t) }
             pickingType = false
         }
@@ -255,9 +257,9 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
 
     if (confirmDelete) {
         ConfirmDialog(
-            "Delete ${remote.name}?",
-            "Its buttons and codes will be removed from this phone.",
-            "Delete",
+            stringResource(R.string.delete_remote_title, remote.name),
+            stringResource(R.string.delete_remote_body),
+            stringResource(R.string.delete),
             onDismiss = { confirmDelete = false },
         ) {
             confirmDelete = false
@@ -307,7 +309,7 @@ private fun NoBlasterBanner() {
             ) { Icon(Icons.Filled.WarningAmber, null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp)) }
             Spacer(Modifier.width(14.dp))
             Text(
-                "This phone doesn't have an IR blaster Android apps can use, so buttons won't send anything. You can still set up and edit remotes.",
+                stringResource(R.string.no_blaster_banner),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

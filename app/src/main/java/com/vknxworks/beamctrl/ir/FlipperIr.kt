@@ -13,7 +13,7 @@ object FlipperIr {
 
     class ImportResult(val buttons: List<RemoteButton>, val skipped: List<String>)
 
-    fun parse(text: String): ImportResult {
+    fun parse(text: String, fallbackName: String): ImportResult {
         val buttons = mutableListOf<RemoteButton>()
         val skipped = mutableListOf<String>()
         val usedRoles = mutableSetOf<KeyRole>()
@@ -48,7 +48,7 @@ object FlipperIr {
                 skipped.add(b["name"].orEmpty())
                 continue
             }
-            val name = b["name"].orEmpty().ifBlank { "Button" }
+            val name = b["name"].orEmpty().ifBlank { fallbackName }
             val code = runCatching { toCode(b) }.getOrNull()
             if (code == null) {
                 skipped.add(name)

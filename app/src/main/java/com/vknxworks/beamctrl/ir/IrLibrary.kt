@@ -1,6 +1,7 @@
 package com.vknxworks.beamctrl.ir
 
 import android.content.Context
+import com.vknxworks.beamctrl.R
 import com.vknxworks.beamctrl.data.DeviceType
 import com.vknxworks.beamctrl.data.RemoteButton
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +14,11 @@ import java.nio.ByteBuffer
 import java.util.Locale
 import java.util.zip.Inflater
 
-/** A device type in the code library, e.g. "TVs" or "Air conditioners". */
+/** A device type in the code library, e.g. "TVs" or "Air conditioners". [name] is the library's own (English) name. */
 class LibraryCategory(val index: Int, val name: String, val deviceCount: Int) {
+    /** The category's name in the phone's language. */
+    fun displayName(context: Context): String = NAMES[name]?.let { context.getString(it) } ?: name
+
     val type: DeviceType
         get() = when (name) {
             "TVs", "Monitors", "Touchscreen displays", "Universal TV remotes" -> DeviceType.TV
@@ -27,6 +31,59 @@ class LibraryCategory(val index: Int, val name: String, val deviceCount: Int) {
             "Lights" -> DeviceType.LIGHT
             else -> DeviceType.OTHER
         }
+
+    private companion object {
+        val NAMES: Map<String, Int> = mapOf(
+            "TVs" to R.string.cat_tvs,
+            "Soundbars" to R.string.cat_soundbars,
+            "AV receivers" to R.string.cat_av_receivers,
+            "Projectors" to R.string.cat_projectors,
+            "Streaming devices" to R.string.cat_streaming_devices,
+            "Cable and satellite boxes" to R.string.cat_cable_and_satellite_boxes,
+            "Air conditioners" to R.string.cat_air_conditioners,
+            "Fans" to R.string.cat_fans,
+            "Lights" to R.string.cat_lights,
+            "Air purifiers" to R.string.cat_air_purifiers,
+            "Bidets" to R.string.cat_bidets,
+            "Blu-ray players" to R.string.cat_blu_ray_players,
+            "Cameras" to R.string.cat_cameras,
+            "Car head units" to R.string.cat_car_head_units,
+            "Car multimedia" to R.string.cat_car_multimedia,
+            "CCTV" to R.string.cat_cctv,
+            "CD players" to R.string.cat_cd_players,
+            "Ceiling lifts" to R.string.cat_ceiling_lifts,
+            "Clocks" to R.string.cat_clocks,
+            "Computers" to R.string.cat_computers,
+            "Converters and switches" to R.string.cat_converters_and_switches,
+            "Digital signs" to R.string.cat_digital_signs,
+            "Dust collectors" to R.string.cat_dust_collectors,
+            "DVB-T receivers" to R.string.cat_dvb_t_receivers,
+            "DVD players" to R.string.cat_dvd_players,
+            "Fireplaces" to R.string.cat_fireplaces,
+            "Game consoles" to R.string.cat_game_consoles,
+            "Heaters" to R.string.cat_heaters,
+            "Humidifiers" to R.string.cat_humidifiers,
+            "KVM switches" to R.string.cat_kvm_switches,
+            "Laserdisc players" to R.string.cat_laserdisc_players,
+            "MiniDisc players" to R.string.cat_minidisc_players,
+            "Miscellaneous" to R.string.cat_miscellaneous,
+            "Monitors" to R.string.cat_monitors,
+            "Multimedia" to R.string.cat_multimedia,
+            "Picture frames" to R.string.cat_picture_frames,
+            "Speakers" to R.string.cat_speakers,
+            "Touchscreen displays" to R.string.cat_touchscreen_displays,
+            "Toys" to R.string.cat_toys,
+            "TV tuners" to R.string.cat_tv_tuners,
+            "Universal TV remotes" to R.string.cat_universal_tv_remotes,
+            "Vacuum cleaners" to R.string.cat_vacuum_cleaners,
+            "VCRs" to R.string.cat_vcrs,
+            "Videoconferencing" to R.string.cat_videoconferencing,
+            "Whiteboards" to R.string.cat_whiteboards,
+            "Window cleaners" to R.string.cat_window_cleaners,
+            "More devices" to R.string.cat_more_devices,
+            "Other" to R.string.cat_other,
+        )
+    }
 }
 
 /** One remote in the code library. Its signals are read only when it's opened. */
@@ -140,28 +197,28 @@ class IrLibrary(private val context: Context) {
 
     /** The device's buttons, through the same checks as an imported .ir file. */
     suspend fun load(device: LibraryDevice): FlipperIr.ImportResult = withContext(Dispatchers.IO) {
-        require(device.length in 1..MAX_BLOB && device.offset >= 0) { "That remote is damaged" }
+        irRequire(device.length in 1..MAX_BLOB && device.offset >= 0, R.string.library_damaged)
         val packed = ByteArray(device.length)
         context.assets.openFd("$DIR/data.bin").use { afd ->
-            require(device.offset + device.length <= afd.length) { "That remote is damaged" }
+            irRequire(device.offset + device.length <= afd.length, R.string.library_damaged)
             FileInputStream(afd.fileDescriptor).channel.use { ch ->
                 val buf = ByteBuffer.wrap(packed)
                 var pos = afd.startOffset + device.offset
                 while (buf.hasRemaining()) {
                     val n = ch.read(buf, pos)
-                    if (n < 0) error("That remote is damaged")
+                    if (n < 0) throw IrCodeException(R.string.library_damaged)
                     pos += n
                 }
             }
         }
-        FlipperIr.parse(inflate(packed))
+        FlipperIr.parse(inflate(packed), context.getString(R.string.button_default))
     }
 
     /** Every distinct TV power code in the library, most widely used first. */
     suspend fun tvPowerCodes(): List<RemoteButton> = withContext(Dispatchers.IO) {
         val text = context.assets.open("$DIR/tv_power.ir").use { it.readBytes().decodeToString() }
         // Power codes are matched to the power key by name; here every one is just a code to send.
-        FlipperIr.parse(text).buttons.map { it.copy(role = null) }
+        FlipperIr.parse(text, context.getString(R.string.button_default)).buttons.map { it.copy(role = null) }
     }
 
     private fun inflate(data: ByteArray): String {
@@ -174,7 +231,7 @@ class IrLibrary(private val context: Context) {
                 val n = inflater.inflate(buf)
                 if (n == 0 && (inflater.needsInput() || inflater.needsDictionary())) break
                 out.write(buf, 0, n)
-                require(out.size() <= MAX_TEXT) { "That remote is too big" }
+                irRequire(out.size() <= MAX_TEXT, R.string.library_too_big)
             }
             return out.toByteArray().decodeToString()
         } finally {

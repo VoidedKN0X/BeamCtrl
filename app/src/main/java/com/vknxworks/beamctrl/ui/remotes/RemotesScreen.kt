@@ -1,6 +1,9 @@
 package com.vknxworks.beamctrl.ui.remotes
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -78,17 +81,16 @@ fun RemotesScreen() {
     var deleting by remember { mutableStateOf<Remote?>(null) }
 
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
-        TabTitle("Remotes") {
-            IconButton(onClick = { nav.navigate(AddRoute) }) { Icon(Icons.Filled.Add, "Add a remote") }
+        TabTitle(stringResource(R.string.tab_remotes)) {
+            IconButton(onClick = { nav.navigate(AddRoute) }) { Icon(Icons.Filled.Add, stringResource(R.string.add_title)) }
         }
         if (sorted.isEmpty()) {
             MessageView(
                 Icons.Filled.SettingsRemote,
-                "No remotes yet",
-                if (c.blaster.available) "Add one for your TV in a few taps, import a Flipper .ir file, or build your own."
-                else "This phone doesn't seem to have an IR blaster, but you can still set remotes up.",
+                stringResource(R.string.you_no_remotes),
+                stringResource(if (c.blaster.available) R.string.remotes_empty_body else R.string.remotes_empty_no_blaster),
                 modifier = Modifier.padding(bottom = LocalBottomClearance.current),
-                actionLabel = "Add a remote",
+                actionLabel = stringResource(R.string.add_title),
                 onAction = { nav.navigate(AddRoute) },
             )
         } else {
@@ -106,7 +108,7 @@ fun RemotesScreen() {
                                 Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.Filled.WarningAmber, null, tint = MaterialTheme.colorScheme.error)
                                     Spacer(Modifier.size(12.dp))
-                                    Text("No IR blaster found on this phone, so remotes can't send anything.", style = MaterialTheme.typography.bodyMedium)
+                                    Text(stringResource(R.string.remotes_no_blaster), style = MaterialTheme.typography.bodyMedium)
                                 }
                             }
                         }
@@ -127,10 +129,10 @@ fun RemotesScreen() {
         ModalBottomSheet(onDismissRequest = { actionsFor = null }, containerColor = MaterialTheme.colorScheme.surfaceContainer) {
             Text(r.name, style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
             Column(Modifier.padding(bottom = 24.dp)) {
-                GroupRow("Edit buttons", icon = Icons.Filled.Edit, onClick = { actionsFor = null; nav.openRemote(r.id, edit = true) })
-                GroupRow("Rename", icon = Icons.Filled.DriveFileRenameOutline, onClick = { actionsFor = null; renaming = r })
+                GroupRow(stringResource(R.string.edit_buttons), icon = Icons.Filled.Edit, onClick = { actionsFor = null; nav.openRemote(r.id, edit = true) })
+                GroupRow(stringResource(R.string.rename), icon = Icons.Filled.DriveFileRenameOutline, onClick = { actionsFor = null; renaming = r })
                 GroupRow(
-                    "Delete",
+                    stringResource(R.string.delete),
                     icon = Icons.Filled.Delete,
                     iconTint = MaterialTheme.colorScheme.error,
                     titleColor = MaterialTheme.colorScheme.error,
@@ -140,13 +142,13 @@ fun RemotesScreen() {
         }
     }
     renaming?.let { r ->
-        NameDialog("Rename remote", r.name, onDismiss = { renaming = null }) { name ->
+        NameDialog(stringResource(R.string.rename_remote), r.name, onDismiss = { renaming = null }) { name ->
             c.remotes.update(r.id) { it.copy(name = name) }
             renaming = null
         }
     }
     deleting?.let { r ->
-        ConfirmDialog("Delete ${r.name}?", "Its buttons and codes will be removed from this phone.", "Delete", onDismiss = { deleting = null }) {
+        ConfirmDialog(stringResource(R.string.delete_remote_title, r.name), stringResource(R.string.delete_remote_body), stringResource(R.string.delete), onDismiss = { deleting = null }) {
             c.remotes.delete(r.id)
             deleting = null
         }
@@ -187,14 +189,16 @@ private fun RemoteCard(remote: Remote, onOpen: () -> Unit, onLongPress: () -> Un
                         Modifier.size(44.dp),
                         container = MaterialTheme.colorScheme.error.copy(alpha = 0.14f),
                         contentColor = MaterialTheme.colorScheme.error,
-                        label = "${remote.name} power",
+                        label = stringResource(R.string.remote_power, remote.name),
                     ) { Icon(Icons.Filled.PowerSettingsNew, null, Modifier.size(22.dp)) }
                 }
             }
             Spacer(Modifier.height(18.dp))
             Text(remote.name, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
-                listOfNotNull(remote.brand, "${remote.buttons.size} buttons").joinToString("  ·  "),
+                pluralStringResource(R.plurals.buttons_count, remote.buttons.size, remote.buttons.size).let { buttons ->
+                    remote.brand?.let { stringResource(R.string.dot_pair, it, buttons) } ?: buttons
+                },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,

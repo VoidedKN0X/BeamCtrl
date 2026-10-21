@@ -4,6 +4,19 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.4.1 (2026-10-21)
+
+### Changed
+
+- **Use wallpaper colours** is the new name of the Dynamic colour switch in Settings › Appearance, with "Replaces the default colours with ones from your wallpaper" underneath, the same wording as in every Ctrl app
+- All text is now in one place, ready for translations: every screen, button, message and error (about 250 texts), including key names such as "Volume up", device types, the code library's categories and the code editor's checks. Nothing changes in English
+- Screen readers now call the profile picture "You", like in the other Ctrl apps (before: "You and settings")
+
+### Fixed
+
+- **Counts read correctly for one item**: "1 button", "1 remote" and "1 code ready" instead of "1 buttons", "1 remotes" and "1 codes ready" (in the code library, the remote cards, importing a Flipper file and Turn off any TV)
+- A failed fingerprint prompt could show a technical error message instead of "Couldn't unlock with your fingerprint"
+
 ## v0.4.0 (2026-10-21)
 
 Settings now open from your profile picture, like in every Ctrl app, and backing up to a file is now the way to move BeamCtrl to another phone.

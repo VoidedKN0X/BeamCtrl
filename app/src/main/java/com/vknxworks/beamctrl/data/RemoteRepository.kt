@@ -1,6 +1,7 @@
 package com.vknxworks.beamctrl.data
 
 import android.content.Context
+import com.vknxworks.beamctrl.R
 import com.vknxworks.beamctrl.ir.encode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,10 @@ import java.util.UUID
 
 /** Saved remotes, kept in one JSON file in the app's private storage. */
 class RemoteRepository(context: Context, private val scope: CoroutineScope) {
+    private val appContext: Context = context.applicationContext
+
+    /** The name for a remote whose name is empty. */
+    private val unnamed: String = context.getString(R.string.remote_unnamed)
     private val file = File(context.filesDir, "remotes.json")
     private val writeLock = Mutex()
 
@@ -71,8 +76,8 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
         val names = _remotes.value.map { it.name.lowercase() }.toSet()
         if (base.lowercase() !in names) return base
         var n = 2
-        while ("$base $n".lowercase() in names) n++
-        return "$base $n"
+        while (appContext.getString(R.string.name_numbered, base, n).lowercase() in names) n++
+        return appContext.getString(R.string.name_numbered, base, n)
     }
 
     /** "Restore from a file": replaces every remote with [restored], already checked by [BackupFile.read]. */
@@ -113,7 +118,7 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
             .toList()
         return remote.copy(
             id = remote.id.takeIf { it.isSaneId() && it !in takenIds } ?: UUID.randomUUID().toString(),
-            name = remote.name.clean(MAX_NAME).ifEmpty { "Remote" },
+            name = remote.name.clean(MAX_NAME).ifEmpty { unnamed },
             brand = remote.brand?.clean(MAX_NAME)?.ifEmpty { null },
             buttons = buttons,
         )

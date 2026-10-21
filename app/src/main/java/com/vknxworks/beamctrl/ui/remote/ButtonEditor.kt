@@ -1,6 +1,14 @@
 package com.vknxworks.beamctrl.ui.remote
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
+import com.vknxworks.beamctrl.ir.irRequire
+import com.vknxworks.beamctrl.ir.irErrorText
+import com.vknxworks.beamctrl.ir.IrCodeException
+import androidx.annotation.StringRes
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -44,17 +52,17 @@ import com.vknxworks.beamctrl.ui.components.ChoiceSheet
 import com.vknxworks.beamctrl.ui.components.PillButton
 
 /** The kinds of code the editor can make. */
-private enum class Proto(val label: String, val maxAddress: Int, val maxCommand: Int) {
-    NEC("NEC", 0xFF, 0xFF),
-    NEC_EXT("NEC ext", 0xFFFF, 0xFFFF),
-    SAMSUNG("Samsung", 0xFF, 0xFF),
-    SONY12("Sony 12", 0x1F, 0x7F),
-    SONY15("Sony 15", 0xFF, 0x7F),
-    SONY20("Sony 20", 0x1FFF, 0x7F),
-    RC5("RC5", 0x1F, 0x7F),
-    RC6("RC6", 0xFF, 0xFF),
-    PRONTO("Pronto", 0, 0),
-    RAW("Raw", 0, 0);
+private enum class Proto(@StringRes val label: Int, val maxAddress: Int, val maxCommand: Int) {
+    NEC(R.string.proto_nec, 0xFF, 0xFF),
+    NEC_EXT(R.string.chip_nec_ext, 0xFFFF, 0xFFFF),
+    SAMSUNG(R.string.proto_samsung, 0xFF, 0xFF),
+    SONY12(R.string.chip_sony_12, 0x1F, 0x7F),
+    SONY15(R.string.chip_sony_15, 0xFF, 0x7F),
+    SONY20(R.string.chip_sony_20, 0x1FFF, 0x7F),
+    RC5(R.string.proto_rc5, 0x1F, 0x7F),
+    RC6(R.string.proto_rc6, 0xFF, 0xFF),
+    PRONTO(R.string.proto_pronto, 0, 0),
+    RAW(R.string.proto_raw, 0, 0);
 
     val parsed: Boolean get() = this != PRONTO && this != RAW
 }
@@ -87,11 +95,12 @@ private fun commandOf(code: IrCode): Int? = when (code) {
     else -> null
 }
 
-private fun parseHex(text: String, max: Int, what: String): Int {
+/** Reads a hex address ([isAddress]) or command; a mistake throws [IrCodeException] with the reason. */
+private fun parseHex(text: String, max: Int, isAddress: Boolean): Int {
     val t = text.trim().removePrefix("0x").removePrefix("0X")
-    require(t.isNotEmpty()) { "Enter the $what" }
-    val v = t.toIntOrNull(16) ?: throw IllegalArgumentException("The $what must be hex (0-9, A-F)")
-    require(v in 0..max) { "The $what can be at most ${hex(max, 2)} for this protocol" }
+    irRequire(t.isNotEmpty(), if (isAddress) R.string.edit_enter_address else R.string.edit_enter_command)
+    val v = t.toIntOrNull(16) ?: throw IrCodeException(if (isAddress) R.string.edit_address_not_hex else R.string.edit_command_not_hex)
+    irRequire(v in 0..max, if (isAddress) R.string.edit_address_max else R.string.edit_command_max, hex(max, 2))
     return v
 }
 
@@ -107,9 +116,10 @@ fun ButtonEditorSheet(
     onSave: (RemoteButton) -> Unit,
     onDelete: (() -> Unit)?,
 ) {
-    val blaster = LocalContext.current.container.blaster
+    val context = LocalContext.current
+    val blaster = context.container.blaster
     val initialCode = button?.code
-    var label by remember { mutableStateOf(button?.label ?: presetRole?.label.orEmpty()) }
+    var label by remember { mutableStateOf(button?.label ?: presetRole?.label(context).orEmpty()) }
     var role by remember { mutableStateOf(button?.role ?: presetRole) }
     var proto by remember { mutableStateOf(initialCode?.let(::protoOf) ?: Proto.NEC) }
     var address by remember { mutableStateOf(initialCode?.let(::addressOf)?.let { hex(it, 2) }.orEmpty()) }
@@ -130,15 +140,15 @@ fun ButtonEditorSheet(
     fun build(): IrCode = when (proto) {
         Proto.PRONTO -> IrCode.Pronto(pronto.trim()).also { Pronto.decode(it.hex) }
         Proto.RAW -> {
-            val f = frequency.trim().toIntOrNull() ?: throw IllegalArgumentException("Enter the frequency in Hz, e.g. 38000")
+            val f = frequency.trim().toIntOrNull() ?: throw IrCodeException(R.string.edit_enter_frequency)
             val t = timings.split(Regex("[\\s,]+")).filter { it.isNotBlank() }.map {
-                it.trim().removePrefix("+").removePrefix("-").toIntOrNull() ?: throw IllegalArgumentException("\"$it\" isn't a number")
+                it.trim().removePrefix("+").removePrefix("-").toIntOrNull() ?: throw IrCodeException(R.string.edit_not_number, it.take(12))
             }
             IrCode.Raw(f, t).also { it.encode() }
         }
         else -> {
-            val a = parseHex(address, proto.maxAddress, "address")
-            val c = parseHex(command, proto.maxCommand, "command")
+            val a = parseHex(address, proto.maxAddress, isAddress = true)
+            val c = parseHex(command, proto.maxCommand, isAddress = false)
             when (proto) {
                 Proto.NEC -> IrCode.Nec(a, c)
                 Proto.NEC_EXT -> IrCode.Nec(a, c, extended = true)
@@ -155,7 +165,7 @@ fun ButtonEditorSheet(
     fun attempt(block: (IrCode) -> Unit) {
         runCatching { build() }
             .onSuccess { error = null; block(it) }
-            .onFailure { error = it.message ?: "That code isn't valid" }
+            .onFailure { error = irErrorText(context, it) }
     }
 
     ModalBottomSheet(
@@ -172,25 +182,25 @@ fun ButtonEditorSheet(
                 .padding(horizontal = 24.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(if (button == null) "Add button" else "Edit button", style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(if (button == null) R.string.add_button else R.string.edit_button), style = MaterialTheme.typography.titleLarge)
 
             OutlinedTextField(
                 value = label,
                 onValueChange = { label = it.take(24) },
-                label = { Text("Name") },
+                label = { Text(stringResource(R.string.name)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                 modifier = Modifier.fillMaxWidth(),
             )
 
             OutlinedButton(onClick = { pickRole = true }, modifier = Modifier.fillMaxWidth()) {
-                Text("Place on remote: ${role?.label ?: "More buttons"}")
+                Text(stringResource(R.string.place_on_remote_value, role?.label(context) ?: stringResource(R.string.more_buttons)))
             }
 
-            Text("Protocol", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.protocol), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Proto.entries.forEach { p ->
-                    FilterChip(selected = proto == p, onClick = { proto = p; error = null }, label = { Text(p.label) })
+                    FilterChip(selected = proto == p, onClick = { proto = p; error = null }, label = { Text(stringResource(p.label)) })
                 }
             }
 
@@ -198,7 +208,7 @@ fun ButtonEditorSheet(
                 Proto.PRONTO -> OutlinedTextField(
                     value = pronto,
                     onValueChange = { pronto = it },
-                    label = { Text("Pronto hex") },
+                    label = { Text(stringResource(R.string.pronto_hex)) },
                     placeholder = { Text("0000 006D 0022 0002 0157 00AC …") },
                     minLines = 3,
                     modifier = Modifier.fillMaxWidth(),
@@ -207,7 +217,7 @@ fun ButtonEditorSheet(
                     OutlinedTextField(
                         value = frequency,
                         onValueChange = { frequency = it.filter(Char::isDigit).take(6) },
-                        label = { Text("Carrier frequency (Hz)") },
+                        label = { Text(stringResource(R.string.carrier_frequency)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
@@ -215,7 +225,7 @@ fun ButtonEditorSheet(
                     OutlinedTextField(
                         value = timings,
                         onValueChange = { timings = it },
-                        label = { Text("Timings in µs, on and off in turn") },
+                        label = { Text(stringResource(R.string.timings_label)) },
                         placeholder = { Text("9000 4500 560 560 560 1690 …") },
                         minLines = 3,
                         modifier = Modifier.fillMaxWidth(),
@@ -225,7 +235,7 @@ fun ButtonEditorSheet(
                     OutlinedTextField(
                         value = address,
                         onValueChange = { address = it.take(6) },
-                        label = { Text("Address (hex)") },
+                        label = { Text(stringResource(R.string.address_hex)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
                         modifier = Modifier.weight(1f),
@@ -233,7 +243,7 @@ fun ButtonEditorSheet(
                     OutlinedTextField(
                         value = command,
                         onValueChange = { command = it.take(6) },
-                        label = { Text("Command (hex)") },
+                        label = { Text(stringResource(R.string.command_hex)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
                         modifier = Modifier.weight(1f),
@@ -244,12 +254,12 @@ fun ButtonEditorSheet(
             error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium) }
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                OutlinedButton(onClick = { attempt { blaster.send(it) } }) { Text("Test") }
+                OutlinedButton(onClick = { attempt { blaster.send(it) } }) { Text(stringResource(R.string.test)) }
                 PillButton(
-                    "Save",
+                    stringResource(R.string.save),
                     onClick = {
                         attempt { code ->
-                            val name = label.trim().ifEmpty { role?.label ?: "Button" }
+                            val name = label.trim().ifEmpty { role?.label(context) ?: context.getString(R.string.button_default) }
                             onSave(
                                 (button ?: RemoteButton(label = name, code = code)).copy(label = name, role = role, code = code),
                             )
@@ -262,17 +272,19 @@ fun ButtonEditorSheet(
             if (onDelete != null) {
                 TextButton(onClick = onDelete, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                     androidx.compose.material3.Icon(Icons.Filled.Delete, null, tint = MaterialTheme.colorScheme.error)
-                    Text("  Delete button", color = MaterialTheme.colorScheme.error)
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.delete_button), color = MaterialTheme.colorScheme.error)
                 }
             }
         }
     }
 
     if (pickRole) {
-        val options: List<Pair<KeyRole?, String>> = listOf<Pair<KeyRole?, String>>(null to "More buttons") + KeyRole.entries.map { it to it.label }
-        ChoiceSheet("Place on remote", options, role, onDismiss = { pickRole = false }) { picked ->
+        val options: List<Pair<KeyRole?, String>> =
+            listOf<Pair<KeyRole?, String>>(null to stringResource(R.string.more_buttons)) + KeyRole.entries.map { it to it.label(context) }
+        ChoiceSheet(stringResource(R.string.place_on_remote), options, role, onDismiss = { pickRole = false }) { picked ->
             // Follow the spot's name unless the button has been given its own.
-            if (label.isBlank() || label == role?.label) label = picked?.label ?: label
+            if (label.isBlank() || label == role?.label(context)) label = picked?.label(context) ?: label
             role = picked
             pickRole = false
         }

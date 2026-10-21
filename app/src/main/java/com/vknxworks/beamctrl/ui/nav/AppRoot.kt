@@ -1,6 +1,10 @@
 package com.vknxworks.beamctrl.ui.nav
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.annotation.StringRes
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -82,12 +86,16 @@ fun AppRoot() {
     }
 }
 
-private data class TopDest(val route: Any, val item: TabItem)
+private data class TopDest(val route: Any, @StringRes val label: Int, val icon: ImageVector, val selectedIcon: ImageVector)
+
+/** The tab's icon and its name in the phone's language. */
+@Composable
+private fun TopDest.item(): TabItem = TabItem(stringResource(label), icon, selectedIcon)
 
 /** Only content tabs: Settings, Backup and About open from the profile picture. */
 private val topDestinations = listOf(
-    TopDest(RemotesRoute, TabItem("Remotes", Icons.Outlined.SettingsRemote, Icons.Filled.SettingsRemote)),
-    TopDest(AddRoute, TabItem("Add", Icons.Outlined.AddCircleOutline, Icons.Filled.AddCircle)),
+    TopDest(RemotesRoute, R.string.tab_remotes, Icons.Outlined.SettingsRemote, Icons.Filled.SettingsRemote),
+    TopDest(AddRoute, R.string.tab_add, Icons.Outlined.AddCircleOutline, Icons.Filled.AddCircle),
 )
 
 @Composable
@@ -116,13 +124,14 @@ private fun MainScaffold() {
                         modifier = Modifier.fillMaxHeight().statusBarsPadding(),
                     ) {
                         Spacer(Modifier.weight(1f))
-                        topDestinations.forEachIndexed { i, top ->
+                        topDestinations.forEachIndexed { i, dest ->
+                            val top = dest.item()
                             val selected = i == selectedIndex
                             NavigationRailItem(
                                 selected = selected,
                                 onClick = { selectTab(i) },
-                                icon = { Icon(if (selected) top.item.selectedIcon else top.item.icon, contentDescription = top.item.label) },
-                                label = { Text(top.item.label) },
+                                icon = { Icon(if (selected) top.selectedIcon else top.icon, contentDescription = top.label) },
+                                label = { Text(top.label) },
                             )
                         }
                         Spacer(Modifier.weight(1f))
@@ -174,7 +183,7 @@ private fun PhoneLayout(
             ) {
                 Box(Modifier.fillMaxWidth().navigationBarsPadding().padding(bottom = 12.dp), contentAlignment = Alignment.Center) {
                     GlassTabBar(
-                        items = topDestinations.map { it.item },
+                        items = topDestinations.map { it.item() },
                         selectedIndex = selectedIndex,
                         onSelect = onSelect,
                     )

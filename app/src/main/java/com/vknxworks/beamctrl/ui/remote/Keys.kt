@@ -65,7 +65,7 @@ fun BeamKey(
     container: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     repeat: Boolean = false,
-    label: String? = button?.label ?: role?.label,
+    label: String? = button?.label ?: role?.label(LocalContext.current),
     content: @Composable BoxScope.() -> Unit,
 ) {
     val host = LocalKeyHost.current
