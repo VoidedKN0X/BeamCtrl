@@ -43,10 +43,12 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 c.blaster.errors.collect { Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show() }
             }
-            // "Hide in screenshots and recent apps", and always while the lock or a PIN screen shows. With the
-            // app lock on, the recent-apps view is always blank.
-            val secure = settings.hideContent || lockCovering(c.vault)
-            val blankRecents = secure || c.vault.enabled
+            // "Hide in screenshots": FLAG_SECURE (also blanks the Recents preview). Always on, whatever the
+            // switch says, while the lock screen or a PIN screen shows.
+            val secure = settings.hideScreenshots || lockCovering(c.vault)
+            // "Hide in recent apps": a blank Recents card; screenshots still work. Always with the app lock on,
+            // so Recents never shows what's behind the lock.
+            val blankRecents = settings.hideRecents || c.vault.enabled
             LaunchedEffect(secure, blankRecents) {
                 if (secure) window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 else window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
