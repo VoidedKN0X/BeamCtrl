@@ -1,6 +1,8 @@
 package com.vknxworks.beamctrl.ui.remote
 
 import androidx.compose.foundation.layout.Arrangement
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -88,9 +90,9 @@ fun RemoteLayout(remote: Remote, showNumbers: Boolean, editing: Boolean, onAddBu
                     contentColor = MaterialTheme.colorScheme.error,
                 ) { Icon(Icons.Filled.PowerSettingsNew, null, Modifier.size(30.dp)) }
                 Spacer(Modifier.weight(1f))
-                LabelledKey(b(KeyRole.INPUT), KeyRole.INPUT, Icons.Filled.Input, "Input")
+                LabelledKey(b(KeyRole.INPUT), KeyRole.INPUT, Icons.Filled.Input, stringResource(R.string.key_input))
                 Spacer(Modifier.width(18.dp))
-                LabelledKey(b(KeyRole.MUTE), KeyRole.MUTE, Icons.AutoMirrored.Filled.VolumeOff, "Mute")
+                LabelledKey(b(KeyRole.MUTE), KeyRole.MUTE, Icons.AutoMirrored.Filled.VolumeOff, stringResource(R.string.key_mute))
             }
         }
 
@@ -98,15 +100,15 @@ fun RemoteLayout(remote: Remote, showNumbers: Boolean, editing: Boolean, onAddBu
 
         if (has(navRoles)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                LabelledKey(b(KeyRole.BACK), KeyRole.BACK, Icons.AutoMirrored.Filled.Undo, "Back")
-                LabelledKey(b(KeyRole.HOME), KeyRole.HOME, Icons.Filled.Home, "Home")
-                LabelledKey(b(KeyRole.MENU), KeyRole.MENU, Icons.Filled.Menu, "Menu")
+                LabelledKey(b(KeyRole.BACK), KeyRole.BACK, Icons.AutoMirrored.Filled.Undo, stringResource(R.string.key_back))
+                LabelledKey(b(KeyRole.HOME), KeyRole.HOME, Icons.Filled.Home, stringResource(R.string.key_home))
+                LabelledKey(b(KeyRole.MENU), KeyRole.MENU, Icons.Filled.Menu, stringResource(R.string.key_menu))
             }
         }
 
         if (has(rockerRoles)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Rocker("VOL", b(KeyRole.VOL_UP), KeyRole.VOL_UP, b(KeyRole.VOL_DOWN), KeyRole.VOL_DOWN)
+                Rocker(stringResource(R.string.rocker_vol), b(KeyRole.VOL_UP), KeyRole.VOL_UP, b(KeyRole.VOL_DOWN), KeyRole.VOL_DOWN)
                 Column(
                     Modifier.weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -114,15 +116,15 @@ fun RemoteLayout(remote: Remote, showNumbers: Boolean, editing: Boolean, onAddBu
                 ) {
                     if (editing || b(KeyRole.INFO) != null || b(KeyRole.GUIDE) != null) {
                         Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                            LabelledKey(b(KeyRole.INFO), KeyRole.INFO, Icons.Outlined.Info, "Info", size = 52.dp)
+                            LabelledKey(b(KeyRole.INFO), KeyRole.INFO, Icons.Outlined.Info, stringResource(R.string.key_info), size = 52.dp)
                             if (editing || b(KeyRole.GUIDE) != null) {
-                                LabelledKey(b(KeyRole.GUIDE), KeyRole.GUIDE, Icons.Filled.ViewList, "Guide", size = 52.dp)
+                                LabelledKey(b(KeyRole.GUIDE), KeyRole.GUIDE, Icons.Filled.ViewList, stringResource(R.string.key_guide), size = 52.dp)
                             }
                         }
                     }
-                    LabelledKey(b(KeyRole.EXIT), KeyRole.EXIT, Icons.AutoMirrored.Filled.ExitToApp, "Exit", size = 52.dp)
+                    LabelledKey(b(KeyRole.EXIT), KeyRole.EXIT, Icons.AutoMirrored.Filled.ExitToApp, stringResource(R.string.key_exit), size = 52.dp)
                 }
-                Rocker("CH", b(KeyRole.CH_UP), KeyRole.CH_UP, b(KeyRole.CH_DOWN), KeyRole.CH_DOWN)
+                Rocker(stringResource(R.string.rocker_ch), b(KeyRole.CH_UP), KeyRole.CH_UP, b(KeyRole.CH_DOWN), KeyRole.CH_DOWN)
             }
         }
 
@@ -157,7 +159,7 @@ fun RemoteLayout(remote: Remote, showNumbers: Boolean, editing: Boolean, onAddBu
         if (extras.isNotEmpty() || editing) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    "More buttons",
+                    stringResource(R.string.more_buttons),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 4.dp),
@@ -200,7 +202,7 @@ fun RemoteLayout(remote: Remote, showNumbers: Boolean, editing: Boolean, onAddBu
                             ) {
                                 Icon(Icons.Filled.Add, null, Modifier.size(18.dp))
                                 Spacer(Modifier.width(4.dp))
-                                Text("Add button", style = MaterialTheme.typography.labelLarge)
+                                Text(stringResource(R.string.add_button), style = MaterialTheme.typography.labelLarge)
                             }
                         }
                     }
@@ -246,7 +248,7 @@ private fun DPad(remote: Remote) {
                 container = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             ) {
-                Text("OK", style = MaterialTheme.typography.titleLarge)
+                Text(stringResource(R.string.key_ok), style = MaterialTheme.typography.titleLarge)
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.vknxworks.beamctrl.ir
 
 import kotlin.math.roundToInt
+import com.vknxworks.beamctrl.R
 
 /** Builds an on/off timing list, merging consecutive periods of the same state. Always starts with on. */
 internal class Pulses {
@@ -101,7 +102,7 @@ object Protocols {
     // ---------- Sony SIRC ----------
 
     fun sirc(bits: Int, address: Int, command: Int): IrSignal {
-        require(bits == 12 || bits == 15 || bits == 20) { "Sony codes are 12, 15 or 20 bits" }
+        irRequire(bits == 12 || bits == 15 || bits == 20, R.string.code_sony_bits)
         val addressBits = bits - 7
         val value: Long = (command.toLong() and 0x7F) or ((address.toLong() and ((1L shl addressBits) - 1)) shl 7)
         val frame = Pulses().apply {
@@ -165,20 +166,20 @@ object Pronto {
 
     /** Decodes "0000 006D 0022 0002 0157 00AC …" (learned, modulated codes). */
     fun decode(hex: String): IrSignal {
-        require(hex.length <= IrLimits.MAX_PRONTO_CHARS) { "That Pronto code is too long" }
+        irRequire(hex.length <= IrLimits.MAX_PRONTO_CHARS, R.string.pronto_too_long)
         val words = hex.trim().split(Regex("[\\s,]+")).filter { it.isNotEmpty() }.map {
-            it.toIntOrNull(16) ?: throw IllegalArgumentException("\"$it\" isn't a hex number")
+            it.toIntOrNull(16) ?: throw IrCodeException(R.string.pronto_not_hex, it.take(12))
         }
-        require(words.size >= 6) { "That Pronto code is too short" }
-        require(words[0] == 0x0000) { "Only learned Pronto codes (starting 0000) are supported" }
+        irRequire(words.size >= 6, R.string.pronto_too_short)
+        irRequire(words[0] == 0x0000, R.string.pronto_not_learned)
         val freqWord = words[1]
-        require(freqWord > 0) { "Pronto frequency is zero" }
+        irRequire(freqWord > 0, R.string.pronto_frequency_zero)
         val frequency = (1_000_000.0 / (freqWord * 0.241246)).roundToInt()
-        require(frequency in IrLimits.MIN_FREQUENCY..IrLimits.MAX_FREQUENCY) { "Pronto frequency is out of range" }
+        irRequire(frequency in IrLimits.MIN_FREQUENCY..IrLimits.MAX_FREQUENCY, R.string.pronto_frequency_range)
         val n1 = words[2] * 2
         val n2 = words[3] * 2
-        require(n1 + n2 > 0) { "Pronto code has no timings" }
-        require(words.size >= 4 + n1 + n2) { "Pronto code is shorter than its header says" }
+        irRequire(n1 + n2 > 0, R.string.pronto_no_timings)
+        irRequire(words.size >= 4 + n1 + n2, R.string.pronto_short_header)
         val periodUs = 1_000_000.0 / frequency
         fun seq(from: Int, count: Int) = IntArray(count) { i -> (words[from + i] * periodUs).roundToInt().coerceAtLeast(1) }
         val first = seq(4, n1)
@@ -186,7 +187,7 @@ object Pronto {
         val once = if (first.isNotEmpty()) first else second
         val repeat = if (second.isNotEmpty()) second else first
         for (part in listOf(once, repeat)) {
-            require(part.fold(0L) { acc, v -> acc + v } <= IrLimits.MAX_PATTERN_US) { "That Pronto code is longer than two seconds" }
+            irRequire(part.fold(0L) { acc, v -> acc + v } <= IrLimits.MAX_PATTERN_US, R.string.pronto_too_long_time)
         }
         return IrSignal(frequency, once, repeat)
     }

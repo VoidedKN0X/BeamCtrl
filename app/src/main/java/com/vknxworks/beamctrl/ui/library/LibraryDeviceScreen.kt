@@ -1,6 +1,11 @@
 package com.vknxworks.beamctrl.ui.library
 
 import androidx.compose.foundation.layout.Arrangement
+import com.vknxworks.beamctrl.ir.irErrorText
+import com.vknxworks.beamctrl.ir.IrCodeException
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -59,15 +64,18 @@ private sealed interface DeviceState {
  */
 @Composable
 fun LibraryDeviceScreen(id: Int) {
-    val c = LocalContext.current.container
+    val context = LocalContext.current
+    val c = context.container
     val nav = LocalNavigator.current
     val settings by c.settings.settings.collectAsStateWithLifecycle()
     var state by remember(id) { mutableStateOf<DeviceState>(DeviceState.Loading) }
     LaunchedEffect(id) {
         state = runCatching {
-            val device = c.library.device(id) ?: error("That remote isn't in the library")
+            val device = c.library.device(id) ?: throw IrCodeException(R.string.library_not_found)
             DeviceState.Ready(device, c.library.category(device.category), c.library.load(device))
-        }.getOrElse { DeviceState.Failed(it.message ?: "Couldn't open that remote") }
+        }.getOrElse {
+            DeviceState.Failed(if (it is IrCodeException) irErrorText(context, it) else context.getString(R.string.library_open_failed))
+        }
     }
 
     val ready = state as? DeviceState.Ready
@@ -77,10 +85,10 @@ fun LibraryDeviceScreen(id: Int) {
     }
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar(ready?.device?.title ?: "Remote")
+        ScreenTopBar(ready?.device?.title ?: stringResource(R.string.remote_unnamed))
         when (val s = state) {
             DeviceState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-            is DeviceState.Failed -> MessageView(Icons.Outlined.ErrorOutline, "Couldn't open this remote", s.message)
+            is DeviceState.Failed -> MessageView(Icons.Outlined.ErrorOutline, stringResource(R.string.library_open_failed_title), s.message)
             is DeviceState.Ready -> {
                 val type = s.category?.type ?: com.vknxworks.beamctrl.data.DeviceType.OTHER
                 val preview = remember(s) {
@@ -99,17 +107,19 @@ fun LibraryDeviceScreen(id: Int) {
                             verticalArrangement = Arrangement.spacedBy(14.dp),
                         ) {
                             Text(
-                                listOfNotNull(s.category?.name, "${s.result.buttons.size} buttons").joinToString("  ·  "),
+                                pluralStringResource(R.plurals.buttons_count, s.result.buttons.size, s.result.buttons.size).let { buttons ->
+                                    s.category?.let { stringResource(R.string.dot_pair, it.displayName(context), buttons) } ?: buttons
+                                },
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary,
                             )
                             Text(
-                                "Point your phone at the device and try a few buttons. If it responds, save the remote.",
+                                stringResource(R.string.library_try),
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                             if (s.result.skipped.isNotEmpty()) {
                                 Text(
-                                    "${s.result.skipped.size} more buttons use a code format BeamCtrl can't send yet, so they're left out.",
+                                    pluralStringResource(R.plurals.library_skipped, s.result.skipped.size, s.result.skipped.size),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -117,13 +127,13 @@ fun LibraryDeviceScreen(id: Int) {
                             OutlinedTextField(
                                 value = name,
                                 onValueChange = { name = it.take(40) },
-                                label = { Text("Remote name") },
+                                label = { Text(stringResource(R.string.remote_name)) },
                                 singleLine = true,
                                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
                                 modifier = Modifier.fillMaxWidth(),
                             )
                             PillButton(
-                                "Save remote",
+                                stringResource(R.string.save_remote),
                                 onClick = {
                                     val saved = c.remotes.add(
                                         preview.copy(id = java.util.UUID.randomUUID().toString(), name = name.trim().ifEmpty { s.device.title }),

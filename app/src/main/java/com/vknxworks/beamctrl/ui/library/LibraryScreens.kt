@@ -1,6 +1,9 @@
 package com.vknxworks.beamctrl.ui.library
 
 import androidx.compose.foundation.background
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -83,6 +86,7 @@ private fun count(n: Int): String = NumberFormat.getIntegerInstance().format(n)
 /** Code library home: search across every remote, or browse by device type. */
 @Composable
 fun LibraryScreen(initialQuery: String) {
+    val context = LocalContext.current
     val nav = LocalNavigator.current
     var query by rememberSaveable { mutableStateOf(initialQuery) }
     // Wait for a pause in typing before searching 8,000+ remotes.
@@ -95,19 +99,21 @@ fun LibraryScreen(initialQuery: String) {
     val results = rememberLibrary(debounced) { if (debounced.isBlank()) emptyList() else search(debounced) }
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar("Code library")
-        SearchField(query, onChange = { query = it }, placeholder = "Brand or model, e.g. LG soundbar")
+        ScreenTopBar(stringResource(R.string.library_title))
+        SearchField(query, onChange = { query = it }, placeholder = stringResource(R.string.library_search_hint))
         when {
             index == null -> Loading()
             query.isNotBlank() -> when {
                 results == null || debounced != query -> Loading()
-                results.isEmpty() -> MessageView(Icons.Outlined.SearchOff, "No remotes found", "Try just the brand, or fewer words.")
+                results.isEmpty() -> MessageView(Icons.Outlined.SearchOff, stringResource(R.string.library_no_results), stringResource(R.string.library_no_results_body))
                 else -> LazyColumn(contentPadding = listPadding()) {
                     cardList(results, key = { it.id }) { device, _ ->
                         val cat = index.categories.getOrNull(device.category)
                         ListRow(
                             title = device.title,
-                            subtitle = listOfNotNull(cat?.name, "${device.signalCount} buttons").joinToString("  ·  "),
+                            subtitle = pluralStringResource(R.plurals.buttons_count, device.signalCount, device.signalCount).let { buttons ->
+                                if (cat != null) stringResource(R.string.dot_pair, cat.displayName(context), buttons) else buttons
+                            },
                             icon = cat?.type?.icon,
                             power = device.hasPower,
                             onClick = { nav.navigate(LibraryDeviceRoute(device.id)) },
@@ -118,8 +124,7 @@ fun LibraryScreen(initialQuery: String) {
             else -> LazyColumn(contentPadding = listPadding()) {
                 item {
                     Text(
-                        "${count(index.devices.size)} remotes from the Flipper-IRDB community database, built into the app. " +
-                            "Pick one, try its buttons, and save it.",
+                        pluralStringResource(R.plurals.library_intro, index.devices.size, count(index.devices.size)),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = Gutter, end = Gutter, top = 4.dp, bottom = 16.dp),
@@ -127,8 +132,8 @@ fun LibraryScreen(initialQuery: String) {
                 }
                 cardList(index.categories.filter { it.deviceCount > 0 }, key = { it.index }) { cat, _ ->
                     ListRow(
-                        title = cat.name,
-                        subtitle = "${count(cat.deviceCount)} remotes",
+                        title = cat.displayName(context),
+                        subtitle = pluralStringResource(R.plurals.remotes_count, cat.deviceCount, count(cat.deviceCount)),
                         icon = cat.type.icon,
                         onClick = { nav.navigate(LibraryCategoryRoute(cat.index)) },
                     )
@@ -149,12 +154,12 @@ fun LibraryCategoryScreen(categoryIndex: Int) {
     val library = c.library
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar(category?.name ?: "Code library")
-        SearchField(filter, onChange = { filter = it }, placeholder = "Filter brands")
+        ScreenTopBar(category?.displayName(LocalContext.current) ?: stringResource(R.string.library_title))
+        SearchField(filter, onChange = { filter = it }, placeholder = stringResource(R.string.library_filter_brands))
         val shown = brands?.filter { it.first.contains(filter.trim(), ignoreCase = true) }
         when {
             shown == null -> Loading()
-            shown.isEmpty() -> MessageView(Icons.Outlined.SearchOff, "No brands match", "Check the spelling, or search the whole library instead.")
+            shown.isEmpty() -> MessageView(Icons.Outlined.SearchOff, stringResource(R.string.library_no_brands), stringResource(R.string.library_no_brands_body))
             else -> {
                 var opening by remember { mutableStateOf<String?>(null) }
                 LaunchedEffect(opening) {
@@ -168,7 +173,7 @@ fun LibraryCategoryScreen(categoryIndex: Int) {
                     cardList(shown, key = { it.first }) { (brand, n), _ ->
                         ListRow(
                             title = brand,
-                            subtitle = if (n == 1) "1 remote" else "$n remotes",
+                            subtitle = pluralStringResource(R.plurals.remotes_count, n, count(n)),
                             onClick = { opening = brand },
                         )
                     }
@@ -186,14 +191,14 @@ fun LibraryBrandScreen(categoryIndex: Int, brand: String) {
     val category = rememberLibrary(categoryIndex) { category(categoryIndex) }
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar(listOfNotNull(brand, category?.name).joinToString(" "))
+        ScreenTopBar(category?.let { stringResource(R.string.brand_title, brand, it.displayName(LocalContext.current)) } ?: brand)
         when {
             devices == null -> Loading()
-            devices.isEmpty() -> MessageView(Icons.Filled.LibraryBooks, "No remotes here")
+            devices.isEmpty() -> MessageView(Icons.Filled.LibraryBooks, stringResource(R.string.library_brand_empty))
             else -> LazyColumn(contentPadding = listPadding(top = 8.dp)) {
                 item {
                     Text(
-                        "Not sure which one is yours? Most models from the same brand share codes, so pick the closest and try its buttons.",
+                        stringResource(R.string.library_brand_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = Gutter, end = Gutter, bottom = 16.dp),
@@ -202,7 +207,7 @@ fun LibraryBrandScreen(categoryIndex: Int, brand: String) {
                 cardList(devices, key = { it.id }) { device, _ ->
                     ListRow(
                         title = device.model,
-                        subtitle = "${device.signalCount} buttons",
+                        subtitle = pluralStringResource(R.plurals.buttons_count, device.signalCount, device.signalCount),
                         power = device.hasPower,
                         onClick = { nav.navigate(LibraryDeviceRoute(device.id)) },
                     )
@@ -230,7 +235,7 @@ internal fun SearchField(value: String, onChange: (String) -> Unit, placeholder:
         placeholder = { Text(placeholder, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         leadingIcon = { Icon(Icons.Filled.Search, null) },
         trailingIcon = {
-            if (value.isNotEmpty()) IconButton(onClick = { onChange("") }) { Icon(Icons.Filled.Close, "Clear") }
+            if (value.isNotEmpty()) IconButton(onClick = { onChange("") }) { Icon(Icons.Filled.Close, stringResource(R.string.clear)) }
         },
         singleLine = true,
         shape = CircleShape,
@@ -305,7 +310,7 @@ private fun ListRow(
         if (power) {
             Icon(
                 Icons.Filled.PowerSettingsNew,
-                "Has a power button",
+                stringResource(R.string.library_has_power),
                 Modifier.size(16.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )

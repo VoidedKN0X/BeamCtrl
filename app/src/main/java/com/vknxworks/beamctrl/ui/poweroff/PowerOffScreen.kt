@@ -1,6 +1,9 @@
 package com.vknxworks.beamctrl.ui.poweroff
 
 import android.app.Activity
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import android.view.WindowManager
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -127,7 +130,7 @@ fun PowerOffScreen() {
     }
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar("Turn off any TV")
+        ScreenTopBar(stringResource(R.string.poweroff_title))
         val list = codes
         if (list == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
@@ -147,18 +150,17 @@ fun PowerOffScreen() {
                     Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Filled.WarningAmber, null, tint = MaterialTheme.colorScheme.error)
                         Spacer(Modifier.width(12.dp))
-                        Text("This phone doesn't have an IR blaster, so nothing can be sent.", style = MaterialTheme.typography.bodyMedium)
+                        Text(stringResource(R.string.poweroff_no_blaster), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
             }
 
             Text(
                 when {
-                    running -> "Keep the top of your phone pointed at the TV. Tap stop as soon as it turns off."
-                    finished -> "Sent every code. If the TV didn't turn off, its power code isn't in the library yet."
-                    sent > 0 -> "Stopped. If the TV turned off, one of the last codes did it. Try them below to find which."
-                    else -> "Sends the power code of every TV in the library, ${list.size} in all, starting with the most common. " +
-                        "Point your phone at the TV and start. It takes about a minute to go through them all."
+                    running -> stringResource(R.string.poweroff_running)
+                    finished -> stringResource(R.string.poweroff_finished)
+                    sent > 0 -> stringResource(R.string.poweroff_stopped)
+                    else -> pluralStringResource(R.plurals.poweroff_intro, list.size, list.size)
                 },
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -179,14 +181,14 @@ fun PowerOffScreen() {
                 Spacer(Modifier.height(8.dp))
                 Text(
                     when {
-                        running && current >= 0 -> "Code ${current + 1} of ${list.size}  ·  ${list[current].label}"
-                        sent > 0 -> "$sent of ${list.size} codes sent"
-                        else -> "${list.size} codes ready"
+                        running && current >= 0 -> stringResource(R.string.dot_pair, stringResource(R.string.poweroff_code_of, current + 1, list.size), list[current].label)
+                        sent > 0 -> pluralStringResource(R.plurals.poweroff_sent, list.size, sent, list.size)
+                        else -> pluralStringResource(R.plurals.poweroff_ready, list.size, list.size)
                     },
                     style = MaterialTheme.typography.labelLarge,
                 )
                 if (!running && sent > 0 && !finished) {
-                    TextButton(onClick = { sent = 0; current = -1 }) { Text("Start from the beginning") }
+                    TextButton(onClick = { sent = 0; current = -1 }) { Text(stringResource(R.string.poweroff_restart)) }
                 }
             }
 
@@ -195,7 +197,7 @@ fun PowerOffScreen() {
                 val recent = (maxOf(0, sent - 8) until sent).reversed().map { it to list[it] }
                 Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        "Last codes sent",
+                        stringResource(R.string.poweroff_last_codes),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 4.dp),
@@ -213,7 +215,7 @@ fun PowerOffScreen() {
                         }
                     }
                     Text(
-                        "Found it? Tap the search icon to find that brand's full remote in the code library.",
+                        stringResource(R.string.poweroff_found_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 4.dp),
@@ -238,6 +240,7 @@ private fun BigPowerButton(running: Boolean, resume: Boolean, enabled: Boolean, 
     val scale by animateFloatAsState(if (running && pulse) 1.06f else 1f, label = "pulse")
     val color = if (running) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.error.copy(alpha = 0.16f)
     val content = if (running) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.error
+    val label = stringResource(if (running) R.string.poweroff_stop else if (resume) R.string.poweroff_continue else R.string.poweroff_start)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             Modifier
@@ -248,14 +251,14 @@ private fun BigPowerButton(running: Boolean, resume: Boolean, enabled: Boolean, 
                 .clickable(enabled = enabled, onClick = onClick)
                 .semantics {
                     role = Role.Button
-                    contentDescription = if (running) "Stop" else if (resume) "Continue" else "Start"
+                    contentDescription = label
                 },
             contentAlignment = Alignment.Center,
         ) {
             Icon(if (running) Icons.Filled.Stop else Icons.Filled.PowerSettingsNew, null, Modifier.size(64.dp), tint = content)
         }
         Spacer(Modifier.height(10.dp))
-        Text(if (running) "Stop" else if (resume) "Continue" else "Start", style = MaterialTheme.typography.titleMedium)
+        Text(label, style = MaterialTheme.typography.titleMedium)
     }
 }
 
@@ -267,15 +270,15 @@ private fun RecentCode(number: Int, button: RemoteButton, onTest: () -> Unit, on
     ) {
         Column(Modifier.weight(1f)) {
             Text(button.label, style = MaterialTheme.typography.bodyLarge)
-            Text("Code $number", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.poweroff_code, number), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         OutlinedButton(onClick = onTest) {
             Icon(Icons.Filled.PowerSettingsNew, null, Modifier.size(18.dp))
             Spacer(Modifier.width(6.dp))
-            Text("Test")
+            Text(stringResource(R.string.test))
         }
         androidx.compose.material3.IconButton(onClick = onFind) {
-            Icon(Icons.Filled.Search, "Find ${button.label} in the code library")
+            Icon(Icons.Filled.Search, stringResource(R.string.poweroff_find, button.label))
         }
     }
 }

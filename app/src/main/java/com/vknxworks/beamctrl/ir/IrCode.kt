@@ -1,6 +1,9 @@
 package com.vknxworks.beamctrl.ir
 
 import kotlinx.serialization.SerialName
+import com.vknxworks.beamctrl.R
+import androidx.annotation.StringRes
+import android.content.Context
 import kotlinx.serialization.Serializable
 
 /**
@@ -66,28 +69,28 @@ object IrLimits {
 /** Timings ready for the blaster. [once] is sent for a tap; [repeat] keeps going while a button is held. */
 class IrSignal(val frequency: Int, val once: IntArray, val repeat: IntArray)
 
-val IrCode.protocolLabel: String
-    get() = when (this) {
-        is IrCode.Nec -> if (extended) "NEC extended" else "NEC"
-        is IrCode.Samsung32 -> "Samsung"
-        is IrCode.Sirc -> "Sony $bits-bit"
-        is IrCode.Rc5 -> if (command >= 64) "RC5X" else "RC5"
-        is IrCode.Rc6 -> "RC6"
-        is IrCode.Pronto -> "Pronto"
-        is IrCode.Raw -> "Raw"
-    }
+/** The protocol's name, e.g. "NEC", "Sony 12-bit" or "Raw". */
+fun IrCode.protocolLabel(context: Context): String = when (this) {
+    is IrCode.Nec -> context.getString(if (extended) R.string.proto_nec_ext else R.string.proto_nec)
+    is IrCode.Samsung32 -> context.getString(R.string.proto_samsung)
+    is IrCode.Sirc -> context.getString(R.string.proto_sony_bits, bits)
+    is IrCode.Rc5 -> context.getString(if (command >= 64) R.string.proto_rc5x else R.string.proto_rc5)
+    is IrCode.Rc6 -> context.getString(R.string.proto_rc6)
+    is IrCode.Pronto -> context.getString(R.string.proto_pronto)
+    is IrCode.Raw -> context.getString(R.string.proto_raw)
+}
 
-/** Short description of the code for lists and the editor, e.g. "NEC  04 · 08". */
-val IrCode.summary: String
-    get() = when (this) {
-        is IrCode.Nec -> "$protocolLabel  ${hex(address, if (extended) 4 else 2)} · ${hex(command, if (extended) 4 else 2)}"
-        is IrCode.Samsung32 -> "$protocolLabel  ${hex(address, 2)} · ${hex(command, 2)}"
-        is IrCode.Sirc -> "$protocolLabel  ${hex(address, 2)} · ${hex(command, 2)}"
-        is IrCode.Rc5 -> "$protocolLabel  ${hex(address, 2)} · ${hex(command, 2)}"
-        is IrCode.Rc6 -> "$protocolLabel  ${hex(address, 2)} · ${hex(command, 2)}"
-        is IrCode.Pronto -> "$protocolLabel  ${hex.take(IrLimits.MAX_PRONTO_CHARS).trim().split(Regex("\\s+")).size} words"
-        is IrCode.Raw -> "$protocolLabel  ${timings.size} timings at ${frequency / 1000} kHz"
-    }
+/** A code that can't be sent or saved; [text] (from strings.xml, with [args]) says why. */
+class IrCodeException(@StringRes val text: Int, vararg val args: Any) : IllegalArgumentException("invalid IR code")
+
+/** Throws [IrCodeException] with [text] unless [ok]. */
+fun irRequire(ok: Boolean, @StringRes text: Int, vararg args: Any) {
+    if (!ok) throw IrCodeException(text, *args)
+}
+
+/** Why a code can't be used, in the phone's language. */
+fun irErrorText(context: Context, e: Throwable): String =
+    if (e is IrCodeException) context.getString(e.text, *e.args) else context.getString(R.string.code_invalid)
 
 fun hex(value: Int, digits: Int): String = value.toString(16).uppercase().padStart(digits, '0')
 
@@ -103,12 +106,12 @@ fun IrCode.encode(toggle: Boolean = false): IrSignal = when (this) {
     is IrCode.Rc6 -> Protocols.rc6(address, command, toggle)
     is IrCode.Pronto -> Pronto.decode(hex)
     is IrCode.Raw -> {
-        require(timings.size <= IrLimits.MAX_TIMINGS) { "Too many timings (at most ${IrLimits.MAX_TIMINGS})" }
+        irRequire(timings.size <= IrLimits.MAX_TIMINGS, R.string.code_too_many_timings, IrLimits.MAX_TIMINGS)
         val t = timings.filter { it > 0 }.toIntArray()
-        require(t.isNotEmpty()) { "No timings" }
-        require(t.all { it <= IrLimits.MAX_TIMING_US }) { "A timing is longer than one second" }
-        require(t.fold(0L) { acc, v -> acc + v } <= IrLimits.MAX_PATTERN_US) { "The code is longer than two seconds" }
-        require(frequency in IrLimits.MIN_FREQUENCY..IrLimits.MAX_FREQUENCY) { "Frequency out of range" }
+        irRequire(t.isNotEmpty(), R.string.code_no_timings)
+        irRequire(t.all { it <= IrLimits.MAX_TIMING_US }, R.string.code_timing_too_long)
+        irRequire(t.fold(0L) { acc, v -> acc + v } <= IrLimits.MAX_PATTERN_US, R.string.code_too_long)
+        irRequire(frequency in IrLimits.MIN_FREQUENCY..IrLimits.MAX_FREQUENCY, R.string.code_frequency_range)
         IrSignal(frequency, t, t)
     }
 }

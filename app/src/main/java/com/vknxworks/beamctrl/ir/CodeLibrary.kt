@@ -1,6 +1,9 @@
 package com.vknxworks.beamctrl.ir
 
 import com.vknxworks.beamctrl.data.DeviceType
+import com.vknxworks.beamctrl.R
+import androidx.annotation.StringRes
+import android.content.Context
 import com.vknxworks.beamctrl.data.KeyRole
 import com.vknxworks.beamctrl.data.Remote
 import com.vknxworks.beamctrl.data.RemoteButton
@@ -10,18 +13,20 @@ class BrandTemplate(
     val id: String,
     val brand: String,
     val type: DeviceType,
-    val note: String,
+    @StringRes val note: Int,
     val keys: List<Pair<KeyRole, IrCode>>,
 ) {
-    val title: String get() = "$brand ${type.label}"
+    /** "Samsung TV". */
+    fun title(context: Context): String = context.getString(R.string.brand_title, brand, context.getString(type.label))
 
     fun code(role: KeyRole): IrCode? = keys.firstOrNull { it.first == role }?.second
 
-    fun toRemote(name: String = title): Remote = Remote(
+    /** A remote with every key, named in the phone's language. */
+    fun toRemote(context: Context, name: String = title(context)): Remote = Remote(
         name = name,
         type = type,
         brand = brand,
-        buttons = keys.map { (role, code) -> RemoteButton(label = role.label, role = role, code = code) },
+        buttons = keys.map { (role, code) -> RemoteButton(label = role.label(context), role = role, code = code) },
     )
 }
 
@@ -34,7 +39,7 @@ object CodeLibrary {
         id = "samsung-tv",
         brand = "Samsung",
         type = DeviceType.TV,
-        note = "Most Samsung TVs since about 2005, including current models",
+        note = R.string.brand_note_samsung,
         keys = buildList<Pair<KeyRole, IrCode>> {
             fun k(role: KeyRole, cmd: Int) = add(role to IrCode.Samsung32(0x07, cmd))
             k(KeyRole.POWER, 0x02); k(KeyRole.INPUT, 0x01); k(KeyRole.MUTE, 0x0F)
@@ -52,7 +57,7 @@ object CodeLibrary {
         id = "lg-tv",
         brand = "LG",
         type = DeviceType.TV,
-        note = "LG TVs, including webOS models",
+        note = R.string.brand_note_lg,
         keys = buildList<Pair<KeyRole, IrCode>> {
             fun k(role: KeyRole, cmd: Int) = add(role to IrCode.Nec(0x04, cmd))
             k(KeyRole.POWER, 0x08); k(KeyRole.INPUT, 0x0B); k(KeyRole.MUTE, 0x09)
@@ -69,7 +74,7 @@ object CodeLibrary {
         id = "sony-tv",
         brand = "Sony",
         type = DeviceType.TV,
-        note = "Sony Bravia and older Sony TVs (12-bit SIRC)",
+        note = R.string.brand_note_sony,
         keys = buildList<Pair<KeyRole, IrCode>> {
             fun k(role: KeyRole, cmd: Int) = add(role to IrCode.Sirc(12, 0x01, cmd))
             k(KeyRole.POWER, 21); k(KeyRole.INPUT, 37); k(KeyRole.MUTE, 20)
@@ -85,7 +90,7 @@ object CodeLibrary {
         id = "philips-tv",
         brand = "Philips",
         type = DeviceType.TV,
-        note = "Philips TVs using RC6",
+        note = R.string.brand_note_philips,
         keys = buildList<Pair<KeyRole, IrCode>> {
             fun k(role: KeyRole, cmd: Int) = add(role to IrCode.Rc6(0x00, cmd))
             k(KeyRole.POWER, 0x0C); k(KeyRole.INPUT, 0x38); k(KeyRole.MUTE, 0x0D)
@@ -100,7 +105,7 @@ object CodeLibrary {
         id = "vizio-tv",
         brand = "Vizio",
         type = DeviceType.TV,
-        note = "Vizio TVs, including SmartCast models",
+        note = R.string.brand_note_vizio,
         keys = buildList<Pair<KeyRole, IrCode>> {
             fun k(role: KeyRole, cmd: Int) = add(role to IrCode.Nec(0x04, cmd))
             k(KeyRole.POWER, 0x08); k(KeyRole.INPUT, 0x2F); k(KeyRole.MUTE, 0x09)

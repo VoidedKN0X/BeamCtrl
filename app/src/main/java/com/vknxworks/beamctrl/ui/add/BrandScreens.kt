@@ -1,6 +1,10 @@
 package com.vknxworks.beamctrl.ui.add
 
 import androidx.compose.foundation.layout.Arrangement
+import com.vknxworks.beamctrl.ir.protocolLabel
+import com.vknxworks.beamctrl.R
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,7 +49,6 @@ import com.vknxworks.beamctrl.data.KeyRole
 import com.vknxworks.beamctrl.data.RemoteButton
 import com.vknxworks.beamctrl.ir.BrandTemplate
 import com.vknxworks.beamctrl.ir.CodeLibrary
-import com.vknxworks.beamctrl.ir.summary
 import com.vknxworks.beamctrl.ui.components.MessageView
 import com.vknxworks.beamctrl.ui.components.PillButton
 import com.vknxworks.beamctrl.ui.components.ScreenTopBar
@@ -58,16 +61,17 @@ import com.vknxworks.beamctrl.ui.theme.Gutter
 /** Test a brand's codes on the TV, then save them as a remote. */
 @Composable
 fun BrandScreen(id: String) {
-    val c = LocalContext.current.container
+    val context = LocalContext.current
+    val c = context.container
     val nav = LocalNavigator.current
     val settings by c.settings.settings.collectAsStateWithLifecycle()
     val brand = CodeLibrary.brand(id)
-    var name by remember { mutableStateOf(brand?.let { c.remotes.uniqueName(it.title) }.orEmpty()) }
+    var name by remember { mutableStateOf(brand?.let { c.remotes.uniqueName(it.title(context)) }.orEmpty()) }
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar(brand?.title ?: "Remote")
+        ScreenTopBar(brand?.title(context) ?: stringResource(R.string.remote_unnamed))
         if (brand == null) {
-            MessageView(Icons.Filled.PowerSettingsNew, "That brand isn't in the list")
+            MessageView(Icons.Filled.PowerSettingsNew, stringResource(R.string.brand_missing))
             return@Column
         }
         CompositionLocalProvider(LocalKeyHost provides KeyHost(holdToRepeat = settings.holdToRepeat, haptics = settings.haptics)) {
@@ -79,31 +83,31 @@ fun BrandScreen(id: String) {
                     .padding(horizontal = Gutter, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                Text(brand.note, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(brand.note), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
-                    "Point the top of your phone at the TV and try a few buttons. If the TV responds, save the remote.",
+                    stringResource(R.string.brand_try),
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 TestKeys(brand)
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it.take(40) },
-                    label = { Text("Remote name") },
+                    label = { Text(stringResource(R.string.remote_name)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
                     modifier = Modifier.fillMaxWidth(),
                 )
                 PillButton(
-                    "Save remote",
+                    stringResource(R.string.save_remote),
                     onClick = {
-                        val remote = c.remotes.add(brand.toRemote(name.trim().ifEmpty { brand.title }))
+                        val remote = c.remotes.add(brand.toRemote(context, name.trim().ifEmpty { brand.title(context) }))
                         nav.openRemote(remote.id, fromAdd = true)
                     },
                     icon = Icons.Filled.Check,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Text(
-                    "Codes: ${brand.keys.first().second.summary.substringBefore("  ")}, ${brand.keys.size} buttons. You can change any of them later.",
+                    pluralStringResource(R.plurals.brand_codes, brand.keys.size, brand.keys.first().second.protocolLabel(context), brand.keys.size),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -116,10 +120,10 @@ fun BrandScreen(id: String) {
 @Composable
 private fun TestKeys(brand: BrandTemplate) {
     val tests: List<Triple<KeyRole, ImageVector, String>> = listOf(
-        Triple(KeyRole.POWER, Icons.Filled.PowerSettingsNew, "Power"),
-        Triple(KeyRole.VOL_DOWN, Icons.AutoMirrored.Filled.VolumeDown, "Vol −"),
-        Triple(KeyRole.VOL_UP, Icons.AutoMirrored.Filled.VolumeUp, "Vol +"),
-        Triple(KeyRole.MUTE, Icons.AutoMirrored.Filled.VolumeOff, "Mute"),
+        Triple(KeyRole.POWER, Icons.Filled.PowerSettingsNew, stringResource(R.string.key_power)),
+        Triple(KeyRole.VOL_DOWN, Icons.AutoMirrored.Filled.VolumeDown, stringResource(R.string.key_vol_down_short)),
+        Triple(KeyRole.VOL_UP, Icons.AutoMirrored.Filled.VolumeUp, stringResource(R.string.key_vol_up_short)),
+        Triple(KeyRole.MUTE, Icons.AutoMirrored.Filled.VolumeOff, stringResource(R.string.key_mute)),
     )
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
         tests.forEach { (role, icon, label) ->
@@ -151,14 +155,13 @@ fun FindBrandScreen() {
     var index by remember { mutableIntStateOf(0) }
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar("Find my TV")
+        ScreenTopBar(stringResource(R.string.find_title))
         if (index >= brands.size) {
             MessageView(
                 Icons.Filled.PowerSettingsNew,
-                "No match",
-                "None of the built-in brands worked. If you have a Flipper .ir file for your TV you can import it, " +
-                    "or build a remote yourself from its codes.",
-                actionLabel = "Start again",
+                stringResource(R.string.find_no_match),
+                stringResource(R.string.find_no_match_body),
+                actionLabel = stringResource(R.string.find_start_again),
                 onAction = { index = 0 },
             )
             return@Column
@@ -176,20 +179,20 @@ fun FindBrandScreen() {
                 verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
                 Text(
-                    "Brand ${index + 1} of ${brands.size}",
+                    stringResource(R.string.find_progress, index + 1, brands.size),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(brand.brand, style = MaterialTheme.typography.displaySmall, textAlign = TextAlign.Center)
                 Text(
-                    "Point your phone at the TV and tap power. Did the TV turn off or on?",
+                    stringResource(R.string.find_try),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(8.dp))
                 BeamKey(
-                    power?.let { RemoteButton(id = "find-${brand.id}", label = "Power", role = KeyRole.POWER, code = it) },
+                    power?.let { RemoteButton(id = "find-${brand.id}", label = stringResource(R.string.key_power), role = KeyRole.POWER, code = it) },
                     KeyRole.POWER,
                     Modifier.size(120.dp),
                     container = MaterialTheme.colorScheme.error.copy(alpha = 0.16f),
@@ -197,7 +200,7 @@ fun FindBrandScreen() {
                 ) { Icon(Icons.Filled.PowerSettingsNew, null, Modifier.size(52.dp)) }
                 Spacer(Modifier.height(8.dp))
                 PillButton(
-                    "It worked",
+                    stringResource(R.string.find_worked),
                     onClick = { nav.navigate(com.vknxworks.beamctrl.ui.nav.BrandRoute(brand.id)) },
                     icon = Icons.Filled.Check,
                     modifier = Modifier.fillMaxWidth(),
@@ -205,7 +208,7 @@ fun FindBrandScreen() {
                 OutlinedButton(onClick = { index++ }, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                     Icon(Icons.Filled.SkipNext, null)
                     Spacer(Modifier.size(8.dp))
-                    Text(if (index == brands.lastIndex) "Didn't work" else "Didn't work, try ${brands[index + 1].brand}")
+                    Text(if (index == brands.lastIndex) stringResource(R.string.find_didnt_work) else stringResource(R.string.find_didnt_work_next, brands[index + 1].brand))
                 }
             }
         }
