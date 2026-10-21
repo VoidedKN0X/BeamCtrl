@@ -24,6 +24,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Pronto hex and raw timings
 - **Backup and restore** all remotes as a single file
 - **Vibrate on press**, keep the screen on while a remote is open, and show or hide the number pad
+- **App lock** with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes
 - Light, dark and pure black themes, with an ember accent or your wallpaper's Material You colours; tablet and foldable layout
 
 ## Screenshots
@@ -62,11 +63,26 @@ If the Obtainium button doesn't open the app, add `https://github.com/VoidedKN0X
 
 Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use the code library, a ready-made remote or a Flipper Zero file instead.
 
+## App lock
+
+Turn it on under **Settings > Privacy and security > App lock**. It's off until you turn it on.
+
+- **Its own app PIN** of at least 6 digits, separate from your phone's screen lock. Very obvious PINs such as 111111 or 123456 are refused.
+- **Unlock with fingerprint** (optional) only accepts strong biometrics, such as the fingerprint sensor, checked by the phone's secure hardware. Face unlock that only uses the camera isn't accepted. The PIN is still needed after the phone restarts and at least every 72 hours, and adding a new fingerprint to the phone turns fingerprint unlock off until you turn it on again.
+- **The PIN is never stored.** It's stretched with 600,000 rounds of PBKDF2 and mixed with a key held in the phone's secure hardware, so a copy of the app's files isn't enough to guess it on a computer.
+- **Wrong PINs:** after 5 tries you wait 30 seconds, doubling up to 15 minutes. Restarting the app or the phone, or changing the clock, doesn't skip the wait.
+- **Lock again:** as soon as you leave the app (the default), after 1, 5 or 15 minutes or 1 hour away, or only when the app restarts. Exporting or restoring a backup file and opening a link in your browser don't count as leaving, unless you stay away for more than 5 minutes.
+- **Change app PIN** asks for your current PIN first, and turning the app lock off asks for the PIN too.
+- **Forgot your PIN?** It can't be recovered. The lock screen offers to delete every remote and setting on the phone and turn the lock off; if you exported your remotes to a file, you can restore them afterwards.
+- **BeamCtrl has no servers or passwords**, so the app lock only keeps the app closed until it's unlocked. With the app lock on, the recent-apps screen always shows a blank card.
+
+**Hide in screenshots and recent apps** (in the same section, also without the app lock) keeps BeamCtrl out of screenshots, screen recordings and the recent-apps view. The lock screen is always hidden.
+
 ## Privacy
 
 **Telemetry-free.** BeamCtrl has no analytics, crash reporting, usage stats or tracking of any kind. It has no internet permission, works fully offline and never connects to the internet.
 
-- Remotes, the code library, Turn off any TV, imports and backups all stay on your phone.
+- Remotes, the code library, Turn off any TV, imports and backups all stay on your phone. Nothing goes into a cloud backup; your remotes only move to a new phone in a direct phone-to-phone transfer (the app lock is set up again there), or with a backup file you export.
 - The Support, Report a bug, Source code and Licence links in Settings open in your browser, only when you tap them.
 
 ## Build from source
@@ -97,6 +113,7 @@ Native Android apps for self-hosted services and everyday tools, all with the sa
 
 | App | What it's for |
 | --- | --- |
+| [AdCtrl](https://github.com/VoidedKN0X/AdCtrl) | Control your AdGuard Home DNS server |
 | [ArrCtrl](https://github.com/VoidedKN0X/ArrCtrl) | Radarr, Sonarr, Prowlarr, Bazarr, qBittorrent, autobrr and Cleanuparr in one app |
 | **BeamCtrl** (this app) | TV remote for phones with an IR blaster |
 | [CraftyCtrl](https://github.com/VoidedKN0X/CraftyCtrl) | Manage Minecraft servers on Crafty Controller |
@@ -105,6 +122,7 @@ Native Android apps for self-hosted services and everyday tools, all with the sa
 | [FrigateCtrl](https://github.com/VoidedKN0X/FrigateCtrl) | Watch and review your Frigate NVR cameras |
 | [ImmichCtrl](https://github.com/VoidedKN0X/ImmichCtrl) | Photos and backup for your Immich server |
 | [JellyCtrl](https://github.com/VoidedKN0X/JellyCtrl) | Movies, shows, music and Live TV from Jellyfin |
+| [MemoCtrl](https://github.com/VoidedKN0X/MemoCtrl) | Notes on your Memos server |
 | [NaviCtrl](https://github.com/VoidedKN0X/NaviCtrl) | Music player for Navidrome servers |
 | [PaperCtrl](https://github.com/VoidedKN0X/PaperCtrl) | Scan and browse documents on Paperless-ngx |
 | [PrintCtrl](https://github.com/VoidedKN0X/PrintCtrl) | Bambu Lab printers through Bambuddy, and Spoolman spools |

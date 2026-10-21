@@ -28,7 +28,19 @@ import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.Waves
+import androidx.compose.material.icons.outlined.Fingerprint
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Password
+import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.pluralStringResource
+import com.vknxworks.beamctrl.data.lock.LockVault
+import com.vknxworks.beamctrl.data.settings.LockTimeout
+import com.vknxworks.beamctrl.ui.lock.AppLock
+import com.vknxworks.beamctrl.ui.lock.PinRequest
+import com.vknxworks.beamctrl.ui.lock.findActivity
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -73,6 +85,8 @@ fun SettingsScreen() {
     }
     fun open(url: String) {
         try {
+            // Opening the browser from here doesn't count as leaving BeamCtrl for the app lock.
+            AppLock.expectReturn()
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         } catch (_: ActivityNotFoundException) {
         }
@@ -85,7 +99,7 @@ fun SettingsScreen() {
             val ok = withContext(Dispatchers.IO) {
                 runCatching { context.contentResolver.openOutputStream(uri, "wt")?.use { it.write(json.toByteArray()) } }.isSuccess
             }
-            Toast.makeText(context, if (ok) "Backup saved" else "Couldn't save the backup", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(if (ok) R.string.backup_saved else R.string.backup_save_failed), Toast.LENGTH_SHORT).show()
         }
     }
     val restoreBackup = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -97,11 +111,8 @@ fun SettingsScreen() {
             val added = text?.let { t -> withContext(Dispatchers.Default) { runCatching { c.remotes.importJson(t) }.getOrNull() } }
             Toast.makeText(
                 context,
-                when (added) {
-                    null -> "That isn't a BeamCtrl backup"
-                    1 -> "Restored 1 remote"
-                    else -> "Restored $added remotes"
-                },
+                if (added == null) context.getString(R.string.backup_not_beamctrl)
+                else context.resources.getQuantityString(R.plurals.backup_restored, added, added),
                 Toast.LENGTH_SHORT,
             ).show()
         }
@@ -114,67 +125,84 @@ fun SettingsScreen() {
             .statusBarsPadding()
             .padding(bottom = 24.dp + LocalBottomClearance.current),
     ) {
-        TabTitle("Settings")
+        TabTitle(stringResource(R.string.settings))
+
+        Group(stringResource(R.string.group_appearance)) {
+            GroupChoice(
+                stringResource(R.string.theme),
+                ThemeChoice.entries.map { it to stringResource(it.label) },
+                settings.theme,
+                icon = Icons.Filled.DarkMode,
+            ) { t -> set { it.copy(theme = t) } }
+            GroupSwitch(
+                stringResource(R.string.dynamic_colour),
+                stringResource(R.string.dynamic_colour_subtitle),
+                checked = settings.dynamicColor,
+                icon = Icons.Filled.Palette,
+            ) { v -> set { it.copy(dynamicColor = v) } }
+        }
+
+        PrivacyAndSecurityGroup(settings)
 
         Group(
-            "IR blaster",
-            footer = if (c.blaster.available) null
-            else "Android didn't report an IR emitter. Phones with one built in (many Xiaomi, OPPO, OnePlus, Honor and Vivo models) show it here.",
+            stringResource(R.string.blaster_group),
+            footer = if (c.blaster.available) null else stringResource(R.string.blaster_missing_footer),
         ) {
             GroupRow(
-                if (c.blaster.available) "Ready" else "Not found on this phone",
-                if (c.blaster.available) "Buttons send infrared from the top of the phone" else null,
+                stringResource(if (c.blaster.available) R.string.blaster_ready else R.string.blaster_missing),
+                if (c.blaster.available) stringResource(R.string.blaster_ready_subtitle) else null,
                 icon = Icons.Filled.Sensors,
                 iconTint = if (c.blaster.available) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
             if (c.blaster.carrierRanges.isNotEmpty()) {
                 GroupRow(
-                    "Carrier frequencies",
+                    stringResource(R.string.blaster_frequencies),
                     c.blaster.carrierRanges.joinToString(", ") { r ->
-                        if (r.first == r.last) khz(r.first) else "${khz(r.first)} to ${khz(r.last)}"
+                        if (r.first == r.last) khz(context, r.first) else context.getString(R.string.khz_range, khz(context, r.first), khz(context, r.last))
                     },
                     icon = Icons.Filled.Waves,
                 )
             }
         }
 
-        Group("Buttons") {
-            GroupSwitch("Vibrate on press", checked = settings.haptics, icon = Icons.Filled.Vibration) { v -> set { it.copy(haptics = v) } }
+        Group(stringResource(R.string.buttons_group)) {
+            GroupSwitch(stringResource(R.string.haptics), checked = settings.haptics, icon = Icons.Filled.Vibration) { v -> set { it.copy(haptics = v) } }
             GroupSwitch(
-                "Hold to repeat",
-                "Keep sending while volume, channel and arrow keys are held",
+                stringResource(R.string.hold_to_repeat),
+                stringResource(R.string.hold_to_repeat_subtitle),
                 checked = settings.holdToRepeat,
                 icon = Icons.Filled.Repeat,
             ) { v -> set { it.copy(holdToRepeat = v) } }
-            GroupSwitch("Number pad", "Show 0 to 9 on remotes that have them", checked = settings.showNumberPad, icon = Icons.Filled.Dialpad) { v ->
-                set { it.copy(showNumberPad = v) }
-            }
-            GroupSwitch("Keep screen on", "While a remote is open", checked = settings.keepScreenOn, icon = Icons.Filled.LightMode) { v ->
-                set { it.copy(keepScreenOn = v) }
-            }
+            GroupSwitch(
+                stringResource(R.string.number_pad),
+                stringResource(R.string.number_pad_subtitle),
+                checked = settings.showNumberPad,
+                icon = Icons.Filled.Dialpad,
+            ) { v -> set { it.copy(showNumberPad = v) } }
+            GroupSwitch(
+                stringResource(R.string.keep_screen_on),
+                stringResource(R.string.keep_screen_on_subtitle),
+                checked = settings.keepScreenOn,
+                icon = Icons.Filled.LightMode,
+            ) { v -> set { it.copy(keepScreenOn = v) } }
         }
 
-        Group("Appearance") {
-            GroupChoice("Theme", ThemeChoice.entries.map { it to it.label }, settings.theme, icon = Icons.Filled.DarkMode) { t ->
-                set { it.copy(theme = t) }
-            }
-            GroupSwitch("Wallpaper colours", "Use Material You colours instead of ember", checked = settings.dynamicColor, icon = Icons.Filled.Palette) { v ->
-                set { it.copy(dynamicColor = v) }
-            }
-        }
-
-        Group("Backup", footer = "Remotes are also included in your phone's Android backup, but only when it's end-to-end encrypted (a screen lock is set).") {
+        Group(stringResource(R.string.backup_group), footer = stringResource(R.string.backup_footer)) {
             GroupRow(
-                "Export all remotes",
-                if (remotes.isEmpty()) "Nothing to export yet" else "${remotes.size} remotes to a JSON file",
+                stringResource(R.string.backup_export),
+                if (remotes.isEmpty()) stringResource(R.string.backup_export_empty)
+                else pluralStringResource(R.plurals.backup_export_subtitle, remotes.size, remotes.size),
                 icon = Icons.Filled.Backup,
-                onClick = if (remotes.isEmpty()) null else ({ exportBackup.launch("beamctrl-backup.json") }),
+                onClick = if (remotes.isEmpty()) null else ({ AppLock.expectReturn(); exportBackup.launch("beamctrl-backup.json") }),
             )
             GroupRow(
-                "Restore from backup",
-                "Adds the remotes in a backup file to the ones here",
+                stringResource(R.string.backup_restore),
+                stringResource(R.string.backup_restore_subtitle),
                 icon = Icons.Filled.Restore,
-                onClick = { restoreBackup.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) },
+                onClick = {
+                    AppLock.expectReturn()
+                    restoreBackup.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
+                },
             )
         }
 
@@ -219,5 +247,70 @@ fun SettingsScreen() {
     }
 }
 
-private fun khz(hz: Int): String =
-    if (hz % 1000 == 0) "${hz / 1000} kHz" else String.format(Locale.getDefault(), "%.1f kHz", hz / 1000.0)
+/** Privacy and security: the shared Ctrl series app lock, then hiding BeamCtrl in screenshots. */
+@Composable
+private fun PrivacyAndSecurityGroup(settings: AppSettings) {
+    val context = LocalContext.current
+    val c = context.container
+    val bioAvailable = remember { AppLock.biometricAvailable(context) }
+    val lockOn = c.vault.enabled
+    Group(stringResource(R.string.group_privacy), footer = stringResource(R.string.app_lock_footer)) {
+        GroupSwitch(
+            stringResource(R.string.app_lock),
+            stringResource(R.string.app_lock_subtitle),
+            checked = lockOn,
+            icon = Icons.Outlined.Lock,
+        ) { on -> AppLock.request = if (on) PinRequest.ENABLE else PinRequest.DISABLE }
+        if (lockOn) {
+            GroupRow(
+                stringResource(R.string.lock_change_pin),
+                stringResource(R.string.lock_change_pin_subtitle, LockVault.PIN_MIN),
+                icon = Icons.Outlined.Password,
+                showChevron = true,
+                onClick = { AppLock.request = PinRequest.CHANGE },
+            )
+            GroupSwitch(
+                stringResource(R.string.lock_fingerprint),
+                stringResource(if (bioAvailable || c.vault.biometricEnabled) R.string.lock_fingerprint_subtitle else R.string.lock_fingerprint_unavailable),
+                checked = c.vault.biometricEnabled,
+                icon = Icons.Outlined.Fingerprint,
+            ) { on ->
+                if (!on) {
+                    c.vault.disableBiometric()
+                } else if (bioAvailable) {
+                    val activity = context.findActivity()
+                    val cipher = c.vault.biometricEnrolCipher()
+                    if (activity == null || cipher == null) {
+                        Toast.makeText(context, context.getString(R.string.lock_fingerprint_setup_failed), Toast.LENGTH_SHORT).show()
+                    } else {
+                        AppLock.biometricPrompt(
+                            activity,
+                            context.getString(R.string.lock_fingerprint_enable_title),
+                            context.getString(R.string.lock_fingerprint_enable_subtitle),
+                            cipher,
+                        ) { unlocked ->
+                            if (!c.vault.finishBiometricEnrol(unlocked)) {
+                                Toast.makeText(context, context.getString(R.string.lock_fingerprint_setup_failed), Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+            GroupChoice(
+                stringResource(R.string.lock_again),
+                LockTimeout.entries.map { it to stringResource(it.label) },
+                settings.lockTimeout,
+                icon = Icons.Outlined.Timer,
+            ) { t -> c.appScope.launch { c.settings.update { it.copy(lockTimeout = t) } } }
+        }
+        GroupSwitch(
+            stringResource(R.string.hide_content),
+            stringResource(R.string.hide_content_subtitle),
+            checked = settings.hideContent,
+            icon = Icons.Outlined.VisibilityOff,
+        ) { on -> c.appScope.launch { c.settings.update { it.copy(hideContent = on) } } }
+    }
+}
+
+private fun khz(context: android.content.Context, hz: Int): String =
+    context.getString(R.string.khz, if (hz % 1000 == 0) "${hz / 1000}" else String.format(Locale.getDefault(), "%.1f", hz / 1000.0))

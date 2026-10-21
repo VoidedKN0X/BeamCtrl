@@ -62,6 +62,9 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
 
     fun delete(id: String) = change { list -> list.filterNot { it.id == id } }
 
+    /** Deletes every remote ("Forgot PIN?"). */
+    fun deleteAll() = change { emptyList() }
+
     fun markUsed(id: String) {
         // Not worth a disk write on every press: only when it changes the order on the list.
         val now = System.currentTimeMillis()

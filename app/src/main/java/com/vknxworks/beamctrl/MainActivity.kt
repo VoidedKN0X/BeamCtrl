@@ -2,6 +2,7 @@ package com.vknxworks.beamctrl
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -13,6 +14,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vknxworks.beamctrl.data.settings.ThemeChoice
+import com.vknxworks.beamctrl.ui.lock.AppLockGate
+import com.vknxworks.beamctrl.ui.lock.lockCovering
 import com.vknxworks.beamctrl.ui.nav.AppRoot
 import com.vknxworks.beamctrl.ui.theme.BeamCtrlTheme
 
@@ -40,8 +43,18 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 c.blaster.errors.collect { Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show() }
             }
+            // "Hide in screenshots and recent apps", and always while the lock or a PIN screen shows. With the
+            // app lock on, the recent-apps view is always blank.
+            val secure = settings.hideContent || lockCovering(c.vault)
+            val blankRecents = secure || c.vault.enabled
+            LaunchedEffect(secure, blankRecents) {
+                if (secure) window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                else window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                setRecentsScreenshotEnabled(!blankRecents)
+            }
             BeamCtrlTheme(settings.theme, settings.dynamicColor) {
-                AppRoot()
+                // Nothing of the app is shown while the app lock is locked.
+                AppLockGate { AppRoot() }
             }
         }
     }

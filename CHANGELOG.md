@@ -4,6 +4,32 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.3.0 (2026-10-21)
+
+The app lock: the same one as in every other Ctrl app, with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes.
+
+### New
+
+- **App lock** (**Settings > Privacy and security > App lock**, off until you turn it on). BeamCtrl asks for its own app PIN when you open it. The PIN needs at least 6 digits and is separate from your phone's; very obvious ones like 111111 or 123456 are refused. You choose it twice when turning the lock on
+- **Unlock with fingerprint** (optional): only strong biometrics such as your fingerprint, not face unlock that only uses the camera, which a photo can sometimes fool. The PIN is still needed after the phone restarts and at least every 72 hours, the same as Android does for your screen lock
+- **Lock again**: as soon as you leave the app (the default), after 1, 5 or 15 minutes or 1 hour away, or only when the app restarts. Exporting or restoring a backup file and opening a link in your browser don't count as leaving, unless you stay away longer than 5 minutes
+- **Change app PIN** asks for your current PIN first, and turning the app lock off asks for the PIN too
+- **Forgot PIN?** on the lock screen deletes every remote and setting on the phone and turns the lock off, because the PIN can't be recovered. If you exported your remotes to a file, you can restore them afterwards
+- **Hide in screenshots and recent apps** (Settings > Privacy and security, off by default): keeps BeamCtrl out of screenshots, screen recordings and the recent apps view. The lock and PIN screens are always hidden, and with the app lock on the recent apps view always shows a blank card
+
+### Changed
+
+- **Settings are in the same order as in the other Ctrl apps**: Appearance first, then Privacy and security, then IR blaster, Buttons, Backup and About
+- **"Wallpaper colours" is now "Dynamic colour"** ("Use colours from your wallpaper instead of ember"), like in the other Ctrl apps
+- **No cloud backup any more.** Your remotes and settings are no longer put in Android's cloud backup, so nothing from BeamCtrl goes to a backup service. They still move to a new phone in a direct phone-to-phone transfer, and **Export all remotes** still saves them to a file you keep. The app lock isn't transferred: its keys belong to this phone's secure hardware, so you set it up again on the new phone
+- **README**: new App lock section, backups explained under Privacy, and AdCtrl and MemoCtrl added to the Ctrl series table
+
+### Security
+
+- **The PIN can't be guessed off the phone.** It's never stored. It's stretched with 600,000 rounds of PBKDF2 and mixed with a secret held in the phone's secure hardware (StrongBox where available), so copying BeamCtrl's files to a computer isn't enough to try PINs there
+- **Wrong PINs lock the screen**: after 5 tries you wait 30 seconds, doubling with every further 5 wrong tries up to 15 minutes. Restarting the app or the phone, or changing the clock, doesn't reset the wait
+- **Fingerprint unlock can't be faked**: the fingerprint has to unlock a key in the phone's secure hardware, so a tampered "success" on a rooted phone doesn't open the app. Adding a new fingerprint turns fingerprint unlock off until you turn it on again with your PIN
+
 ## v0.2.9 (2026-10-20)
 
 ### Changed
