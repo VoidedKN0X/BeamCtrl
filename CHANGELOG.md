@@ -4,6 +4,14 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.3.1 (2026-10-21)
+
+### Changed
+
+- **Hide in screenshots** and **Hide in recent apps** are now two separate switches in Settings > Privacy and security, both off by default, the same in every Ctrl app. **Hide in screenshots** keeps BeamCtrl out of screenshots and screen recordings (and blanks its preview in recent apps); **Hide in recent apps** only shows a blank card in the recent apps view, so screenshots still work. If you turned on the single switch in 0.3.0, both new switches start on
+- The lock screen and the PIN screens are always kept out of screenshots, and with the app lock on the recent apps view always shows a blank card, whatever the switches say
+- **README**: the App lock section uses the same wording as the other Ctrl apps and describes the two switches
+
 ## v0.3.0 (2026-10-21)
 
 The app lock: the same one as in every other Ctrl app, with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes.

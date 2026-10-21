@@ -46,8 +46,10 @@ data class AppSettings(
     val dynamicColor: Boolean = false,
     /** App lock: when it asks again after BeamCtrl was in the background. */
     val lockTimeout: LockTimeout = LockTimeout.IMMEDIATELY,
-    /** FLAG_SECURE on the whole app: blank screenshots, screen recordings and Recents card. */
-    val hideContent: Boolean = false,
+    /** "Hide in screenshots": FLAG_SECURE on the app's windows (screenshots, recordings and the Recents preview). */
+    val hideScreenshots: Boolean = false,
+    /** "Hide in recent apps": the Recents view shows a blank card. Screenshots still work. */
+    val hideRecents: Boolean = false,
 )
 
 class SettingsRepository(private val context: Context, scope: CoroutineScope) {
@@ -59,7 +61,10 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         val theme = stringPreferencesKey("theme")
         val dynamic = booleanPreferencesKey("dynamic_color")
         val lockTimeout = stringPreferencesKey("lock_timeout")
-        val hideContent = booleanPreferencesKey("hide_content")
+        val hideScreenshots = booleanPreferencesKey("hide_screenshots")
+        val hideRecents = booleanPreferencesKey("hide_recents")
+        /** The earlier single "hide in screenshots and recent apps" switch; an "on" turns on both new ones. */
+        val legacyHide = booleanPreferencesKey("hide_content")
     }
 
     init {
@@ -89,7 +94,8 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         theme = this[K.theme]?.let { n -> ThemeChoice.entries.firstOrNull { it.name == n } } ?: ThemeChoice.SYSTEM,
         dynamicColor = this[K.dynamic] ?: false,
         lockTimeout = this[K.lockTimeout]?.let { n -> LockTimeout.entries.firstOrNull { it.name == n } } ?: LockTimeout.IMMEDIATELY,
-        hideContent = this[K.hideContent] ?: false,
+        hideScreenshots = this[K.hideScreenshots] ?: this[K.legacyHide] ?: false,
+        hideRecents = this[K.hideRecents] ?: this[K.legacyHide] ?: false,
     )
 
     suspend fun update(transform: (AppSettings) -> AppSettings) {
@@ -102,7 +108,9 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
             p[K.theme] = s.theme.name
             p[K.dynamic] = s.dynamicColor
             p[K.lockTimeout] = s.lockTimeout.name
-            p[K.hideContent] = s.hideContent
+            p[K.hideScreenshots] = s.hideScreenshots
+            p[K.hideRecents] = s.hideRecents
+            p.remove(K.legacyHide)
         }
     }
 }

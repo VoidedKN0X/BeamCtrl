@@ -74,9 +74,9 @@ Turn it on under **Settings > Privacy and security > App lock**. It's off until 
 - **Lock again:** as soon as you leave the app (the default), after 1, 5 or 15 minutes or 1 hour away, or only when the app restarts. Exporting or restoring a backup file and opening a link in your browser don't count as leaving, unless you stay away for more than 5 minutes.
 - **Change app PIN** asks for your current PIN first, and turning the app lock off asks for the PIN too.
 - **Forgot your PIN?** It can't be recovered. The lock screen offers to delete every remote and setting on the phone and turn the lock off; if you exported your remotes to a file, you can restore them afterwards.
-- **BeamCtrl has no servers or passwords**, so the app lock only keeps the app closed until it's unlocked. With the app lock on, the recent-apps screen always shows a blank card.
+- **BeamCtrl has no servers or passwords**, so the app lock only keeps the app closed until it's unlocked.
 
-**Hide in screenshots and recent apps** (in the same section, also without the app lock) keeps BeamCtrl out of screenshots, screen recordings and the recent-apps view. The lock screen is always hidden.
+**Hide in screenshots** and **Hide in recent apps** (the last two switches in the same section, also without the app lock, both off by default): the first keeps BeamCtrl out of screenshots and screen recordings (and blanks its recent-apps preview), the second shows a blank card for BeamCtrl in the recent-apps view while screenshots still work. With the app lock on, the recent-apps view always shows a blank card. The lock screen and the PIN screens are always kept out of screenshots.
 
 ## Privacy
 
