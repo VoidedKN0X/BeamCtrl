@@ -8,14 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Dialpad
-import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.Sensors
-import androidx.compose.material.icons.filled.Vibration
-import androidx.compose.material.icons.filled.Waves
+import androidx.compose.material.icons.outlined.Dialpad
+import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material.icons.outlined.Repeat
+import androidx.compose.material.icons.outlined.Sensors
+import androidx.compose.material.icons.outlined.Vibration
+import androidx.compose.material.icons.outlined.Waves
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.Layers
 import androidx.compose.material.icons.outlined.Lock
@@ -37,7 +35,6 @@ import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.data.lock.LockVault
 import com.vknxworks.beamctrl.data.settings.AppSettings
 import com.vknxworks.beamctrl.data.settings.LockTimeout
-import com.vknxworks.beamctrl.data.settings.ThemeChoice
 import com.vknxworks.beamctrl.ui.components.Group
 import com.vknxworks.beamctrl.ui.components.GroupChoice
 import com.vknxworks.beamctrl.ui.components.GroupRow
@@ -49,7 +46,10 @@ import com.vknxworks.beamctrl.ui.lock.findActivity
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-/** Settings, opened from the You page (tap the profile picture). Backup and About are on the You page itself. */
+/**
+ * Settings, opened from the You page (tap the profile picture). Backup and About are on the You page itself.
+ * BeamCtrl is dark only (Ctrl / Signal), so there are no theme or wallpaper colour settings.
+ */
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
@@ -66,23 +66,8 @@ fun SettingsScreen() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .navigationBarsPadding()
-                .padding(bottom = 24.dp),
+                .padding(top = 4.dp, bottom = 24.dp),
         ) {
-            Group(stringResource(R.string.group_appearance)) {
-                GroupChoice(
-                    stringResource(R.string.theme),
-                    ThemeChoice.entries.map { it to stringResource(it.label) },
-                    settings.theme,
-                    icon = Icons.Filled.DarkMode,
-                ) { t -> set { it.copy(theme = t) } }
-                GroupSwitch(
-                    stringResource(R.string.dynamic_colour),
-                    stringResource(R.string.dynamic_colour_subtitle),
-                    checked = settings.dynamicColor,
-                    icon = Icons.Filled.Palette,
-                ) { v -> set { it.copy(dynamicColor = v) } }
-            }
-
             PrivacyAndSecurityGroup(settings)
 
             Group(
@@ -92,8 +77,14 @@ fun SettingsScreen() {
                 GroupRow(
                     stringResource(if (c.blaster.available) R.string.blaster_ready else R.string.blaster_missing),
                     if (c.blaster.available) stringResource(R.string.blaster_ready_subtitle) else null,
-                    icon = Icons.Filled.Sensors,
+                    icon = Icons.Outlined.Sensors,
                     iconTint = if (c.blaster.available) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                    trailing = {
+                        com.vknxworks.beamctrl.ui.components.StatusTag(
+                            stringResource(if (c.blaster.available) R.string.status_ready else R.string.status_missing),
+                            active = c.blaster.available,
+                        )
+                    },
                 )
                 if (c.blaster.carrierRanges.isNotEmpty()) {
                     GroupRow(
@@ -101,30 +92,30 @@ fun SettingsScreen() {
                         c.blaster.carrierRanges.joinToString(", ") { r ->
                             if (r.first == r.last) khz(context, r.first) else context.getString(R.string.khz_range, khz(context, r.first), khz(context, r.last))
                         },
-                        icon = Icons.Filled.Waves,
+                        icon = Icons.Outlined.Waves,
                     )
                 }
             }
 
             Group(stringResource(R.string.buttons_group)) {
-                GroupSwitch(stringResource(R.string.haptics), checked = settings.haptics, icon = Icons.Filled.Vibration) { v -> set { it.copy(haptics = v) } }
+                GroupSwitch(stringResource(R.string.haptics), checked = settings.haptics, icon = Icons.Outlined.Vibration) { v -> set { it.copy(haptics = v) } }
                 GroupSwitch(
                     stringResource(R.string.hold_to_repeat),
                     stringResource(R.string.hold_to_repeat_subtitle),
                     checked = settings.holdToRepeat,
-                    icon = Icons.Filled.Repeat,
+                    icon = Icons.Outlined.Repeat,
                 ) { v -> set { it.copy(holdToRepeat = v) } }
                 GroupSwitch(
                     stringResource(R.string.number_pad),
                     stringResource(R.string.number_pad_subtitle),
                     checked = settings.showNumberPad,
-                    icon = Icons.Filled.Dialpad,
+                    icon = Icons.Outlined.Dialpad,
                 ) { v -> set { it.copy(showNumberPad = v) } }
                 GroupSwitch(
                     stringResource(R.string.keep_screen_on),
                     stringResource(R.string.keep_screen_on_subtitle),
                     checked = settings.keepScreenOn,
-                    icon = Icons.Filled.LightMode,
+                    icon = Icons.Outlined.LightMode,
                 ) { v -> set { it.copy(keepScreenOn = v) } }
             }
         }

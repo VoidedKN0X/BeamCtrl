@@ -1,5 +1,9 @@
 package com.vknxworks.beamctrl.ui.library
 
+import com.vknxworks.beamctrl.ui.components.ctrlFieldColors
+import com.vknxworks.beamctrl.ui.components.CtrlSecondaryButton
+import com.vknxworks.beamctrl.ui.theme.CtrlShapes
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
 import androidx.compose.foundation.layout.Arrangement
 import com.vknxworks.beamctrl.ir.irErrorText
 import com.vknxworks.beamctrl.ir.IrCodeException
@@ -18,7 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -51,6 +55,7 @@ import com.vknxworks.beamctrl.ui.remote.KeyHost
 import com.vknxworks.beamctrl.ui.remote.LocalKeyHost
 import com.vknxworks.beamctrl.ui.remote.RemoteLayout
 import com.vknxworks.beamctrl.ui.theme.Gutter
+import com.vknxworks.beamctrl.ui.theme.CtrlType
 
 private sealed interface DeviceState {
     data object Loading : DeviceState
@@ -87,7 +92,7 @@ fun LibraryDeviceScreen(id: Int) {
     Column(Modifier.fillMaxSize()) {
         ScreenTopBar(ready?.device?.title ?: stringResource(R.string.remote_unnamed))
         when (val s = state) {
-            DeviceState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+            DeviceState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.Accent) }
             is DeviceState.Failed -> MessageView(Icons.Outlined.ErrorOutline, stringResource(R.string.library_open_failed_title), s.message)
             is DeviceState.Ready -> {
                 val type = s.category?.type ?: com.vknxworks.beamctrl.data.DeviceType.OTHER
@@ -109,9 +114,9 @@ fun LibraryDeviceScreen(id: Int) {
                             Text(
                                 pluralStringResource(R.plurals.buttons_count, s.result.buttons.size, s.result.buttons.size).let { buttons ->
                                     s.category?.let { stringResource(R.string.dot_pair, it.displayName(context), buttons) } ?: buttons
-                                },
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.primary,
+                                }.uppercase(),
+                                style = CtrlType.Label,
+                                color = CtrlColors.Accent,
                             )
                             Text(
                                 stringResource(R.string.library_try),
@@ -121,10 +126,12 @@ fun LibraryDeviceScreen(id: Int) {
                                 Text(
                                     pluralStringResource(R.plurals.library_skipped, s.result.skipped.size, s.result.skipped.size),
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = CtrlColors.Muted,
                                 )
                             }
                             OutlinedTextField(
+                                shape = CtrlShapes.Field,
+                                colors = ctrlFieldColors(),
                                 value = name,
                                 onValueChange = { name = it.take(40) },
                                 label = { Text(stringResource(R.string.remote_name)) },
@@ -140,7 +147,7 @@ fun LibraryDeviceScreen(id: Int) {
                                     )
                                     nav.openRemote(saved.id, fromAdd = true)
                                 },
-                                icon = Icons.Filled.Check,
+                                icon = Icons.Outlined.Check,
                                 modifier = Modifier.fillMaxWidth(),
                             )
                         }

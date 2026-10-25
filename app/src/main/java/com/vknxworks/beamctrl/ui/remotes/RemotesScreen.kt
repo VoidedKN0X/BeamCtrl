@@ -1,13 +1,9 @@
 package com.vknxworks.beamctrl.ui.remotes
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import com.vknxworks.beamctrl.R
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,27 +11,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DriveFileRenameOutline
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.SettingsRemote
-import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DriveFileRenameOutline
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.PowerSettingsNew
+import androidx.compose.material.icons.outlined.SettingsRemote
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -45,10 +37,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,6 +48,14 @@ import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.data.KeyRole
 import com.vknxworks.beamctrl.data.Remote
 import com.vknxworks.beamctrl.ui.components.ConfirmDialog
+import com.vknxworks.beamctrl.ui.components.CtrlBottomSheet
+import com.vknxworks.beamctrl.ui.components.CtrlHeroCard
+import com.vknxworks.beamctrl.ui.components.CtrlSquareButton
+import com.vknxworks.beamctrl.ui.components.WarningCard
+import com.vknxworks.beamctrl.ui.components.topDivider
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
+import com.vknxworks.beamctrl.ui.theme.CtrlShapes
+import com.vknxworks.beamctrl.ui.theme.CtrlType
 import com.vknxworks.beamctrl.ui.components.GroupRow
 import com.vknxworks.beamctrl.ui.components.LocalBottomClearance
 import com.vknxworks.beamctrl.ui.components.MessageView
@@ -81,12 +81,12 @@ fun RemotesScreen() {
     var deleting by remember { mutableStateOf<Remote?>(null) }
 
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
-        TabTitle(stringResource(R.string.tab_remotes)) {
-            IconButton(onClick = { nav.navigate(AddRoute) }) { Icon(Icons.Filled.Add, stringResource(R.string.add_title)) }
-        }
         if (sorted.isEmpty()) {
+            TabTitle(stringResource(R.string.tab_remotes)) {
+                CtrlSquareButton(Icons.Outlined.Add, stringResource(R.string.add_title), onClick = { nav.navigate(AddRoute) })
+            }
             MessageView(
-                Icons.Filled.SettingsRemote,
+                Icons.Outlined.SettingsRemote,
                 stringResource(R.string.you_no_remotes),
                 stringResource(if (c.blaster.available) R.string.remotes_empty_body else R.string.remotes_empty_no_blaster),
                 modifier = Modifier.padding(bottom = LocalBottomClearance.current),
@@ -95,30 +95,58 @@ fun RemotesScreen() {
             )
         } else {
             CompositionLocalProvider(LocalKeyHost provides KeyHost(holdToRepeat = false, haptics = settings.haptics)) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 160.dp),
-                    contentPadding = PaddingValues(start = Gutter, end = Gutter, top = 8.dp, bottom = 24.dp + LocalBottomClearance.current),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 24.dp + LocalBottomClearance.current),
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    if (!c.blaster.available) {
-                        item(span = { GridItemSpan(maxLineSpan) }) {
-                            Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.error.copy(alpha = 0.12f)) {
-                                Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Filled.WarningAmber, null, tint = MaterialTheme.colorScheme.error)
-                                    Spacer(Modifier.size(12.dp))
-                                    Text(stringResource(R.string.remotes_no_blaster), style = MaterialTheme.typography.bodyMedium)
-                                }
-                            }
+                    item(key = "title") {
+                        TabTitle(
+                            stringResource(R.string.tab_remotes),
+                            label = pluralStringResource(R.plurals.you_remote_count, sorted.size, sorted.size),
+                        ) {
+                            CtrlSquareButton(Icons.Outlined.Add, stringResource(R.string.add_title), onClick = { nav.navigate(AddRoute) })
                         }
                     }
-                    items(sorted, key = { it.id }) { remote ->
-                        RemoteCard(
-                            remote,
-                            onOpen = { nav.openRemote(remote.id) },
-                            onLongPress = { actionsFor = remote },
+                    if (!c.blaster.available) {
+                        item(key = "no-blaster") {
+                            WarningCard(
+                                stringResource(R.string.remotes_no_blaster),
+                                Icons.Outlined.WarningAmber,
+                                Modifier.padding(horizontal = Gutter, vertical = 6.dp),
+                            )
+                        }
+                    }
+                    // The hero: the remote used last, with its power key right on the card.
+                    val first = sorted.first()
+                    item(key = "hero-${first.id}") {
+                        HeroRemote(
+                            first,
+                            onOpen = { nav.openRemote(first.id) },
+                            onLongPress = { actionsFor = first },
+                            modifier = Modifier.padding(horizontal = Gutter, vertical = 8.dp),
                         )
+                    }
+                    if (sorted.size > 1) {
+                        item(key = "all-header") {
+                            Row(
+                                Modifier.fillMaxWidth().padding(start = Gutter, end = Gutter, top = 18.dp, bottom = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(stringResource(R.string.label_all_remotes), style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+                                Text(
+                                    pluralStringResource(R.plurals.you_remote_count, sorted.size, sorted.size).uppercase(),
+                                    style = CtrlType.Data,
+                                    color = CtrlColors.Muted,
+                                )
+                            }
+                        }
+                        items(sorted.drop(1), key = { it.id }) { remote ->
+                            RemoteRow(
+                                remote,
+                                onOpen = { nav.openRemote(remote.id) },
+                                onLongPress = { actionsFor = remote },
+                            )
+                        }
                     }
                 }
             }
@@ -126,16 +154,16 @@ fun RemotesScreen() {
     }
 
     actionsFor?.let { r ->
-        ModalBottomSheet(onDismissRequest = { actionsFor = null }, containerColor = MaterialTheme.colorScheme.surfaceContainer) {
+        CtrlBottomSheet(onDismissRequest = { actionsFor = null }) {
             Text(r.name, style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
             Column(Modifier.padding(bottom = 24.dp)) {
-                GroupRow(stringResource(R.string.edit_buttons), icon = Icons.Filled.Edit, onClick = { actionsFor = null; nav.openRemote(r.id, edit = true) })
-                GroupRow(stringResource(R.string.rename), icon = Icons.Filled.DriveFileRenameOutline, onClick = { actionsFor = null; renaming = r })
+                GroupRow(stringResource(R.string.edit_buttons), icon = Icons.Outlined.Edit, onClick = { actionsFor = null; nav.openRemote(r.id, edit = true) })
+                GroupRow(stringResource(R.string.rename), icon = Icons.Outlined.DriveFileRenameOutline, onClick = { actionsFor = null; renaming = r })
                 GroupRow(
                     stringResource(R.string.delete),
-                    icon = Icons.Filled.Delete,
-                    iconTint = MaterialTheme.colorScheme.error,
-                    titleColor = MaterialTheme.colorScheme.error,
+                    icon = Icons.Outlined.Delete,
+                    iconTint = CtrlColors.Error,
+                    titleColor = CtrlColors.Error,
                     onClick = { actionsFor = null; deleting = r },
                 )
             }
@@ -155,55 +183,91 @@ fun RemotesScreen() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+/** Brand and button count, e.g. "Samsung · 42 buttons". */
 @Composable
-private fun RemoteCard(remote: Remote, onOpen: () -> Unit, onLongPress: () -> Unit) {
-    val haptics = LocalHapticFeedback.current
+private fun remoteMeta(remote: Remote): String =
+    pluralStringResource(R.plurals.buttons_count, remote.buttons.size, remote.buttons.size).let { buttons ->
+        remote.brand?.let { stringResource(R.string.dot_pair, it, buttons) } ?: buttons
+    }
+
+/** The last-used remote as an accent hero card: type and button count on top, its name big, and quick power. */
+@Composable
+private fun HeroRemote(remote: Remote, onOpen: () -> Unit, onLongPress: () -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     val power = remote.button(KeyRole.POWER)
-    Surface(
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        modifier = Modifier.fillMaxWidth(),
+    CtrlHeroCard(
+        label = stringResource(R.string.dot_pair, stringResource(R.string.label_last_used), stringResource(remote.type.label)),
+        meta = pluralStringResource(R.plurals.buttons_count, remote.buttons.size, remote.buttons.size),
+        onClick = onOpen,
+        onLongClick = onLongPress,
+        modifier = modifier.fillMaxWidth(),
     ) {
-        Column(
-            Modifier
-                .combinedClickable(
-                    onClick = onOpen,
-                    onLongClick = {
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onLongPress()
-                    },
+        Row(verticalAlignment = Alignment.Bottom) {
+            Column(Modifier.weight(1f)) {
+                Text(
+                    remote.name,
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = CtrlColors.OnAccent,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                .padding(16.dp),
-        ) {
-            Row(verticalAlignment = Alignment.Top) {
-                Box(
-                    Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.16f)),
-                    contentAlignment = Alignment.Center,
-                ) { Icon(remote.type.icon, null, tint = MaterialTheme.colorScheme.primary) }
-                Spacer(Modifier.weight(1f))
-                if (power != null) {
-                    // Quick power without opening the remote.
-                    BeamKey(
-                        power, KeyRole.POWER,
-                        Modifier.size(44.dp),
-                        container = MaterialTheme.colorScheme.error.copy(alpha = 0.14f),
-                        contentColor = MaterialTheme.colorScheme.error,
-                        label = stringResource(R.string.remote_power, remote.name),
-                    ) { Icon(Icons.Filled.PowerSettingsNew, null, Modifier.size(22.dp)) }
+                if (remote.brand != null) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(remote.brand.uppercase(), style = CtrlType.Data, color = CtrlColors.OnAccent.copy(alpha = 0.7f), maxLines = 1)
                 }
             }
-            Spacer(Modifier.height(18.dp))
-            Text(remote.name, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(
-                pluralStringResource(R.plurals.buttons_count, remote.buttons.size, remote.buttons.size).let { buttons ->
-                    remote.brand?.let { stringResource(R.string.dot_pair, it, buttons) } ?: buttons
+            if (power != null) {
+                Spacer(Modifier.width(12.dp))
+                // Quick power without opening the remote: a dark key on the accent.
+                BeamKey(
+                    power, KeyRole.POWER,
+                    Modifier.size(64.dp),
+                    shape = CtrlShapes.Key,
+                    container = CtrlColors.OnAccent,
+                    contentColor = CtrlColors.Accent,
+                    borderColor = null,
+                    label = context.getString(R.string.remote_power, remote.name),
+                ) { Icon(Icons.Outlined.PowerSettingsNew, null, Modifier.size(28.dp)) }
+            }
+        }
+    }
+}
+
+/** One remote in the list: type icon, name and details, and a quick power key. */
+@Composable
+private fun RemoteRow(remote: Remote, onOpen: () -> Unit, onLongPress: () -> Unit) {
+    val haptics = LocalHapticFeedback.current
+    val power = remote.button(KeyRole.POWER)
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = onOpen,
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongPress()
                 },
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
+            .padding(horizontal = Gutter)
+            .topDivider()
+            .heightIn(min = 64.dp)
+            .padding(vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(remote.type.icon, null, Modifier.size(22.dp), tint = CtrlColors.Muted)
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(remote.name, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(remoteMeta(remote), style = CtrlType.Data, color = CtrlColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        if (power != null) {
+            Spacer(Modifier.width(12.dp))
+            BeamKey(
+                power, KeyRole.POWER,
+                Modifier.size(44.dp),
+                shape = CtrlShapes.Control,
+                label = stringResource(R.string.remote_power, remote.name),
+            ) { Icon(Icons.Outlined.PowerSettingsNew, null, Modifier.size(20.dp)) }
         }
     }
 }

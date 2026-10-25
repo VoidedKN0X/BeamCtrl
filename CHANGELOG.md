@@ -4,6 +4,36 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.5.0 (2026-10-25)
+
+BeamCtrl gets **Ctrl / Signal**, the new look shared by every Ctrl app: near-black, high contrast, one violet accent and a sharper, squarer shape language. Every feature, screen and setting works exactly as before; only the look changes.
+
+### Changed
+
+- **New colours everywhere**: a near-black background (#08080A), dark grey cards with a thin border, light text, and a single violet accent (#B48CFF) for the things that matter: power keys, OK, the selected tab, switches that are on, and main buttons. The old ember (orange) accent and the red power keys are gone; power is now always the accent.
+- **New fonts**: Space Grotesk for all text and headings, and JetBrains Mono for numbers, codes, counts, section labels and the keypad digits. Both are built into the app (SIL Open Font License 1.1), so nothing is downloaded. They replace Manrope.
+- **Status and navigation bars** now always match the app's background, with light icons, edge to edge.
+- **Top bar**: the main tabs show a **BEAM/CTRL** wordmark at the top left (the slash in the accent) and your profile picture at the top right as a rounded square. A small accent square on the profile picture shows the IR blaster is ready. Tapping it still opens the You page with Settings, Backup and About. The tab's name sits underneath in large type.
+- **Pushed screens** (a remote, the code library, Settings and so on) have a square back button and the title next to it, instead of a plain arrow; actions such as Edit and the ⋮ menu are square buttons too. **Done** while editing a remote is a small accent button.
+- **Remotes tab**: the remote you used last is a big accent card at the top with its name, type, button count and its own power key, so you can switch it on without opening it. The rest are listed underneath as plain rows with a thin line between them, the device type icon, brand and button count, and a quick power key. Long-press still opens Edit, Rename and Delete, on both the card and the rows.
+- **Remote keys** look like the keys on the lock screen: dark grey rounded-square keys with a thin border, instead of round ones. The **power key is accent-filled**, the **d-pad** is a dark grey disc with a thin border and an **accent OK key** in the middle, volume and channel are tall rounded rockers, and key names under the keys are short mono capitals. The **number pad** uses the same keys as the lock screen keypad, with JetBrains Mono digits. A pressed key lights up towards the accent, and its edge turns accent. In edit mode keys still get an accent outline, and **Add button** is an outlined accent tile.
+- **Bottom bar**: a floating dark bar 20dp from the sides, with a thin border and squarer corners. The selected tab is an accent block with its icon and name; the other tab shows just its icon. It replaces the frosted-glass tab bar (the blur library it used is no longer in the app).
+- **Switches** are the new Ctrl switch: a rounded rectangle with a square knob, accent when on and grey when off. The whole row still toggles, and screen readers still announce it as a switch.
+- **Settings and You page**: section names are small spaced-out mono capitals (BACKUP, PRIVACY AND SECURITY, ABOUT…), groups are dark cards with thin lines between rows, and icons are outlined. The IR blaster row shows a mono **READY** or **MISSING** status with a status square.
+- **You page**: a close button with a mono PROFILE label at the top, then a 68dp accent square with a phone icon next to this phone's name, and the remote count and blaster status in mono underneath. Settings sits under **APP**. **Support BeamCtrl** is now a big accent button at the bottom of the page (it was a row in About), followed by the line "GOOGLE-FREE · TELEMETRY-FREE · ARM64" and the version.
+- **App lock and PIN screens**: a 72dp accent square with the lock, "VKNXWORKS · CTRL" in mono, then **Locked** in large type (was "BeamCtrl is locked"). PIN digits are small squares, filled in the accent as you type. The keypad is three columns of tall rounded-square keys with JetBrains Mono digits. The **fingerprint** is now a key on the keypad (bottom left, outlined in the accent) instead of a "Use fingerprint" button underneath; when a PIN needs confirming, that spot becomes the accent OK / Next / Done key. Delete is an icon-only key on the right. How the lock works is unchanged: same PIN rules, same fingerprint unlock, same "Forgot PIN?".
+- **Code library**: the search field is a dark field with a thin border that turns accent while you type. Categories, brands and remotes are plain rows with thin lines between them and mono details; remotes with a power code show an accent power icon.
+- **Find your TV's brand** and **Turn off any TV**: the big power key is an accent rounded square instead of a red circle; while Turn off any TV is sending, it becomes a dark Stop key with an accent edge. The progress bar is thin and accent, counts and code numbers are in mono, and the last-sent codes are a card with thin lines between them.
+- **Brand pages**: the test keys follow the remote style (accent power, dark grey volume and mute keys).
+- **Button editor**: the protocol picker uses squarer chips (accent when selected) with mono names, text fields are dark with an accent edge when focused, and Test is a dark secondary button next to the accent Save.
+- **Dialogs, menus and bottom sheets** are dark grey with a thin border and larger rounded corners.
+- **Empty and error messages** show their icon in a dark rounded square instead of a circle.
+- Brand rows on the Add tab show the protocol on the right in mono.
+
+### Removed
+
+- **Theme** and **Use wallpaper colours** in Settings › Appearance (and with them the whole Appearance group). BeamCtrl is now dark only, like every Ctrl app. A theme or wallpaper-colour choice saved earlier, or in a backup file, is kept in the file but no longer changes anything.
+
 ## v0.4.4 (2026-10-21)
 
 ### Fixed

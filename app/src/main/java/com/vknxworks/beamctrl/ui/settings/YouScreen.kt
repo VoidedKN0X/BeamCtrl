@@ -8,7 +8,11 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,18 +22,18 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Backup
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Gavel
-import androidx.compose.material.icons.filled.Restore
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.outlined.Backup
+import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Gavel
+import androidx.compose.material.icons.outlined.PhoneAndroid
+import androidx.compose.material.icons.outlined.Restore
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,6 +51,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vknxworks.beamctrl.BuildConfig
@@ -60,7 +66,12 @@ import com.vknxworks.beamctrl.data.readTextCapped
 import com.vknxworks.beamctrl.ui.components.ConfirmDialog
 import com.vknxworks.beamctrl.ui.components.Group
 import com.vknxworks.beamctrl.ui.components.GroupRow
-import com.vknxworks.beamctrl.ui.components.ScreenTopBar
+import com.vknxworks.beamctrl.ui.components.CtrlAlertDialog
+import com.vknxworks.beamctrl.ui.components.CtrlButton
+import com.vknxworks.beamctrl.ui.components.CtrlSquareButton
+import com.vknxworks.beamctrl.ui.components.SectionLabel
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
+import com.vknxworks.beamctrl.ui.theme.CtrlType
 import com.vknxworks.beamctrl.ui.lock.AppLock
 import com.vknxworks.beamctrl.ui.nav.LocalNavigator
 import com.vknxworks.beamctrl.ui.nav.SettingsRoute
@@ -144,34 +155,44 @@ fun YouScreen() {
     }
 
     Column(Modifier.fillMaxSize()) {
-        ScreenTopBar(stringResource(R.string.you_title))
+        // Close button and a mono PROFILE label, like every Ctrl app's profile page.
+        Row(
+            Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Gutter, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            CtrlSquareButton(Icons.Outlined.Close, stringResource(R.string.back), onClick = nav::back)
+            Box(Modifier.weight(1f), contentAlignment = Alignment.Center) { SectionLabel(stringResource(R.string.label_profile)) }
+            Spacer(Modifier.size(44.dp))
+        }
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).navigationBarsPadding().padding(bottom = 24.dp)) {
-            Column(
-                Modifier.fillMaxWidth().padding(start = Gutter, end = Gutter, top = 8.dp, bottom = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Row(
+                Modifier.fillMaxWidth().padding(start = Gutter, end = Gutter, top = 10.dp, bottom = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
-                    Modifier.size(96.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)),
+                    Modifier.size(68.dp).clip(RoundedCornerShape(22.dp)).background(CtrlColors.Accent),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Filled.AccountCircle, null, Modifier.size(56.dp), tint = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Outlined.PhoneAndroid, null, Modifier.size(30.dp), tint = CtrlColors.OnAccent)
                 }
-                Spacer(Modifier.height(14.dp))
-                Text(
-                    deviceName.ifBlank { stringResource(R.string.you_this_phone) },
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    listOf(
-                        if (remotes.isEmpty()) stringResource(R.string.you_no_remotes)
-                        else pluralStringResource(R.plurals.you_remote_count, remotes.size, remotes.size),
-                        stringResource(if (c.blaster.available) R.string.you_blaster_ready else R.string.you_blaster_missing),
-                    ).joinToString("  ·  "),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                )
+                Spacer(Modifier.width(16.dp))
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        deviceName.ifBlank { stringResource(R.string.you_this_phone) },
+                        style = MaterialTheme.typography.headlineSmall,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        listOf(
+                            if (remotes.isEmpty()) stringResource(R.string.you_no_remotes)
+                            else pluralStringResource(R.plurals.you_remote_count, remotes.size, remotes.size),
+                            stringResource(if (c.blaster.available) R.string.you_blaster_ready else R.string.you_blaster_missing),
+                        ).joinToString(" · "),
+                        style = CtrlType.Data,
+                        color = CtrlColors.Muted,
+                    )
+                }
             }
 
             Group(stringResource(R.string.backup_group), footer = stringResource(R.string.backup_footer)) {
@@ -179,7 +200,7 @@ fun YouScreen() {
                     stringResource(R.string.backup_to_file),
                     if (remotes.isEmpty()) stringResource(R.string.backup_to_file_subtitle_empty)
                     else pluralStringResource(R.plurals.backup_to_file_subtitle, remotes.size, remotes.size),
-                    icon = Icons.Filled.Backup,
+                    icon = Icons.Outlined.Backup,
                     showChevron = true,
                     onClick = {
                         // Android's file picker doesn't count as leaving BeamCtrl for the app lock.
@@ -190,7 +211,7 @@ fun YouScreen() {
                 GroupRow(
                     stringResource(R.string.backup_restore),
                     stringResource(R.string.backup_restore_subtitle),
-                    icon = Icons.Filled.Restore,
+                    icon = Icons.Outlined.Restore,
                     showChevron = true,
                     onClick = {
                         AppLock.expectReturn()
@@ -199,11 +220,11 @@ fun YouScreen() {
                 )
             }
 
-            Group {
+            Group(stringResource(R.string.label_app)) {
                 GroupRow(
                     stringResource(R.string.settings),
                     stringResource(R.string.settings_subtitle),
-                    icon = Icons.Filled.Settings,
+                    icon = Icons.Outlined.Tune,
                     showChevron = true,
                     onClick = { nav.navigate(SettingsRoute) },
                 )
@@ -211,42 +232,52 @@ fun YouScreen() {
 
             Group(stringResource(R.string.group_about)) {
                 GroupRow(
-                    stringResource(R.string.support_title),
-                    stringResource(R.string.support_subtitle),
-                    icon = Icons.Filled.Favorite,
-                    showChevron = true,
-                    onClick = { open(SPONSOR_URL) },
-                )
-                GroupRow(
                     stringResource(R.string.bugs_title),
                     stringResource(R.string.bugs_subtitle),
-                    icon = Icons.Filled.BugReport,
+                    icon = Icons.Outlined.BugReport,
                     showChevron = true,
                     onClick = { open(ISSUES_URL) },
                 )
                 GroupRow(
                     stringResource(R.string.source_title),
                     stringResource(R.string.source_subtitle),
-                    icon = Icons.Filled.Code,
+                    icon = Icons.Outlined.Code,
                     showChevron = true,
                     onClick = { open(REPO_URL) },
                 )
                 GroupRow(
                     stringResource(R.string.licence_title),
                     stringResource(R.string.licence_subtitle),
-                    icon = Icons.Filled.Gavel,
-                    showChevron = true,
+                    icon = Icons.Outlined.Gavel,
+                    value = "GPL-3.0",
                     onClick = { open(LICENCE_URL) },
                 )
             }
 
-            Text(
-                stringResource(R.string.about_footer, BuildConfig.VERSION_NAME),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                textAlign = TextAlign.Center,
-            )
+            Column(
+                Modifier.fillMaxWidth().padding(start = Gutter, end = Gutter, top = 18.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                CtrlButton(
+                    stringResource(R.string.support_title),
+                    onClick = { open(SPONSOR_URL) },
+                    icon = Icons.Outlined.FavoriteBorder,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Text(
+                    stringResource(R.string.label_footer_badges).uppercase(),
+                    style = CtrlType.Label.copy(letterSpacing = 0.12.em),
+                    color = CtrlColors.Muted,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    stringResource(R.string.about_footer, BuildConfig.VERSION_NAME),
+                    style = CtrlType.Data,
+                    color = CtrlColors.Muted,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 
@@ -283,7 +314,7 @@ fun YouScreen() {
     }
 
     problem?.let { reason ->
-        AlertDialog(
+        CtrlAlertDialog(
             onDismissRequest = { problem = null },
             title = { Text(stringResource(R.string.backup_restore_failed_title)) },
             text = { Text(stringResource(reason)) },

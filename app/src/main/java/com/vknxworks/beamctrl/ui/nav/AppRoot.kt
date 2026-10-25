@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,13 +66,13 @@ import com.vknxworks.beamctrl.ui.library.LibraryDeviceScreen
 import com.vknxworks.beamctrl.ui.library.LibraryScreen
 import com.vknxworks.beamctrl.ui.poweroff.PowerOffScreen
 import com.vknxworks.beamctrl.ui.components.LocalBottomClearance
-import com.vknxworks.beamctrl.ui.components.LocalHazeState
+import com.vknxworks.beamctrl.ui.components.CtrlBottomBar
+import com.vknxworks.beamctrl.ui.components.TabItem
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
 import com.vknxworks.beamctrl.ui.remote.RemoteScreen
 import com.vknxworks.beamctrl.ui.remotes.RemotesScreen
 import com.vknxworks.beamctrl.ui.settings.SettingsScreen
 import com.vknxworks.beamctrl.ui.settings.YouScreen
-import dev.chrisbanes.haze.hazeSource
-import dev.chrisbanes.haze.rememberHazeState
 
 @Composable
 fun AppRoot() {
@@ -79,7 +80,7 @@ fun AppRoot() {
     val ready by c.remotes.ready.collectAsStateWithLifecycle()
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         if (!ready) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.Accent) }
         } else {
             MainScaffold()
         }
@@ -132,6 +133,13 @@ private fun MainScaffold() {
                                 onClick = { selectTab(i) },
                                 icon = { Icon(if (selected) top.selectedIcon else top.icon, contentDescription = top.label) },
                                 label = { Text(top.label) },
+                                colors = NavigationRailItemDefaults.colors(
+                                    selectedIconColor = CtrlColors.OnAccent,
+                                    selectedTextColor = CtrlColors.Text,
+                                    indicatorColor = CtrlColors.Accent,
+                                    unselectedIconColor = CtrlColors.Muted,
+                                    unselectedTextColor = CtrlColors.Muted,
+                                ),
                             )
                         }
                         Spacer(Modifier.weight(1f))
@@ -151,8 +159,9 @@ private fun MainScaffold() {
 }
 
 /**
- * Phones: content runs edge to edge and scrolls under a floating glass island.
- * The island shows on the main tabs; remotes and other pushed screens get the full height.
+ * Phones: content runs edge to edge and scrolls under the floating bottom bar (20dp from the sides, 28dp
+ * above the navigation bar). The bar shows on the main tabs; remotes and other pushed screens get the
+ * full height.
  */
 @Composable
 private fun PhoneLayout(
@@ -161,18 +170,12 @@ private fun PhoneLayout(
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
 ) {
-    val hazeState = rememberHazeState()
     val density = LocalDensity.current
     var overlayHeight by remember { mutableStateOf(0.dp) }
 
-    CompositionLocalProvider(
-        LocalHazeState provides hazeState,
-        LocalBottomClearance provides if (showTabs) overlayHeight else 0.dp,
-    ) {
+    CompositionLocalProvider(LocalBottomClearance provides if (showTabs) overlayHeight else 0.dp) {
         Box(Modifier.fillMaxSize()) {
-            Box(Modifier.fillMaxSize().hazeSource(hazeState)) {
-                AppNavHost(navController)
-            }
+            AppNavHost(navController)
             AnimatedVisibility(
                 visible = showTabs,
                 enter = fadeIn() + slideInVertically { it / 2 },
@@ -181,8 +184,13 @@ private fun PhoneLayout(
                     .align(Alignment.BottomCenter)
                     .onSizeChanged { overlayHeight = with(density) { it.height.toDp() } },
             ) {
-                Box(Modifier.fillMaxWidth().navigationBarsPadding().padding(bottom = 12.dp), contentAlignment = Alignment.Center) {
-                    GlassTabBar(
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(start = 20.dp, end = 20.dp, bottom = 28.dp),
+                ) {
+                    CtrlBottomBar(
                         items = topDestinations.map { it.item() },
                         selectedIndex = selectedIndex,
                         onSelect = onSelect,

@@ -4,14 +4,14 @@ import androidx.compose.material.icons.Icons
 import com.vknxworks.beamctrl.R
 import androidx.annotation.StringRes
 import android.content.Context
-import androidx.compose.material.icons.filled.AcUnit
-import androidx.compose.material.icons.filled.Air
-import androidx.compose.material.icons.filled.Dvr
-import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.SettingsRemote
-import androidx.compose.material.icons.filled.Speaker
-import androidx.compose.material.icons.filled.Tv
-import androidx.compose.material.icons.filled.Videocam
+import androidx.compose.material.icons.outlined.AcUnit
+import androidx.compose.material.icons.outlined.Air
+import androidx.compose.material.icons.outlined.Dvr
+import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.SettingsRemote
+import androidx.compose.material.icons.outlined.Speaker
+import androidx.compose.material.icons.outlined.Tv
+import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.vknxworks.beamctrl.ir.IrCode
 import kotlinx.serialization.Serializable
@@ -30,14 +30,14 @@ enum class DeviceType(@StringRes val label: Int) {
 
     val icon: ImageVector
         get() = when (this) {
-            TV -> Icons.Filled.Tv
-            BOX -> Icons.Filled.Dvr
-            SOUNDBAR -> Icons.Filled.Speaker
-            PROJECTOR -> Icons.Filled.Videocam
-            AC -> Icons.Filled.AcUnit
-            FAN -> Icons.Filled.Air
-            LIGHT -> Icons.Filled.Lightbulb
-            OTHER -> Icons.Filled.SettingsRemote
+            TV -> Icons.Outlined.Tv
+            BOX -> Icons.Outlined.Dvr
+            SOUNDBAR -> Icons.Outlined.Speaker
+            PROJECTOR -> Icons.Outlined.Videocam
+            AC -> Icons.Outlined.AcUnit
+            FAN -> Icons.Outlined.Air
+            LIGHT -> Icons.Outlined.Lightbulb
+            OTHER -> Icons.Outlined.SettingsRemote
         }
 }
 

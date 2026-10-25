@@ -40,6 +40,16 @@
     <string name="keep_screen_on_subtitle">While a remote is open</string>
     <!-- You page (tap the profile picture) -->
     <string name="you_title">You</string>
+    <!-- Mono labels (shown in capitals) -->
+    <string name="status_ready">Ready</string>
+    <string name="status_missing">Missing</string>
+    <string name="label_profile">Profile</string>
+    <string name="label_app">App</string>
+    <string name="label_lock_brand">VKNXWorks · Ctrl</string>
+    <string name="label_last_used">Last used</string>
+    <string name="label_quick_power">Power</string>
+    <string name="label_all_remotes">All remotes</string>
+    <string name="label_footer_badges">Google-free · Telemetry-free · arm64</string>
     <string name="you_this_phone">This phone</string>
     <string name="you_blaster_ready">IR blaster ready</string>
     <string name="you_blaster_missing">No IR blaster found</string>
@@ -48,7 +58,7 @@
         <item quantity="other">%d remotes</item>
     </plurals>
     <string name="you_no_remotes">No remotes yet</string>
-    <string name="settings_subtitle">Appearance, privacy and security, IR blaster and buttons</string>
+    <string name="settings_subtitle">Privacy and security, IR blaster and buttons</string>
 
     <!-- Backup (on the You page) -->
     <string name="backup_group">Backup</string>
@@ -93,7 +103,7 @@
     <string name="hide_screenshots_subtitle">Screenshots and screen recordings show a blank screen</string>
     <string name="hide_recents">Hide in recent apps</string>
     <string name="hide_recents_subtitle">The recent apps view shows a blank card instead of the app</string>
-    <string name="lock_title">BeamCtrl is locked</string>
+    <string name="lock_title">Locked</string>
     <string name="lock_prompt_title">Unlock BeamCtrl</string>
     <string name="lock_prompt_subtitle">Your remotes</string>
     <string name="lock_use_pin">Use PIN</string>

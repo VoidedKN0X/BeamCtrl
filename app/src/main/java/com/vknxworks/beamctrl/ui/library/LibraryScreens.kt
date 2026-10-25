@@ -1,6 +1,5 @@
 package com.vknxworks.beamctrl.ui.library
 
-import androidx.compose.foundation.background
 import com.vknxworks.beamctrl.R
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -21,24 +20,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.LibraryBooks
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.LibraryBooks
+import androidx.compose.material.icons.outlined.PowerSettingsNew
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,8 +44,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -67,6 +60,11 @@ import com.vknxworks.beamctrl.ui.nav.LibraryCategoryRoute
 import com.vknxworks.beamctrl.ui.nav.LibraryDeviceRoute
 import com.vknxworks.beamctrl.ui.nav.LocalNavigator
 import com.vknxworks.beamctrl.ui.theme.Gutter
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
+import com.vknxworks.beamctrl.ui.theme.CtrlType
+import com.vknxworks.beamctrl.ui.components.CtrlTextField
+import com.vknxworks.beamctrl.ui.components.topDivider
+import androidx.compose.ui.text.font.FontWeight
 import kotlinx.coroutines.delay
 import java.text.NumberFormat
 
@@ -126,7 +124,7 @@ fun LibraryScreen(initialQuery: String) {
                     Text(
                         pluralStringResource(R.plurals.library_intro, index.devices.size, count(index.devices.size)),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = CtrlColors.Muted,
                         modifier = Modifier.padding(start = Gutter, end = Gutter, top = 4.dp, bottom = 16.dp),
                     )
                 }
@@ -194,13 +192,13 @@ fun LibraryBrandScreen(categoryIndex: Int, brand: String) {
         ScreenTopBar(category?.let { stringResource(R.string.brand_title, brand, it.displayName(LocalContext.current)) } ?: brand)
         when {
             devices == null -> Loading()
-            devices.isEmpty() -> MessageView(Icons.Filled.LibraryBooks, stringResource(R.string.library_brand_empty))
+            devices.isEmpty() -> MessageView(Icons.Outlined.LibraryBooks, stringResource(R.string.library_brand_empty))
             else -> LazyColumn(contentPadding = listPadding(top = 8.dp)) {
                 item {
                     Text(
                         stringResource(R.string.library_brand_hint),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = CtrlColors.Muted,
                         modifier = Modifier.padding(start = Gutter, end = Gutter, bottom = 16.dp),
                     )
                 }
@@ -223,37 +221,30 @@ private fun listPadding(top: androidx.compose.ui.unit.Dp = 4.dp) = PaddingValues
 
 @Composable
 private fun Loading() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.Accent) }
 }
 
 @Composable
 internal fun SearchField(value: String, onChange: (String) -> Unit, placeholder: String) {
     val focus = LocalFocusManager.current
-    TextField(
+    CtrlTextField(
         value = value,
         onValueChange = { onChange(it.take(60)) },
         placeholder = { Text(placeholder, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        leadingIcon = { Icon(Icons.Filled.Search, null) },
+        leadingIcon = { Icon(Icons.Outlined.Search, null, Modifier.size(20.dp)) },
         trailingIcon = {
-            if (value.isNotEmpty()) IconButton(onClick = { onChange("") }) { Icon(Icons.Filled.Close, stringResource(R.string.clear)) }
+            if (value.isNotEmpty()) IconButton(onClick = { onChange("") }) { Icon(Icons.Outlined.Close, stringResource(R.string.clear), Modifier.size(20.dp)) }
         },
         singleLine = true,
-        shape = CircleShape,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { focus.clearFocus() }),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-        ),
         modifier = Modifier.fillMaxWidth().padding(horizontal = Gutter, vertical = 8.dp),
     )
 }
 
 /**
- * Items drawn as one rounded card, like the grouped lists elsewhere in the app, but lazily, so
- * lists of thousands of remotes scroll smoothly.
+ * Items as plain Ctrl list rows separated by thin lines, drawn lazily so lists of thousands of remotes
+ * scroll smoothly.
  */
 private fun <T> LazyListScope.cardList(
     items: List<T>,
@@ -261,20 +252,7 @@ private fun <T> LazyListScope.cardList(
     content: @Composable (T, Int) -> Unit,
 ) {
     itemsIndexed(items, key = { _, item -> key(item) }) { i, item ->
-        val big = 24.dp
-        val shape = RoundedCornerShape(
-            topStart = if (i == 0) big else 0.dp,
-            topEnd = if (i == 0) big else 0.dp,
-            bottomStart = if (i == items.lastIndex) big else 0.dp,
-            bottomEnd = if (i == items.lastIndex) big else 0.dp,
-        )
-        Box(
-            Modifier
-                .padding(horizontal = Gutter)
-                .clip(shape)
-                .background(MaterialTheme.colorScheme.surfaceContainer)
-                .padding(top = if (i == 0) 6.dp else 0.dp, bottom = if (i == items.lastIndex) 6.dp else 0.dp),
-        ) { content(item, i) }
+        Box(Modifier.padding(horizontal = Gutter).then(if (i > 0) Modifier.topDivider() else Modifier)) { content(item, i) }
     }
 }
 
@@ -291,32 +269,30 @@ private fun ListRow(
             .fillMaxWidth()
             .heightIn(min = 56.dp)
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 4.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon != null) {
-            Box(
-                Modifier.size(36.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)),
-                contentAlignment = Alignment.Center,
-            ) { Icon(icon, null, Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary) }
+            Icon(icon, null, Modifier.size(22.dp), tint = CtrlColors.Muted)
             Spacer(Modifier.width(14.dp))
         }
         Column(Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(title, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium), maxLines = 2, overflow = TextOverflow.Ellipsis)
             if (!subtitle.isNullOrBlank()) {
-                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+                Text(subtitle, style = CtrlType.Data, color = CtrlColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
         if (power) {
+            // Has a power code: the accent status square, like "active" in other Ctrl lists.
             Icon(
-                Icons.Filled.PowerSettingsNew,
+                Icons.Outlined.PowerSettingsNew,
                 stringResource(R.string.library_has_power),
                 Modifier.size(16.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = CtrlColors.Accent,
             )
             Spacer(Modifier.width(8.dp))
         }
-        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, null, Modifier.size(20.dp), tint = CtrlColors.Muted)
     }
 }
 
