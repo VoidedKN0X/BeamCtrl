@@ -17,12 +17,29 @@ object FlipperIr {
         val buttons = mutableListOf<RemoteButton>()
         val skipped = mutableListOf<String>()
         val usedRoles = mutableSetOf<KeyRole>()
+        var seen = 0
 
-        val blocks = mutableListOf<Map<String, String>>()
-        var current = linkedMapOf<String, String>()
+        // Each signal is turned into a button as soon as it ends, and only the fields BeamCtrl reads are
+        // kept, so a huge or broken file can't fill memory with signals or junk lines.
+        var current = HashMap<String, String>()
         fun flush() {
-            if (current.containsKey("name")) blocks.add(current)
-            current = linkedMapOf()
+            val b = current
+            current = HashMap()
+            val rawName = b["name"] ?: return
+            // A real remote has a few dozen signals; stop at a sane number instead of filling memory.
+            if (seen++ >= MAX_SIGNALS) {
+                skipped.add(rawName.take(MAX_LABEL))
+                return
+            }
+            val name = rawName.ifBlank { fallbackName }
+            val code = runCatching { toCode(b) }.getOrNull()
+            if (code == null) {
+                skipped.add(name.take(MAX_LABEL))
+                return
+            }
+            // Only the first button for each role goes on the layout; the rest stay in "More buttons".
+            val role = roleFor(name)?.takeIf { usedRoles.add(it) }
+            buttons.add(RemoteButton(label = prettyName(name).ifEmpty { fallbackName }, role = role, code = code))
         }
         text.lineSequence().forEach { raw ->
             val line = raw.trim()
@@ -35,36 +52,24 @@ object FlipperIr {
                         val key = line.substring(0, i).trim().lowercase(Locale.ROOT)
                         // A new name starts a new signal even if the file left out the "#" separator.
                         if (key == "name" && current.containsKey("name")) flush()
-                        current[key] = line.substring(i + 1).trim()
+                        if (key in FIELDS) current[key] = line.substring(i + 1).trim()
                     }
                 }
             }
         }
         flush()
-
-        for ((index, b) in blocks.withIndex()) {
-            // A real remote has a few dozen signals; stop at a sane number instead of filling memory.
-            if (index >= MAX_SIGNALS) {
-                skipped.add(b["name"].orEmpty())
-                continue
-            }
-            val name = b["name"].orEmpty().ifBlank { fallbackName }
-            val code = runCatching { toCode(b) }.getOrNull()
-            if (code == null) {
-                skipped.add(name)
-                continue
-            }
-            // Only the first button for each role goes on the layout; the rest stay in "More buttons".
-            val role = roleFor(name)?.takeIf { usedRoles.add(it) }
-            buttons.add(RemoteButton(label = prettyName(name), role = role, code = code))
-        }
         return ImportResult(buttons, skipped)
     }
 
+    /** The fields of a signal that BeamCtrl reads; anything else in a file is ignored. */
+    private val FIELDS = setOf("name", "type", "frequency", "data", "protocol", "address", "command")
+
+    private val WHITESPACE = Regex("\\s+")
+
     private fun bytesLe(value: String?): Int {
-        val parts = value.orEmpty().split(Regex("\\s+")).filter { it.isNotEmpty() }
         var out = 0
-        parts.take(4).forEachIndexed { i, p -> out = out or ((p.toInt(16) and 0xFF) shl (8 * i)) }
+        WHITESPACE.splitToSequence(value.orEmpty().trim()).filter { it.isNotEmpty() }.take(4)
+            .forEachIndexed { i, p -> out = out or ((p.toInt(16) and 0xFF) shl (8 * i)) }
         return out
     }
 
@@ -72,7 +77,8 @@ object FlipperIr {
         return when (b["type"]?.lowercase(Locale.ROOT)) {
             "raw" -> {
                 val freq = b["frequency"]?.toDoubleOrNull()?.takeIf { it.isFinite() }?.toInt() ?: 38_000
-                val timings = b["data"].orEmpty().split(Regex("\\s+")).asSequence()
+                // Read lazily, so a file with millions of numbers on one line doesn't fill memory first.
+                val timings = WHITESPACE.splitToSequence(b["data"].orEmpty())
                     .mapNotNull { it.toIntOrNull() }.filter { it > 0 }
                     .take(IrLimits.MAX_TIMINGS + 1).toList()
                 // Only keep codes the blaster can actually send (frequency, length and timing limits).

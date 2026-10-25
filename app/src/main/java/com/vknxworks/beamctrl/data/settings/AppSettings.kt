@@ -7,15 +7,18 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 val Context.appDataStore: DataStore<Preferences> by preferencesDataStore(name = "beamctrl")
 
@@ -79,12 +82,17 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         }
     }
 
-    val settings: StateFlow<AppSettings> = context.appDataStore.data
+    /** The saved settings; if the settings file can't be read, the defaults instead of a crash. */
+    private val prefs: Flow<Preferences> = context.appDataStore.data.catch { e ->
+        if (e is IOException) emit(emptyPreferences()) else throw e
+    }
+
+    val settings: StateFlow<AppSettings> = prefs
         .map { it.toSettings() }
         .stateIn(scope, SharingStarted.Eagerly, AppSettings())
 
     /** The stored settings as they're read and changed, without [settings]' placeholder defaults at start-up. */
-    val stored: Flow<AppSettings> = context.appDataStore.data.map { it.toSettings() }
+    val stored: Flow<AppSettings> = prefs.map { it.toSettings() }
 
     private fun Preferences.toSettings() = AppSettings(
         haptics = this[K.haptics] ?: true,
@@ -98,7 +106,16 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         hideRecents = this[K.hideRecents] ?: this[K.legacyHide] ?: false,
     )
 
+    /** Saves a change. If the phone's storage fails, the change is dropped instead of closing the app. */
     suspend fun update(transform: (AppSettings) -> AppSettings) {
+        try {
+            save(transform)
+        } catch (e: IOException) {
+            // Nothing to do: the settings stay as they were.
+        }
+    }
+
+    private suspend fun save(transform: (AppSettings) -> AppSettings) {
         context.appDataStore.edit { p ->
             val s = transform(p.toSettings())
             p[K.haptics] = s.haptics

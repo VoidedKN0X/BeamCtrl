@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /** A button currently held down. Call [release] when the finger lifts. */
 fun interface Press {
@@ -31,6 +32,9 @@ class Blaster(context: Context) {
     private val dispatcher = Executors.newSingleThreadExecutor { r -> Thread(r, "beamctrl-ir") }.asCoroutineDispatcher()
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     private var toggle = false
+
+    /** Goes up in [releaseAll]; a held button stops repeating as soon as it changes. */
+    private val holdGeneration = AtomicInteger(0)
 
     /** Whether this phone has an IR emitter that apps can use. */
     val available: Boolean = runCatching { ir?.hasIrEmitter() == true }.getOrDefault(false)
@@ -73,6 +77,8 @@ class Blaster(context: Context) {
     fun press(code: IrCode, repeat: Boolean): Press {
         val released = AtomicBoolean(false)
         val pressedAt = SystemClock.uptimeMillis()
+        val generation = holdGeneration.get()
+        fun held() = !released.get() && holdGeneration.get() == generation
         scope.launch {
             if (!available) {
                 _errors.tryEmit(appContext.getString(R.string.blaster_none))
@@ -88,12 +94,20 @@ class Blaster(context: Context) {
             if (!transmit(signal.frequency, signal.once)) return@launch
             if (!repeat) return@launch
             // A quick tap is one press; only start repeating once the button has been held.
-            while (!released.get() && SystemClock.uptimeMillis() - pressedAt < HOLD_DELAY_MS) delay(15)
-            while (!released.get() && isActive && SystemClock.uptimeMillis() - pressedAt < MAX_HOLD_MS) {
+            while (held() && SystemClock.uptimeMillis() - pressedAt < HOLD_DELAY_MS) delay(15)
+            while (held() && isActive && SystemClock.uptimeMillis() - pressedAt < MAX_HOLD_MS) {
                 if (!transmit(signal.frequency, signal.repeat)) break
             }
         }
         return Press { released.set(true) }
+    }
+
+    /**
+     * Lets go of every held button. Called when BeamCtrl leaves the screen, so a button that was held while
+     * the app was closed or the screen turned off never keeps sending where you can't see it.
+     */
+    fun releaseAll() {
+        holdGeneration.incrementAndGet()
     }
 
     private suspend fun transmit(frequency: Int, pattern: IntArray): Boolean {
