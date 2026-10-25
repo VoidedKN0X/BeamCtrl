@@ -140,7 +140,7 @@ fun PowerOffScreen() {
         ScreenTopBar(stringResource(R.string.poweroff_title))
         val list = codes
         if (list == null) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.Accent) }
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.AccentText) }
             return@Column
         }
         Column(
@@ -238,7 +238,7 @@ private fun BigPowerButton(running: Boolean, resume: Boolean, enabled: Boolean, 
     val scale by animateFloatAsState(if (running && pulse) 1.06f else 1f, label = "pulse")
     // Accent key, as power is everywhere in BeamCtrl; while sending it turns into a surface Stop key with an accent edge.
     val color = if (running) CtrlColors.Surface else CtrlColors.Accent
-    val content = if (running) CtrlColors.Accent else CtrlColors.OnAccent
+    val content = if (running) CtrlColors.AccentText else CtrlColors.OnAccent
     val label = stringResource(if (running) R.string.poweroff_stop else if (resume) R.string.poweroff_continue else R.string.poweroff_start)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
@@ -247,7 +247,7 @@ private fun BigPowerButton(running: Boolean, resume: Boolean, enabled: Boolean, 
                 .size(148.dp)
                 .clip(CtrlShapes.Hero)
                 .background(if (enabled) color else CtrlColors.Raised)
-                .then(if (running) Modifier.border(1.dp, CtrlColors.Accent, CtrlShapes.Hero) else Modifier)
+                .then(if (running) Modifier.border(1.dp, CtrlColors.AccentText, CtrlShapes.Hero) else Modifier)
                 .clickable(enabled = enabled, onClick = onClick)
                 .semantics {
                     role = Role.Button

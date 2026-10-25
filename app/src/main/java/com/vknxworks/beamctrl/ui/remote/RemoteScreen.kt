@@ -301,8 +301,8 @@ private fun BeamLight() {
             launch { glow.animateTo(0f, tween(420)) }
         }
     }
-    // A Ctrl status square that flashes in the accent.
-    val accent = CtrlColors.Accent
+    // A Ctrl status square that flashes in the accent (the readable accent, so it shows on light too).
+    val accent = CtrlColors.AccentText
     val idle = CtrlColors.EmptyCell
     Box(
         Modifier

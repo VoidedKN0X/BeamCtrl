@@ -197,8 +197,8 @@ fun RemoteLayout(remote: Remote, showNumbers: Boolean, editing: Boolean, onAddBu
                             onClick = onAddButton,
                             shape = CtrlShapes.Field,
                             color = Color.Transparent,
-                            contentColor = CtrlColors.Accent,
-                            border = BorderStroke(1.dp, CtrlColors.Accent),
+                            contentColor = CtrlColors.AccentText,
+                            border = BorderStroke(1.dp, CtrlColors.AccentText),
                             modifier = Modifier.weight(1f).heightIn(min = 52.dp),
                         ) {
                             Row(

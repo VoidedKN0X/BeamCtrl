@@ -48,7 +48,7 @@ import java.util.Locale
 
 /**
  * Settings, opened from the You page (tap the profile picture). Backup and About are on the You page itself.
- * BeamCtrl is dark only (Ctrl / Signal), so there are no theme or wallpaper colour settings.
+ * BeamCtrl follows the phone's dark theme setting (Ctrl / Signal), so there are no theme or wallpaper colour settings.
  */
 @Composable
 fun SettingsScreen() {
