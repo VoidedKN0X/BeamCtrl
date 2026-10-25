@@ -20,6 +20,8 @@ class BeamCtrlApp : Application() {
             }
 
             override fun onStop(owner: LifecycleOwner) {
+                // A button held while the app is closed stops repeating straight away.
+                container.blaster.releaseAll()
                 AppLock.onBackground(container.vault.enabled, container.settings.settings.value.lockTimeout.millis)
             }
         })

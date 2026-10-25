@@ -168,7 +168,8 @@ object Pronto {
     fun decode(hex: String): IrSignal {
         irRequire(hex.length <= IrLimits.MAX_PRONTO_CHARS, R.string.pronto_too_long)
         val words = hex.trim().split(Regex("[\\s,]+")).filter { it.isNotEmpty() }.map {
-            it.toIntOrNull(16) ?: throw IrCodeException(R.string.pronto_not_hex, it.take(12))
+            // Pronto words are four hex digits; anything bigger is not a Pronto code (and would overflow below).
+            it.toIntOrNull(16)?.takeIf { v -> v in 0..0xFFFF } ?: throw IrCodeException(R.string.pronto_not_hex, it.take(12))
         }
         irRequire(words.size >= 6, R.string.pronto_too_short)
         irRequire(words[0] == 0x0000, R.string.pronto_not_learned)

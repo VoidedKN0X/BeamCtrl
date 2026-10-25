@@ -9,13 +9,18 @@ import kotlinx.coroutines.withContext
 import com.vknxworks.beamctrl.data.settings.SettingsRepository
 import com.vknxworks.beamctrl.ir.Blaster
 import com.vknxworks.beamctrl.ir.IrLibrary
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
 /** Manual dependency container; one per process. */
 class AppContainer(val context: Context) {
-    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    /**
+     * Background work that outlives a screen (saving remotes and settings). A failure there (for example a
+     * full disk) must never close the app, so it's dropped here instead of crashing.
+     */
+    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, _ -> })
 
     val settings = SettingsRepository(context, appScope)
     val remotes = RemoteRepository(context, appScope)

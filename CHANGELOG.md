@@ -4,6 +4,25 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.6.1 (2026-10-25)
+
+A clean-up and hardening release: no new features and no changes to how BeamCtrl looks.
+
+### Fixed
+
+- **A held button can no longer keep sending after you leave the app.** If you were holding a volume, channel or arrow key (with **Hold to repeat** on) and pressed Home, switched apps, swiped BeamCtrl away or the screen turned off, the phone could keep repeating that code in the background for up to 15 seconds. Holding stops the moment BeamCtrl leaves the screen.
+- **Importing a very large or broken Flipper .ir file no longer risks closing the app.** BeamCtrl now reads a file signal by signal and ignores lines it doesn't use, instead of first loading every line of the file into memory, so a huge file (or one with millions of numbers on a line) is handled calmly: the usable signals are imported and the rest are reported as skipped, as before.
+- **A Pronto code with an oversized word** (more than four hex digits, such as `FFFFFFFF`) is now refused with "not a Pronto code" in the button editor, an import or a backup, instead of producing a broken signal.
+- **A full or failing phone storage no longer closes BeamCtrl.** If saving your remotes or a setting fails, the app keeps working with what's on screen and tries again on your next change; the last saved copy stays as it was. If the settings file can't be read, BeamCtrl starts with the default settings instead of closing.
+
+### Security
+
+- **One less way into the app from outside.** A background receiver that an Android library adds to every app (for app-store and developer tools) is removed, so BeamCtrl's launcher screen is the only part of it other apps can start. BeamCtrl still has **no internet permission** and works fully offline.
+
+### Changed
+
+- Internal cleanup: removed unused texts left over from the old Theme and wallpaper-colour settings and the old Support row.
+
 ## v0.6.0 (2026-10-25)
 
 ### New

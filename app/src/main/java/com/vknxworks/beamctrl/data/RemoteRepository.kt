@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.util.UUID
 
@@ -90,10 +91,16 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope) {
                 withContext(Dispatchers.IO) {
                     // Write to a temporary file and swap it in, so a crash never leaves half a file.
                     val tmp = File(file.parentFile, "remotes.json.tmp")
-                    // Always write the latest list, so out-of-order writes can't save an older one.
-                    tmp.writeText(json.encodeToString(listSerializer, _remotes.value))
-                    if (!tmp.renameTo(file)) {
-                        file.writeText(tmp.readText())
+                    try {
+                        // Always write the latest list, so out-of-order writes can't save an older one.
+                        tmp.writeText(json.encodeToString(listSerializer, _remotes.value))
+                        if (!tmp.renameTo(file)) {
+                            file.writeText(tmp.readText())
+                            tmp.delete()
+                        }
+                    } catch (e: IOException) {
+                        // Full or failing storage: keep the remotes in memory and the last saved file as it was;
+                        // the next change tries again.
                         tmp.delete()
                     }
                 }
