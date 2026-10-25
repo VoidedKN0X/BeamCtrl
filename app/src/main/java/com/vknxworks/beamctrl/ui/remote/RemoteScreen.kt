@@ -9,7 +9,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,25 +24,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DriveFileRenameOutline
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.FileDownload
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DriveFileRenameOutline
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -54,7 +52,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -68,6 +70,10 @@ import com.vknxworks.beamctrl.ui.components.ConfirmDialog
 import com.vknxworks.beamctrl.ui.components.MessageView
 import com.vknxworks.beamctrl.ui.components.NameDialog
 import com.vknxworks.beamctrl.ui.components.ScreenTopBar
+import com.vknxworks.beamctrl.ui.components.CtrlSquareButton
+import com.vknxworks.beamctrl.ui.components.WarningCard
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
+import com.vknxworks.beamctrl.ui.theme.CtrlShapes
 import com.vknxworks.beamctrl.ui.nav.LocalNavigator
 import com.vknxworks.beamctrl.ui.theme.Gutter
 import kotlinx.coroutines.Dispatchers
@@ -136,38 +142,54 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
         ScreenTopBar(remote.name) {
             BeamLight()
             if (editing) {
-                TextButton(onClick = { editing = false }) {
-                    Icon(Icons.Filled.Check, null, Modifier.size(18.dp))
+                // Done: a small accent button while editing.
+                Row(
+                    Modifier
+                        .height(44.dp)
+                        .clip(CtrlShapes.Control)
+                        .background(CtrlColors.Accent)
+                        .clickable(role = Role.Button) { editing = false }
+                        .padding(horizontal = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Outlined.Check, null, Modifier.size(18.dp), tint = CtrlColors.OnAccent)
                     Spacer(Modifier.width(6.dp))
-                    Text(stringResource(R.string.done))
+                    Text(stringResource(R.string.done), style = MaterialTheme.typography.labelLarge, color = CtrlColors.OnAccent)
                 }
             } else {
-                IconButton(onClick = { editing = true }) { Icon(Icons.Filled.Edit, stringResource(R.string.edit_buttons)) }
+                CtrlSquareButton(Icons.Outlined.Edit, stringResource(R.string.edit_buttons), onClick = { editing = true })
             }
             Box {
-                IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, stringResource(R.string.more)) }
-                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                CtrlSquareButton(Icons.Outlined.MoreVert, stringResource(R.string.more), onClick = { menu = true })
+                DropdownMenu(
+                    expanded = menu,
+                    onDismissRequest = { menu = false },
+                    shape = CtrlShapes.Field,
+                    containerColor = CtrlColors.Raised,
+                    tonalElevation = 0.dp,
+                    border = BorderStroke(1.dp, CtrlColors.ControlOutline),
+                ) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.rename)) },
-                        leadingIcon = { Icon(Icons.Filled.DriveFileRenameOutline, null) },
+                        leadingIcon = { Icon(Icons.Outlined.DriveFileRenameOutline, null) },
                         onClick = { menu = false; renaming = true },
                     )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.device_type)) },
-                        leadingIcon = { Icon(Icons.Filled.Category, null) },
+                        leadingIcon = { Icon(Icons.Outlined.Category, null) },
                         onClick = { menu = false; pickingType = true },
                     )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.export_flipper)) },
-                        leadingIcon = { Icon(Icons.Filled.FileDownload, null) },
+                        leadingIcon = { Icon(Icons.Outlined.FileDownload, null) },
                         onClick = {
                             menu = false
                             exportIr.launch(remote.name.replace(Regex("[^A-Za-z0-9 _-]"), "").trim().replace(' ', '_').ifEmpty { "remote" } + ".ir")
                         },
                     )
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.delete_remote), color = MaterialTheme.colorScheme.error) },
-                        leadingIcon = { Icon(Icons.Filled.Delete, null, tint = MaterialTheme.colorScheme.error) },
+                        text = { Text(stringResource(R.string.delete_remote), color = CtrlColors.Error) },
+                        leadingIcon = { Icon(Icons.Outlined.Delete, null, tint = CtrlColors.Error) },
                         onClick = { menu = false; confirmDelete = true },
                     )
                 }
@@ -187,7 +209,7 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                     Text(
                         stringResource(R.string.edit_hint),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = CtrlColors.Muted,
                         modifier = Modifier.padding(horizontal = Gutter, vertical = 4.dp),
                     )
                     Spacer(Modifier.height(12.dp))
@@ -195,7 +217,7 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                 if (remote.buttons.isEmpty() && !editing) {
                     Box(Modifier.fillMaxWidth().height(420.dp)) {
                         MessageView(
-                            Icons.Filled.Edit,
+                            Icons.Outlined.Edit,
                             stringResource(R.string.no_buttons),
                             stringResource(R.string.no_buttons_body),
                             actionLabel = stringResource(R.string.add_buttons),
@@ -279,16 +301,24 @@ private fun BeamLight() {
             launch { glow.animateTo(0f, tween(420)) }
         }
     }
-    val accent = MaterialTheme.colorScheme.primary
-    val idle = MaterialTheme.colorScheme.outlineVariant
+    // A Ctrl status square that flashes in the accent.
+    val accent = CtrlColors.Accent
+    val idle = CtrlColors.EmptyCell
     Box(
         Modifier
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 6.dp)
             .size(22.dp)
             .drawBehind {
                 val g = glow.value
-                if (g > 0f) drawCircle(accent.copy(alpha = 0.35f * g), radius = size.minDimension / 2)
-                drawCircle(lerpColor(idle, accent, g), radius = size.minDimension / 4)
+                val r = CornerRadius(3.dp.toPx())
+                if (g > 0f) drawRoundRect(accent.copy(alpha = 0.30f * g), cornerRadius = CornerRadius(6.dp.toPx()))
+                val d = 8.dp.toPx()
+                drawRoundRect(
+                    lerpColor(idle, accent, g),
+                    topLeft = Offset((size.width - d) / 2, (size.height - d) / 2),
+                    size = Size(d, d),
+                    cornerRadius = r,
+                )
             },
     )
 }
@@ -297,21 +327,9 @@ private fun lerpColor(a: Color, b: Color, t: Float): Color = androidx.compose.ui
 
 @Composable
 private fun NoBlasterBanner() {
-    Surface(
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.error.copy(alpha = 0.12f),
-        modifier = Modifier.fillMaxWidth().padding(horizontal = Gutter, vertical = 8.dp),
-    ) {
-        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                Modifier.size(36.dp).clip(CircleShape).background(MaterialTheme.colorScheme.error.copy(alpha = 0.16f)),
-                contentAlignment = Alignment.Center,
-            ) { Icon(Icons.Filled.WarningAmber, null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp)) }
-            Spacer(Modifier.width(14.dp))
-            Text(
-                stringResource(R.string.no_blaster_banner),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-    }
+    WarningCard(
+        stringResource(R.string.no_blaster_banner),
+        Icons.Outlined.WarningAmber,
+        Modifier.padding(horizontal = Gutter, vertical = 8.dp),
+    )
 }

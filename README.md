@@ -25,7 +25,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Back up to a file** and **restore** every remote and setting, also on another phone
 - **Vibrate on press**, keep the screen on while a remote is open, and show or hide the number pad
 - **App lock** with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes
-- Light, dark and pure black themes, with an ember accent or your wallpaper's Material You colours; tablet and foldable layout
+- **Ctrl / Signal look**, shared by every Ctrl app: dark only, high contrast, one violet accent, Space Grotesk and JetBrains Mono; tablet and foldable layout
 
 ## Screenshots
 
@@ -146,3 +146,5 @@ Native Android apps for self-hosted services and everyday tools, all with the sa
 BeamCtrl is licensed under the [GNU General Public License v3.0](LICENSE). © VKNXWorks
 
 The built-in code library comes from [Flipper-IRDB](https://github.com/Lucaslhm/Flipper-IRDB) (CC0 1.0), packed with `tools/irdb/pack_irdb.py`.
+
+Fonts, bundled in the app (nothing is downloaded): [Space Grotesk](https://github.com/floriankarsten/space-grotesk) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono), both under the SIL Open Font License 1.1 ([FONT-LICENSE-SpaceGrotesk.txt](FONT-LICENSE-SpaceGrotesk.txt), [FONT-LICENSE-JetBrainsMono.txt](FONT-LICENSE-JetBrainsMono.txt)).

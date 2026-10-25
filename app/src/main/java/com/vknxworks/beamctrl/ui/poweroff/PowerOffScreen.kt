@@ -7,6 +7,8 @@ import androidx.compose.ui.res.stringResource
 import android.view.WindowManager
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,19 +24,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material.icons.outlined.PowerSettingsNew
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Stop
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -61,6 +59,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.vknxworks.beamctrl.container
+import com.vknxworks.beamctrl.ui.components.CtrlCard
+import com.vknxworks.beamctrl.ui.components.CtrlProgressBar
+import com.vknxworks.beamctrl.ui.components.CtrlSecondaryButton
+import com.vknxworks.beamctrl.ui.components.SectionLabel
+import com.vknxworks.beamctrl.ui.components.WarningCard
+import com.vknxworks.beamctrl.ui.components.topDivider
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
+import com.vknxworks.beamctrl.ui.theme.CtrlShapes
+import com.vknxworks.beamctrl.ui.theme.CtrlType
 import com.vknxworks.beamctrl.data.RemoteButton
 import com.vknxworks.beamctrl.ui.components.ScreenTopBar
 import com.vknxworks.beamctrl.ui.nav.LibraryRoute
@@ -133,7 +140,7 @@ fun PowerOffScreen() {
         ScreenTopBar(stringResource(R.string.poweroff_title))
         val list = codes
         if (list == null) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.Accent) }
             return@Column
         }
         Column(
@@ -146,13 +153,7 @@ fun PowerOffScreen() {
             verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
             if (!c.blaster.available) {
-                Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.error.copy(alpha = 0.12f)) {
-                    Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Filled.WarningAmber, null, tint = MaterialTheme.colorScheme.error)
-                        Spacer(Modifier.width(12.dp))
-                        Text(stringResource(R.string.poweroff_no_blaster), style = MaterialTheme.typography.bodyMedium)
-                    }
-                }
+                WarningCard(stringResource(R.string.poweroff_no_blaster), Icons.Outlined.WarningAmber)
             }
 
             Text(
@@ -163,7 +164,7 @@ fun PowerOffScreen() {
                     else -> pluralStringResource(R.plurals.poweroff_intro, list.size, list.size)
                 },
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = CtrlColors.Muted,
                 textAlign = TextAlign.Center,
             )
 
@@ -177,15 +178,16 @@ fun PowerOffScreen() {
 
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 val progress by animateFloatAsState(if (list.isEmpty()) 0f else sent.toFloat() / list.size, label = "sweep")
-                LinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape))
-                Spacer(Modifier.height(8.dp))
+                CtrlProgressBar(progress, color = CtrlColors.Accent)
+                Spacer(Modifier.height(10.dp))
                 Text(
                     when {
                         running && current >= 0 -> stringResource(R.string.dot_pair, stringResource(R.string.poweroff_code_of, current + 1, list.size), list[current].label)
                         sent > 0 -> pluralStringResource(R.plurals.poweroff_sent, list.size, sent, list.size)
                         else -> pluralStringResource(R.plurals.poweroff_ready, list.size, list.size)
                     },
-                    style = MaterialTheme.typography.labelLarge,
+                    style = CtrlType.Data,
+                    color = CtrlColors.Text,
                 )
                 if (!running && sent > 0 && !finished) {
                     TextButton(onClick = { sent = 0; current = -1 }) { Text(stringResource(R.string.poweroff_restart)) }
@@ -196,16 +198,12 @@ fun PowerOffScreen() {
             if (!running && sent > 0) {
                 val recent = (maxOf(0, sent - 8) until sent).reversed().map { it to list[it] }
                 Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        stringResource(R.string.poweroff_last_codes),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(start = 4.dp),
-                    )
-                    Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.fillMaxWidth()) {
-                        Column(Modifier.padding(vertical = 6.dp)) {
-                            recent.forEach { (i, button) ->
+                    SectionLabel(stringResource(R.string.poweroff_last_codes), Modifier.padding(start = 4.dp))
+                    CtrlCard(Modifier.fillMaxWidth(), padding = PaddingValues(0.dp)) {
+                        Column {
+                            recent.forEachIndexed { n, (i, button) ->
                                 RecentCode(
+                                    first = n == 0,
                                     number = i + 1,
                                     button = button,
                                     onTest = { c.blaster.send(button.code) },
@@ -217,7 +215,7 @@ fun PowerOffScreen() {
                     Text(
                         stringResource(R.string.poweroff_found_hint),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = CtrlColors.Muted,
                         modifier = Modifier.padding(horizontal = 4.dp),
                     )
                 }
@@ -238,16 +236,18 @@ private fun BigPowerButton(running: Boolean, resume: Boolean, enabled: Boolean, 
         pulse = false
     }
     val scale by animateFloatAsState(if (running && pulse) 1.06f else 1f, label = "pulse")
-    val color = if (running) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.error.copy(alpha = 0.16f)
-    val content = if (running) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.error
+    // Accent key, as power is everywhere in BeamCtrl; while sending it turns into a surface Stop key with an accent edge.
+    val color = if (running) CtrlColors.Surface else CtrlColors.Accent
+    val content = if (running) CtrlColors.Accent else CtrlColors.OnAccent
     val label = stringResource(if (running) R.string.poweroff_stop else if (resume) R.string.poweroff_continue else R.string.poweroff_start)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             Modifier
                 .scale(scale)
                 .size(148.dp)
-                .clip(CircleShape)
-                .background(if (enabled) color else color.copy(alpha = 0.06f))
+                .clip(CtrlShapes.Hero)
+                .background(if (enabled) color else CtrlColors.Raised)
+                .then(if (running) Modifier.border(1.dp, CtrlColors.Accent, CtrlShapes.Hero) else Modifier)
                 .clickable(enabled = enabled, onClick = onClick)
                 .semantics {
                     role = Role.Button
@@ -255,7 +255,7 @@ private fun BigPowerButton(running: Boolean, resume: Boolean, enabled: Boolean, 
                 },
             contentAlignment = Alignment.Center,
         ) {
-            Icon(if (running) Icons.Filled.Stop else Icons.Filled.PowerSettingsNew, null, Modifier.size(64.dp), tint = content)
+            Icon(if (running) Icons.Outlined.Stop else Icons.Outlined.PowerSettingsNew, null, Modifier.size(60.dp), tint = if (enabled) content else CtrlColors.Inactive)
         }
         Spacer(Modifier.height(10.dp))
         Text(label, style = MaterialTheme.typography.titleMedium)
@@ -263,22 +263,26 @@ private fun BigPowerButton(running: Boolean, resume: Boolean, enabled: Boolean, 
 }
 
 @Composable
-private fun RecentCode(number: Int, button: RemoteButton, onTest: () -> Unit, onFind: () -> Unit) {
+private fun RecentCode(first: Boolean, number: Int, button: RemoteButton, onTest: () -> Unit, onFind: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(start = 16.dp, end = 8.dp),
+        Modifier
+            .fillMaxWidth()
+            .then(if (first) Modifier else Modifier.topDivider(CtrlColors.Outline))
+            .heightIn(min = 60.dp)
+            .padding(start = 16.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
             Text(button.label, style = MaterialTheme.typography.bodyLarge)
-            Text(stringResource(R.string.poweroff_code, number), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.poweroff_code, number).uppercase(), style = CtrlType.Data, color = CtrlColors.Muted)
         }
-        OutlinedButton(onClick = onTest) {
-            Icon(Icons.Filled.PowerSettingsNew, null, Modifier.size(18.dp))
+        CtrlSecondaryButton(onClick = onTest) {
+            Icon(Icons.Outlined.PowerSettingsNew, null, Modifier.size(18.dp))
             Spacer(Modifier.width(6.dp))
             Text(stringResource(R.string.test))
         }
         androidx.compose.material3.IconButton(onClick = onFind) {
-            Icon(Icons.Filled.Search, stringResource(R.string.poweroff_find, button.label))
+            Icon(Icons.Outlined.Search, stringResource(R.string.poweroff_find, button.label))
         }
     }
 }

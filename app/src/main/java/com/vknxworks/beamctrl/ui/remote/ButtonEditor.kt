@@ -1,5 +1,14 @@
 package com.vknxworks.beamctrl.ui.remote
 
+import com.vknxworks.beamctrl.ui.components.CtrlBottomSheet
+import com.vknxworks.beamctrl.ui.components.SectionLabel
+import com.vknxworks.beamctrl.ui.theme.CtrlType
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.foundation.layout.height
+import com.vknxworks.beamctrl.ui.components.ctrlFieldColors
+import com.vknxworks.beamctrl.ui.components.CtrlSecondaryButton
+import com.vknxworks.beamctrl.ui.theme.CtrlShapes
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Spacer
@@ -20,12 +29,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.SettingsRemote
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.SettingsRemote
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -168,10 +175,9 @@ fun ButtonEditorSheet(
             .onFailure { error = irErrorText(context, it) }
     }
 
-    ModalBottomSheet(
+    CtrlBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         Column(
             Modifier
@@ -185,6 +191,8 @@ fun ButtonEditorSheet(
             Text(stringResource(if (button == null) R.string.add_button else R.string.edit_button), style = MaterialTheme.typography.titleLarge)
 
             OutlinedTextField(
+                shape = CtrlShapes.Field,
+                colors = ctrlFieldColors(),
                 value = label,
                 onValueChange = { label = it.take(24) },
                 label = { Text(stringResource(R.string.name)) },
@@ -193,19 +201,38 @@ fun ButtonEditorSheet(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            OutlinedButton(onClick = { pickRole = true }, modifier = Modifier.fillMaxWidth()) {
+            CtrlSecondaryButton(onClick = { pickRole = true }, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.place_on_remote_value, role?.label(context) ?: stringResource(R.string.more_buttons)))
             }
 
-            Text(stringResource(R.string.protocol), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            SectionLabel(stringResource(R.string.protocol))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Proto.entries.forEach { p ->
-                    FilterChip(selected = proto == p, onClick = { proto = p; error = null }, label = { Text(stringResource(p.label)) })
+                    FilterChip(
+                        selected = proto == p,
+                        onClick = { proto = p; error = null },
+                        label = { Text(stringResource(p.label), style = CtrlType.Data) },
+                        shape = CtrlShapes.Chip,
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = CtrlColors.Surface,
+                            labelColor = CtrlColors.Text,
+                            selectedContainerColor = CtrlColors.Accent,
+                            selectedLabelColor = CtrlColors.OnAccent,
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            enabled = true,
+                            selected = proto == p,
+                            borderColor = CtrlColors.ControlOutline,
+                            selectedBorderColor = CtrlColors.Accent,
+                        ),
+                    )
                 }
             }
 
             when (proto) {
                 Proto.PRONTO -> OutlinedTextField(
+                    shape = CtrlShapes.Field,
+                    colors = ctrlFieldColors(),
                     value = pronto,
                     onValueChange = { pronto = it },
                     label = { Text(stringResource(R.string.pronto_hex)) },
@@ -215,6 +242,8 @@ fun ButtonEditorSheet(
                 )
                 Proto.RAW -> {
                     OutlinedTextField(
+                        shape = CtrlShapes.Field,
+                        colors = ctrlFieldColors(),
                         value = frequency,
                         onValueChange = { frequency = it.filter(Char::isDigit).take(6) },
                         label = { Text(stringResource(R.string.carrier_frequency)) },
@@ -223,6 +252,8 @@ fun ButtonEditorSheet(
                         modifier = Modifier.fillMaxWidth(),
                     )
                     OutlinedTextField(
+                        shape = CtrlShapes.Field,
+                        colors = ctrlFieldColors(),
                         value = timings,
                         onValueChange = { timings = it },
                         label = { Text(stringResource(R.string.timings_label)) },
@@ -233,6 +264,8 @@ fun ButtonEditorSheet(
                 }
                 else -> Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
+                        shape = CtrlShapes.Field,
+                        colors = ctrlFieldColors(),
                         value = address,
                         onValueChange = { address = it.take(6) },
                         label = { Text(stringResource(R.string.address_hex)) },
@@ -241,6 +274,8 @@ fun ButtonEditorSheet(
                         modifier = Modifier.weight(1f),
                     )
                     OutlinedTextField(
+                        shape = CtrlShapes.Field,
+                        colors = ctrlFieldColors(),
                         value = command,
                         onValueChange = { command = it.take(6) },
                         label = { Text(stringResource(R.string.command_hex)) },
@@ -251,10 +286,10 @@ fun ButtonEditorSheet(
                 }
             }
 
-            error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium) }
+            error?.let { Text(it, color = CtrlColors.Error, style = MaterialTheme.typography.bodyMedium) }
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                OutlinedButton(onClick = { attempt { blaster.send(it) } }) { Text(stringResource(R.string.test)) }
+                CtrlSecondaryButton(onClick = { attempt { blaster.send(it) } }, modifier = Modifier.height(56.dp)) { Text(stringResource(R.string.test)) }
                 PillButton(
                     stringResource(R.string.save),
                     onClick = {
@@ -265,15 +300,15 @@ fun ButtonEditorSheet(
                             )
                         }
                     },
-                    icon = Icons.Filled.SettingsRemote,
+                    icon = Icons.Outlined.SettingsRemote,
                     modifier = Modifier.weight(1f),
                 )
             }
             if (onDelete != null) {
                 TextButton(onClick = onDelete, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    androidx.compose.material3.Icon(Icons.Filled.Delete, null, tint = MaterialTheme.colorScheme.error)
+                    androidx.compose.material3.Icon(Icons.Outlined.Delete, null, tint = CtrlColors.Error)
                     Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.delete_button), color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.delete_button), color = CtrlColors.Error)
                 }
             }
         }

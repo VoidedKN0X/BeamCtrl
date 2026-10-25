@@ -15,13 +15,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.LibraryBooks
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material.icons.filled.FileUpload
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.LibraryBooks
+import androidx.compose.material.icons.outlined.PowerSettingsNew
+import androidx.compose.material.icons.outlined.FileUpload
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Tv
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -115,7 +114,7 @@ fun AddScreen() {
                 librarySize?.let {
                     pluralStringResource(R.plurals.add_library_size, it, java.text.NumberFormat.getIntegerInstance().format(it))
                 } ?: stringResource(R.string.loading),
-                icon = Icons.Filled.LibraryBooks,
+                icon = Icons.Outlined.LibraryBooks,
                 showChevron = true,
                 onClick = { nav.navigate(LibraryRoute()) },
             )
@@ -125,15 +124,14 @@ fun AddScreen() {
             GroupRow(
                 stringResource(R.string.find_title),
                 stringResource(R.string.add_find_subtitle),
-                icon = Icons.Filled.Search,
+                icon = Icons.Outlined.Search,
                 showChevron = true,
                 onClick = { nav.navigate(FindBrandRoute) },
             )
             GroupRow(
                 stringResource(R.string.poweroff_title),
                 stringResource(R.string.add_poweroff_subtitle),
-                icon = Icons.Filled.PowerSettingsNew,
-                iconTint = MaterialTheme.colorScheme.error,
+                icon = Icons.Outlined.PowerSettingsNew,
                 showChevron = true,
                 onClick = { nav.navigate(PowerOffRoute) },
             )
@@ -143,12 +141,9 @@ fun AddScreen() {
             CodeLibrary.brands.forEach { brand ->
                 GroupRow(
                     brand.title(context),
-                    stringResource(
-                        R.string.dot_pair,
-                        pluralStringResource(R.plurals.buttons_count, brand.keys.size, brand.keys.size),
-                        brand.keys.first().second.protocolLabel(context),
-                    ),
-                    icon = Icons.Filled.Tv,
+                    pluralStringResource(R.plurals.buttons_count, brand.keys.size, brand.keys.size),
+                    icon = Icons.Outlined.Tv,
+                    value = brand.keys.first().second.protocolLabel(context).uppercase(),
                     showChevron = true,
                     onClick = { nav.navigate(BrandRoute(brand.id)) },
                 )
@@ -162,14 +157,14 @@ fun AddScreen() {
             GroupRow(
                 stringResource(R.string.add_import),
                 stringResource(R.string.add_import_subtitle),
-                icon = Icons.Filled.FileUpload,
+                icon = Icons.Outlined.FileUpload,
                 showChevron = true,
                 onClick = { importIr.launch(arrayOf("*/*")) },
             )
             GroupRow(
                 stringResource(R.string.add_blank),
                 stringResource(R.string.add_blank_subtitle),
-                icon = Icons.Filled.Edit,
+                icon = Icons.Outlined.Edit,
                 showChevron = true,
                 onClick = { naming = true },
             )

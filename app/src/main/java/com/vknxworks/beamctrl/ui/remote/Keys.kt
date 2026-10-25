@@ -9,9 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -26,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.data.KeyRole
 import com.vknxworks.beamctrl.data.RemoteButton
+import com.vknxworks.beamctrl.ui.theme.CtrlColors
+import com.vknxworks.beamctrl.ui.theme.CtrlShapes
 
 /** How keys on the current screen behave: sending codes, or (in edit mode) opening the editor. */
 class KeyHost(
@@ -61,9 +62,11 @@ fun BeamKey(
     button: RemoteButton?,
     role: KeyRole?,
     modifier: Modifier = Modifier,
-    shape: Shape = CircleShape,
-    container: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    shape: Shape = CtrlShapes.Key,
+    container: Color = CtrlColors.Surface,
+    contentColor: Color = CtrlColors.Text,
+    /** 1dp edge, like the lock screen keypad; null for none (keys on the accent). */
+    borderColor: Color? = CtrlColors.Outline,
     repeat: Boolean = false,
     label: String? = button?.label ?: role?.label(LocalContext.current),
     content: @Composable BoxScope.() -> Unit,
@@ -75,10 +78,15 @@ fun BeamKey(
     val current by rememberUpdatedState(button)
 
     val scale by animateFloatAsState(if (pressed) 0.92f else 1f, spring(dampingRatio = 0.55f, stiffness = 900f), label = "key-scale")
-    val bg by animateColorAsState(
-        if (pressed) MaterialTheme.colorScheme.primary.copy(alpha = 0.30f) else container,
-        label = "key-bg",
-    )
+    // Pressed: surface keys light up in the accent's colour, accent keys go a little darker.
+    val pressedColor = if (container == CtrlColors.Accent) lerp(CtrlColors.Accent, CtrlColors.Background, 0.25f)
+    else lerp(container, CtrlColors.Accent, 0.28f)
+    val bg by animateColorAsState(if (pressed) pressedColor else container, label = "key-bg")
+    val edge = when {
+        host.editing -> CtrlColors.Accent.copy(alpha = if (button != null) 0.8f else 0.35f)
+        pressed && borderColor != null -> CtrlColors.Accent
+        else -> borderColor
+    }
     val enabled = button != null || host.editing
 
     val input = when {
@@ -112,7 +120,7 @@ fun BeamKey(
             }
             .clip(shape)
             .background(bg)
-            .then(if (host.editing) Modifier.border(1.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = if (button != null) 0.7f else 0.3f), shape) else Modifier)
+            .then(if (edge != null) Modifier.border(if (host.editing) 1.5.dp else 1.dp, edge, shape) else Modifier)
             .then(input)
             .semantics {
                 this.role = Role.Button
