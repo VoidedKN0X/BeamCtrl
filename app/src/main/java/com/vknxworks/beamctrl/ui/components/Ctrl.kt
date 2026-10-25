@@ -91,7 +91,7 @@ fun CtrlWordmark(name: String, modifier: Modifier = Modifier) {
     Text(
         buildAnnotatedString {
             append(name.uppercase())
-            withStyle(SpanStyle(color = CtrlColors.Accent)) { append("/") }
+            withStyle(SpanStyle(color = CtrlColors.AccentText)) { append("/") }
             append("CTRL")
         },
         style = CtrlType.Wordmark,
@@ -114,11 +114,11 @@ fun StatusDot(active: Boolean, modifier: Modifier = Modifier, color: Color = if 
 
 /** Mono status text with its square, for the end of a list row. */
 @Composable
-fun StatusTag(text: String, active: Boolean, modifier: Modifier = Modifier, color: Color = if (active) CtrlColors.Accent else CtrlColors.Inactive) {
+fun StatusTag(text: String, active: Boolean, modifier: Modifier = Modifier, color: Color = if (active) CtrlColors.AccentText else CtrlColors.Inactive) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(text.uppercase(), style = CtrlType.Status, color = color, maxLines = 1)
         Spacer(Modifier.width(8.dp))
-        StatusDot(active, color = color)
+        StatusDot(active)
     }
 }
 
@@ -187,6 +187,7 @@ fun CtrlHeroCard(
 }
 
 /** A thin line drawn along the top of whatever it's on, between list rows. */
+@Composable
 fun Modifier.topDivider(color: Color = CtrlColors.Divider): Modifier = drawBehind {
     drawRect(color, topLeft = Offset.Zero, size = Size(size.width, 1.dp.toPx()))
 }
@@ -260,7 +261,7 @@ fun CtrlAvatar(
 @Composable
 fun CtrlSwitch(checked: Boolean, onCheckedChange: ((Boolean) -> Unit)?, modifier: Modifier = Modifier, enabled: Boolean = true) {
     val track by animateColorAsState(if (checked) CtrlColors.Accent else CtrlColors.SwitchTrackOff, label = "switch-track")
-    val knob by animateColorAsState(if (checked) CtrlColors.OnAccent else CtrlColors.Inactive, label = "switch-knob")
+    val knob by animateColorAsState(if (checked) CtrlColors.OnAccent else CtrlColors.SwitchKnobOff, label = "switch-knob")
     val x by animateDpAsState(if (checked) 20.dp else 0.dp, label = "switch-x")
     val shape = RoundedCornerShape(10.dp)
     Box(
@@ -343,10 +344,10 @@ fun ctrlFieldColors(): TextFieldColors = OutlinedTextFieldDefaults.colors(
     unfocusedContainerColor = CtrlColors.Surface,
     disabledContainerColor = CtrlColors.Surface,
     errorContainerColor = CtrlColors.Surface,
-    focusedBorderColor = CtrlColors.Accent,
+    focusedBorderColor = CtrlColors.AccentText,
     unfocusedBorderColor = CtrlColors.ControlOutline,
-    cursorColor = CtrlColors.Accent,
-    focusedLabelColor = CtrlColors.Accent,
+    cursorColor = CtrlColors.AccentText,
+    focusedLabelColor = CtrlColors.AccentText,
     unfocusedLabelColor = CtrlColors.Muted,
     focusedLeadingIconColor = CtrlColors.Text,
     unfocusedLeadingIconColor = CtrlColors.Muted,
@@ -391,7 +392,7 @@ fun CtrlTextField(
 
 /** Progress bar: 6dp tall, 3dp corners. Light fill, or the accent for the main figure. */
 @Composable
-fun CtrlProgressBar(progress: Float, modifier: Modifier = Modifier, color: Color = CtrlColors.Text) {
+fun CtrlProgressBar(progress: Float, modifier: Modifier = Modifier, color: Color = CtrlColors.ProgressFill) {
     val shape = RoundedCornerShape(3.dp)
     Box(modifier.fillMaxWidth().height(6.dp).clip(shape).background(CtrlColors.ProgressTrack)) {
         Box(Modifier.fillMaxHeight().fillMaxWidth(progress.coerceIn(0f, 1f)).clip(shape).background(color))

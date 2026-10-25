@@ -4,6 +4,24 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.6.0 (2026-10-25)
+
+### New
+
+- **Light mode that follows the device theme.** BeamCtrl now switches between dark and light by itself, following your phone's **Dark theme** setting (Settings › Display on most phones). There is still no theme setting in the app, and wallpaper colours (Material You) stay off. Switching the phone's theme, or a dark theme schedule kicking in, changes BeamCtrl straight away, without restarting it.
+- **Signal Light**, the light version of the Ctrl / Signal look: a warm off-white background (#F5F5F1), white cards and sheets with a thin light-grey border (#DEDED7), near-black text (#0B0B0D) and grey secondary text (#5C5C64). Every screen has it: the Remotes tab, every remote, the code library, Add, brand finder, Turn off any TV, the button editor, the You page, Settings, the app lock and PIN screens, and every dialog, menu and bottom sheet.
+
+### Changed
+
+- **Remote keys in light mode** are white (#FFFFFF) with a thin light-grey edge (#DEDED7), like the lock screen keypad; the **power key** and the **OK key** in the middle of the d-pad stay violet-filled with dark symbols, in both modes. The d-pad disc and the volume and channel rockers are white with the same edge.
+- **The violet accent stays the same fill in both modes** (#B48CFF with dark content) for hero cards, main buttons, the power and OK keys, the selected tab, switches that are on and filled PIN digits. For accent **text, icons and thin lines** on the light background (the slash in BEAM/CTRL, READY status, text buttons such as Cancel and OK, the selected item in pick lists, the outlined fingerprint key, focused text fields, the Add button tile, the signal light in a remote's top bar, the power icons in the code library, the step counter in Find your TV's brand, loading spinners), light mode uses a deeper violet (#6A3BDB) so it stays easy to read. Dark mode is unchanged.
+- **Status and navigation bars** follow the theme too: the same colour as the background, with light icons in dark mode and dark icons in light mode. The window colour while BeamCtrl starts up follows the phone's theme as well, so there's no dark flash when opening it in light mode.
+- **Switches in light mode**: grey track (#DCDCD5) with a grey knob when off, violet track with a dark knob when on.
+- **Bottom bar in light mode**: white at 92% with a thin grey border (#D2D2CA); the selected tab is still a violet block.
+- **App lock in light mode**: white keypad keys with a thin edge, empty PIN cells with a grey edge (#C9C9C1), and errors such as "Wrong PIN" in a deeper red (#D93636) that reads well on light.
+- **Progress bar** in Turn off any TV keeps the violet fill on a light grey track (#E2E2DC) in light mode.
+- The quick **power key on the last-used remote card** stays a dark key with a violet symbol in both modes, since it sits on the violet card.
+
 ## v0.5.0 (2026-10-25)
 
 BeamCtrl gets **Ctrl / Signal**, the new look shared by every Ctrl app: near-black, high contrast, one violet accent and a sharper, squarer shape language. Every feature, screen and setting works exactly as before; only the look changes.

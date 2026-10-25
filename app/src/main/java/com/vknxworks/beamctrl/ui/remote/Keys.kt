@@ -83,8 +83,8 @@ fun BeamKey(
     else lerp(container, CtrlColors.Accent, 0.28f)
     val bg by animateColorAsState(if (pressed) pressedColor else container, label = "key-bg")
     val edge = when {
-        host.editing -> CtrlColors.Accent.copy(alpha = if (button != null) 0.8f else 0.35f)
-        pressed && borderColor != null -> CtrlColors.Accent
+        host.editing -> CtrlColors.AccentText.copy(alpha = if (button != null) 0.8f else 0.35f)
+        pressed && borderColor != null -> CtrlColors.AccentText
         else -> borderColor
     }
     val enabled = button != null || host.editing

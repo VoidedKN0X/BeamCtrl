@@ -92,7 +92,7 @@ fun LibraryDeviceScreen(id: Int) {
     Column(Modifier.fillMaxSize()) {
         ScreenTopBar(ready?.device?.title ?: stringResource(R.string.remote_unnamed))
         when (val s = state) {
-            DeviceState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.Accent) }
+            DeviceState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.AccentText) }
             is DeviceState.Failed -> MessageView(Icons.Outlined.ErrorOutline, stringResource(R.string.library_open_failed_title), s.message)
             is DeviceState.Ready -> {
                 val type = s.category?.type ?: com.vknxworks.beamctrl.data.DeviceType.OTHER
@@ -116,7 +116,7 @@ fun LibraryDeviceScreen(id: Int) {
                                     s.category?.let { stringResource(R.string.dot_pair, it.displayName(context), buttons) } ?: buttons
                                 }.uppercase(),
                                 style = CtrlType.Label,
-                                color = CtrlColors.Accent,
+                                color = CtrlColors.AccentText,
                             )
                             Text(
                                 stringResource(R.string.library_try),

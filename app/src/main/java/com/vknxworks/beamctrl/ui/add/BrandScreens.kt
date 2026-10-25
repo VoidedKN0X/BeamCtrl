@@ -186,7 +186,7 @@ fun FindBrandScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                SectionLabel(stringResource(R.string.find_progress, index + 1, brands.size), color = CtrlColors.Accent)
+                SectionLabel(stringResource(R.string.find_progress, index + 1, brands.size), color = CtrlColors.AccentText)
                 Text(brand.brand, style = MaterialTheme.typography.displayMedium, textAlign = TextAlign.Center)
                 Text(
                     stringResource(R.string.find_try),

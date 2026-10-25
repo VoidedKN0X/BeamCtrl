@@ -221,7 +221,7 @@ private fun listPadding(top: androidx.compose.ui.unit.Dp = 4.dp) = PaddingValues
 
 @Composable
 private fun Loading() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.Accent) }
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.AccentText) }
 }
 
 @Composable
@@ -288,7 +288,7 @@ private fun ListRow(
                 Icons.Outlined.PowerSettingsNew,
                 stringResource(R.string.library_has_power),
                 Modifier.size(16.dp),
-                tint = CtrlColors.Accent,
+                tint = CtrlColors.AccentText,
             )
             Spacer(Modifier.width(8.dp))
         }

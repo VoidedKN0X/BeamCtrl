@@ -7,6 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,11 +21,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Dark only (Ctrl / Signal): edge to edge, status and navigation bars in the background colour, light icons.
-        val bars = SystemBarStyle.dark(BAR_COLOR)
-        enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
+        enableEdgeToEdge()
         val c = container
         setContent {
+            // Follows the phone's dark theme setting. Status and navigation bars take the background colour,
+            // with light icons in dark and dark icons in light.
+            val dark = isSystemInDarkTheme()
+            DisposableEffect(dark) {
+                val bars = if (dark) SystemBarStyle.dark(DARK_BAR) else SystemBarStyle.light(LIGHT_BAR, DARK_BAR)
+                enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
+                onDispose { }
+            }
             val settings by c.settings.settings.collectAsStateWithLifecycle()
             // Problems sending a code show up wherever you are.
             LaunchedEffect(Unit) {
@@ -40,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 else window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 setRecentsScreenshotEnabled(!blankRecents)
             }
-            BeamCtrlTheme {
+            BeamCtrlTheme(dark) {
                 // Nothing of the app is shown while the app lock is locked.
                 AppLockGate { AppRoot() }
             }
@@ -48,5 +56,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/** The Ctrl / Signal background (#08080A), behind the status and navigation bars. */
-private val BAR_COLOR = android.graphics.Color.rgb(8, 8, 10)
+/** The Ctrl / Signal backgrounds behind the status and navigation bars: dark #08080A, light #F5F5F1. */
+private val DARK_BAR = android.graphics.Color.rgb(8, 8, 10)
+private val LIGHT_BAR = android.graphics.Color.rgb(245, 245, 241)
