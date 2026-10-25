@@ -276,8 +276,12 @@ fun lockCovering(vault: LockVault): Boolean = (vault.enabled && !AppLock.unlocke
 fun AppLockGate(content: @Composable () -> Unit) {
     val c = LocalContext.current.container
     val vault = c.vault
+    val activity = LocalContext.current.findActivity()
     if (vault.enabled && !AppLock.unlocked) {
-        PinLockScreen()
+        // Locking as the app closes (Back on the first screen, swiped away) must not open anything on a window
+        // that is going away: the app is locked all the same, and opens on the lock screen next time.
+        if (activity == null || !(activity.isFinishing || activity.isDestroyed)) PinLockScreen()
+        else Box(Modifier.fillMaxSize())
         return
     }
     val request = AppLock.request
@@ -357,6 +361,7 @@ private fun PinLockScreen() {
 
     fun askFingerprint() {
         val a = activity ?: return
+        if (a.isFinishing || a.isDestroyed) return
         val cipher = vault.biometricUnlockCipher() ?: run {
             message = if (!vault.biometricEnabled) context.getString(R.string.lock_fingerprint_changed) else null
             return
