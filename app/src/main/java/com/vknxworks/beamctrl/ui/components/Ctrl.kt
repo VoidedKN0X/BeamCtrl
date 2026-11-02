@@ -33,7 +33,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBoxScope
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
@@ -64,6 +69,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ripple
@@ -442,6 +448,84 @@ fun CtrlBottomSheet(
         tonalElevation = 0.dp,
         dragHandle = { BottomSheetDefaults.DragHandle(color = CtrlColors.ControlOutline) },
         content = content,
+    )
+}
+
+// ---------- Popup menus ----------
+
+/**
+ * Every popup menu in the app: flat Signal surface, 16dp corners, 1dp card border and no shadow or tonal
+ * tint. Material's default shadow is drawn inside the popup window and showed up as a grey box.
+ */
+@Composable
+fun CtrlDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    offset: DpOffset = DpOffset(0.dp, 0.dp),
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        offset = offset,
+        shape = CtrlShapes.Menu,
+        containerColor = CtrlColors.Surface,
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, CtrlColors.Outline),
+        content = content,
+    )
+}
+
+/** The same menu for an exposed dropdown (a field with a list under it). */
+@Composable
+fun ExposedDropdownMenuBoxScope.CtrlExposedDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    ExposedDropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        shape = CtrlShapes.Menu,
+        containerColor = CtrlColors.Surface,
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        border = BorderStroke(1.dp, CtrlColors.Outline),
+        content = content,
+    )
+}
+
+/** Item colours for popup menus: text in the text colour, icons muted; [destructive] items in the error colour. */
+@Composable
+fun ctrlMenuItemColors(destructive: Boolean = false): MenuItemColors = MenuDefaults.itemColors(
+    textColor = if (destructive) CtrlColors.Error else CtrlColors.Text,
+    leadingIconColor = if (destructive) CtrlColors.Error else CtrlColors.Muted,
+    trailingIconColor = if (destructive) CtrlColors.Error else CtrlColors.Muted,
+    disabledTextColor = CtrlColors.Inactive,
+    disabledLeadingIconColor = CtrlColors.Inactive,
+    disabledTrailingIconColor = CtrlColors.Inactive,
+)
+
+/** One popup menu item with the Signal colours and type. */
+@Composable
+fun CtrlMenuItem(
+    text: String,
+    onClick: () -> Unit,
+    leadingIcon: ImageVector? = null,
+    destructive: Boolean = false,
+    enabled: Boolean = true,
+) {
+    DropdownMenuItem(
+        text = { Text(text, style = MaterialTheme.typography.bodyLarge) },
+        onClick = onClick,
+        leadingIcon = leadingIcon?.let { icon -> { Icon(icon, null, Modifier.size(20.dp)) } },
+        enabled = enabled,
+        colors = ctrlMenuItemColors(destructive),
     )
 }
 

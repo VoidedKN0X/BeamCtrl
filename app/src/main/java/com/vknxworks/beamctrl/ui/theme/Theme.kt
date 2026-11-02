@@ -266,6 +266,8 @@ object CtrlShapes {
     val Control = RoundedCornerShape(14.dp)
     val Field = RoundedCornerShape(16.dp)
     val Chip = RoundedCornerShape(10.dp)
+    /** Popup menus. */
+    val Menu = RoundedCornerShape(16.dp)
     val Key = RoundedCornerShape(22.dp)
     val Dot = RoundedCornerShape(2.dp)
 }

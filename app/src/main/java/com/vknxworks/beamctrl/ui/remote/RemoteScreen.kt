@@ -34,8 +34,6 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.WarningAmber
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -71,6 +69,8 @@ import com.vknxworks.beamctrl.ui.components.MessageView
 import com.vknxworks.beamctrl.ui.components.NameDialog
 import com.vknxworks.beamctrl.ui.components.ScreenTopBar
 import com.vknxworks.beamctrl.ui.components.CtrlSquareButton
+import com.vknxworks.beamctrl.ui.components.CtrlDropdownMenu
+import com.vknxworks.beamctrl.ui.components.CtrlMenuItem
 import com.vknxworks.beamctrl.ui.components.WarningCard
 import com.vknxworks.beamctrl.ui.theme.CtrlColors
 import com.vknxworks.beamctrl.ui.theme.CtrlShapes
@@ -161,36 +161,22 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
             }
             Box {
                 CtrlSquareButton(Icons.Outlined.MoreVert, stringResource(R.string.more), onClick = { menu = true })
-                DropdownMenu(
-                    expanded = menu,
-                    onDismissRequest = { menu = false },
-                    shape = CtrlShapes.Field,
-                    containerColor = CtrlColors.Raised,
-                    tonalElevation = 0.dp,
-                    border = BorderStroke(1.dp, CtrlColors.ControlOutline),
-                ) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.rename)) },
-                        leadingIcon = { Icon(Icons.Outlined.DriveFileRenameOutline, null) },
-                        onClick = { menu = false; renaming = true },
-                    )
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.device_type)) },
-                        leadingIcon = { Icon(Icons.Outlined.Category, null) },
-                        onClick = { menu = false; pickingType = true },
-                    )
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.export_flipper)) },
-                        leadingIcon = { Icon(Icons.Outlined.FileDownload, null) },
+                CtrlDropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                    CtrlMenuItem(stringResource(R.string.rename), onClick = { menu = false; renaming = true }, leadingIcon = Icons.Outlined.DriveFileRenameOutline)
+                    CtrlMenuItem(stringResource(R.string.device_type), onClick = { menu = false; pickingType = true }, leadingIcon = Icons.Outlined.Category)
+                    CtrlMenuItem(
+                        stringResource(R.string.export_flipper),
                         onClick = {
                             menu = false
                             exportIr.launch(remote.name.replace(Regex("[^A-Za-z0-9 _-]"), "").trim().replace(' ', '_').ifEmpty { "remote" } + ".ir")
                         },
+                        leadingIcon = Icons.Outlined.FileDownload,
                     )
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.delete_remote), color = CtrlColors.Error) },
-                        leadingIcon = { Icon(Icons.Outlined.Delete, null, tint = CtrlColors.Error) },
+                    CtrlMenuItem(
+                        stringResource(R.string.delete_remote),
                         onClick = { menu = false; confirmDelete = true },
+                        leadingIcon = Icons.Outlined.Delete,
+                        destructive = true,
                     )
                 }
             }

@@ -4,6 +4,13 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.6.2 (2026-11-02)
+
+### Fixed
+
+- **Popup menus no longer show a grey box**: the ⋮ menu on a remote (Rename, Device type, Export as Flipper file, Delete remote) used Material's default shadow, which the phone drew as a grey, square-ish edge around the menu, most visible in light mode. It's now a flat Signal surface (dark grey in dark mode, white in light mode) with 16dp rounded corners, a thin card border and no shadow, matching the cards and sheets elsewhere in BeamCtrl.
+- **Menu items follow the Signal colours** in both modes: names in the normal text colour, icons in the muted grey, and **Delete remote** (name and icon) in the error red. Nothing else about the menu changes: same items, same order, same actions.
+
 ## v0.6.1 (2026-10-25)
 
 A clean-up and hardening release: no new features and no changes to how BeamCtrl looks.
