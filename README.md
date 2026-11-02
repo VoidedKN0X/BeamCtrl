@@ -27,20 +27,16 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **App lock** with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes
 - **Ctrl / Signal look**, shared by every Ctrl app: dark and light, following your phone's dark theme setting, high contrast, one violet accent, Space Grotesk and JetBrains Mono; tablet and foldable layout
 
-## Screenshots
-
-Coming soon.
-
 ## Requirements
 
 - Android 13 or newer, on a 64-bit ARM phone (nearly every phone from the last several years)
 - A phone with a built-in IR blaster (many Xiaomi, OPPO, Honor, Huawei and Vivo phones have one)
-- Permissions: the IR blaster only (no internet)
+- Permissions: the IR blaster, and fingerprint unlock for the optional app lock. No internet (see [Is it safe to install?](#is-it-safe-to-install))
 - **Google-free and de-Googled:** no Google Play services, Firebase or other Google services, and the app never contacts Google. It works the same on de-Googled phones (GrapheneOS, CalyxOS, /e/OS, LineageOS without Google apps).
 
 ## Install
 
-1. Download the latest `.apk` file from the [Releases page](https://github.com/VoidedKN0X/BeamCtrl/releases/latest).
+1. Open the [latest release](https://github.com/VoidedKN0X/BeamCtrl/releases/latest) on your phone, scroll down to **Assets** and tap the file that ends in `.apk` (for example `BeamCtrl-v0.6.3.apk`) to download it. The "Source code" zip and tar.gz files are not the app; you don't need them.
 2. Open it on your phone. Android may ask you to allow installing apps from your browser or file manager.
 3. Updates install over the old version. Your remotes and settings are kept.
 
@@ -52,6 +48,27 @@ Coming soon.
 <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/VoidedKN0X/BeamCtrl"><img src=".github/assets/badge_obtainium.png" alt="Get it on Obtainium" height="80"></a> <a href="https://voidedkn0x.github.io/CtrlF-Droid/"><img src=".github/assets/badge_ctrlf-droid.png" alt="Get it from our F-Droid repo" height="80"></a>
 
 If the Obtainium button doesn't open the app, add `https://github.com/VoidedKN0X/BeamCtrl` in Obtainium by hand.
+
+## Is it safe to install?
+
+- **Open source.** All of BeamCtrl's code is in this repo, under the GPL-3.0 licence. Anyone can read it.
+- **Built by GitHub, not on a personal computer.** Every release on the [Releases page](https://github.com/VoidedKN0X/BeamCtrl/releases) is built from this code by GitHub Actions, using [the build workflow](.github/workflows/build.yml).
+- **Always signed with the same key.** Every release is signed with the same release key. Android refuses to install an update signed with a different key over the app you have, and the CtrlF-Droid repo only accepts APKs signed with this key. Its SHA-256 certificate fingerprint is:
+
+  ```
+  36:1C:14:5D:FB:0F:83:25:FB:9F:61:55:C7:0C:6A:84:CB:28:03:92:D6:9F:5D:45:FA:8A:42:C6:C2:FE:B0:54
+  ```
+
+  Advanced users can compare it with [AppVerifier](https://github.com/soupslurpr/AppVerifier).
+
+**Permissions.** BeamCtrl asks for only two, and **no internet permission**, so it can't go online at all.
+
+| Permission | What BeamCtrl uses it for |
+| --- | --- |
+| Transmit infrared (`TRANSMIT_IR`) | Sending codes through your phone's IR blaster. This is what makes the remote work. |
+| Use biometric hardware (`USE_BIOMETRIC`) | Unlocking the app lock with your fingerprint, only if you turn that on. |
+
+More about what stays on your phone in [Privacy](#privacy).
 
 ## Getting started
 
@@ -96,6 +113,10 @@ Turn it on under **Settings > Privacy and security > App lock** (tap your profil
 - Remotes, the code library, Turn off any TV, imports and backups all stay on your phone. BeamCtrl is left out of Android's cloud backup **and** its phone-to-phone transfer, so nothing leaves the phone unless you tap **Back up to a file** and choose where the file goes.
 - The Support, Report a bug, Source code and Licence links on the You page (tap your profile picture) open in your browser, only when you tap them.
 
+## How BeamCtrl is made
+
+BeamCtrl is a one-person project by VoidedKN0X (VKNXWorks). Much of the code is written with the help of AI (Claude, by Anthropic). I decide what the app does, review the changes and use the app myself. Every change is listed in the [changelog](CHANGELOG.md), and you can read every line of code here.
+
 ## Build from source
 
 You need [Android Studio](https://developer.android.com/studio), or JDK 17 and the Android SDK.
@@ -118,6 +139,10 @@ Or open the folder in Android Studio and press **Run** with your phone connected
 
 BeamCtrl is free and open source. If it's useful to you, you can support development on [GitHub Sponsors](https://github.com/sponsors/VoidedKN0X). In the app, tap your profile picture: **About** at the bottom of the You page has **Support BeamCtrl** and **Report a bug**, which opens the [issue tracker](https://github.com/VoidedKN0X/BeamCtrl/issues). Starring the repo helps too.
 
+Found a bug or have an idea? [Open an issue](https://github.com/VoidedKN0X/BeamCtrl/issues/new/choose) and pick **Bug report** or **Feature request**; the form asks for everything needed.
+
+Found a security problem? Please don't open a public issue; see [SECURITY.md](SECURITY.md).
+
 ## The Ctrl series
 
 Native Android apps for self-hosted services and everyday tools, all with the same Material You design.
@@ -138,12 +163,17 @@ Native Android apps for self-hosted services and everyday tools, all with the sa
 | [PaperCtrl](https://github.com/VoidedKN0X/PaperCtrl) | Scan and browse documents on Paperless-ngx |
 | [PrintCtrl](https://github.com/VoidedKN0X/PrintCtrl) | Bambu Lab printers through Bambuddy, and Spoolman spools |
 | [ProxCtrl](https://github.com/VoidedKN0X/ProxCtrl) | Manage your Proxmox VE server |
+| [RideCtrl](https://github.com/VoidedKN0X/RideCtrl) | Offline maintenance, fuel and mod log for your vehicles |
 | [SeerrCtrl](https://github.com/VoidedKN0X/SeerrCtrl) | Request movies and shows on Seerr / Jellyseerr |
+| [SynapseCtrl](https://github.com/VoidedKN0X/SynapseCtrl) | Administer your Matrix Synapse server |
 | [TrueCtrl](https://github.com/VoidedKN0X/TrueCtrl) | Monitor and manage your TrueNAS server |
+| [WrtCtrl](https://github.com/VoidedKN0X/WrtCtrl) | Manage your OpenWrt router |
 
 ## License
 
 BeamCtrl is licensed under the [GNU General Public License v3.0](LICENSE). © VKNXWorks
+
+BeamCtrl isn't made by or affiliated with any TV maker; brand names are only used to say which TVs a code set works with.
 
 The built-in code library comes from [Flipper-IRDB](https://github.com/Lucaslhm/Flipper-IRDB) (CC0 1.0), packed with `tools/irdb/pack_irdb.py`.
 

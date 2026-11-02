@@ -4,6 +4,19 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Project updates (2026-11-02)
+
+No new app version: these changes are to the repo only, and the app is the same as 0.6.3.
+
+### Project
+
+- **New SECURITY.md** explains how to report a security problem privately (through the repo's Security tab, not a public issue), what counts as a security problem for an offline app like BeamCtrl, and how releases are protected, with the release key's SHA-256 fingerprint.
+- **New issue forms** for bug reports and feature requests. The bug form asks for the BeamCtrl version (shown at the bottom of the You page), the Android version and phone, the device you're controlling and where you installed BeamCtrl from. Blank issues are off, and there's a link for reporting security problems privately.
+- **README: new "Is it safe to install?" section**: the code is open source, every release is built by GitHub Actions from this repo and signed with the same key (with its fingerprint to check with AppVerifier), and a table of BeamCtrl's two permissions (IR blaster and fingerprint unlock), with no internet permission.
+- **README: clearer install steps** for people new to GitHub: on the Releases page, scroll to **Assets** and tap the file ending in `.apk`; the "Source code" files aren't the app.
+- **README: new "How BeamCtrl is made" section**, saying it's a one-person project written with the help of AI.
+- **README: other updates**: the empty Screenshots section is gone, the Requirements now mention the fingerprint permission for the optional app lock, the Support section points to the issue forms and SECURITY.md, the Ctrl series table lists every current app (RideCtrl, SynapseCtrl and WrtCtrl added), and the License section says BeamCtrl isn't affiliated with any TV maker.
+
 ## v0.6.3 (2026-11-02)
 
 ### Fixed

@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest an idea for BeamCtrl
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like?
+      description: Describe the feature or change you have in mind.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help you?
+      description: What would you use it for?
+  - type: textarea
+    id: else
+    attributes:
+      label: Anything else?
+      description: Examples, screenshots or links that help explain the idea.
