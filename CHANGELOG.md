@@ -4,6 +4,13 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.6.3 (2026-11-02)
+
+### Fixed
+
+- **Bottom sheets no longer show a stray grey box or outline.** The thin border around bottom sheets was drawn in the wrong place: a grey rectangle could sit partway down an open sheet, cutting across its first rows, and a stray rounded outline could show near the top of the screen. Bottom sheets are now a plain surface (dark grey in dark mode, white in light mode) with rounded top corners and no outline; the dimmed background already sets them apart. This fixes every bottom sheet in BeamCtrl: the long-press menu on a remote (Edit buttons, Rename, Delete), the button editor, **Place on remote**, **Device type**, and the **Lock again** choice in Settings.
+- Dialogs keep their thin border, and popup menus keep the look from 0.6.2. Nothing else changes.
+
 ## v0.6.2 (2026-11-02)
 
 ### Fixed
