@@ -19,11 +19,11 @@ android {
 
     defaultConfig {
         applicationId = "com.vknxworks.beamctrl"
-        minSdk = 33
+        minSdk = 35
         targetSdk = 36
         // Bump both to publish a new release (see CHANGELOG.md).
-        versionCode = 30
-        versionName = "0.6.5"
+        versionCode = 31
+        versionName = "0.6.6"
         // 64-bit ARM phones only (arm64-v8a), like every Ctrl app.
         ndk { abiFilters += listOf("arm64-v8a") }
     }
