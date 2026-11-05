@@ -11,11 +11,15 @@
     <!-- Fingerprint unlock for the app lock: lets BeamCtrl ask Android for its own fingerprint prompt and check
          whether the phone has a strong fingerprint sensor. Without it the fingerprint option never shows. -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <!-- Hides other apps' floating windows over the lock screen, PIN screens and confirmations (only while they
+         show). Granted at install, no prompt. Not a network permission: BeamCtrl stays offline. -->
+    <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS" />
 
     <application
         android:name=".BeamCtrlApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:intentMatchingFlags="enforceIntentFilter"
         android:fullBackupContent="false"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"

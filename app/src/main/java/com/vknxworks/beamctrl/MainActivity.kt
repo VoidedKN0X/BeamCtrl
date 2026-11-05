@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vknxworks.beamctrl.ui.lock.AppLockGate
 import com.vknxworks.beamctrl.ui.lock.lockCovering
+import com.vknxworks.beamctrl.ui.components.shield
 import com.vknxworks.beamctrl.ui.nav.AppRoot
 import com.vknxworks.beamctrl.ui.theme.BeamCtrlTheme
 
@@ -48,6 +49,10 @@ class MainActivity : ComponentActivity() {
                 else window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 setRecentsScreenshotEnabled(!blankRecents)
             }
+            // The lock screen and PIN screens: no other app's floating window over them, and their content hidden from
+            // apps misusing accessibility. Lifted again when they close, so overlays keep working in the rest of the app.
+            val shielded = lockCovering(c.vault)
+            LaunchedEffect(shielded) { window.shield(shielded) }
             BeamCtrlTheme(dark) {
                 // Nothing of the app is shown while the app lock is locked.
                 AppLockGate { AppRoot() }

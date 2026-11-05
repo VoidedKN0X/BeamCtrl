@@ -60,13 +60,15 @@ If the Obtainium button doesn't open the app, add `https://github.com/VoidedKN0X
   ```
 
   Advanced users can compare it with [AppVerifier](https://github.com/soupslurpr/AppVerifier).
+- **Check a download.** Each release's notes end with the APK's SHA-256, so you can check the file you downloaded (`sha256sum BeamCtrl-vX.Y.Z.apk`). With the [GitHub CLI](https://cli.github.com/), `gh attestation verify BeamCtrl-vX.Y.Z.apk -R VoidedKN0X/BeamCtrl` proves the APK was built by this repo's build workflow from the tagged commit. The signing-certificate fingerprint above stays the check Android and AppVerifier use.
 
-**Permissions.** BeamCtrl asks for only two, and **no internet permission**, so it can't go online at all.
+**Permissions.** BeamCtrl asks for only three, and **no internet permission**, so it can't go online at all.
 
 | Permission | What BeamCtrl uses it for |
 | --- | --- |
 | Transmit infrared (`TRANSMIT_IR`) | Sending codes through your phone's IR blaster. This is what makes the remote work. |
 | Use biometric hardware (`USE_BIOMETRIC`) | Unlocking the app lock with your fingerprint, only if you turn that on. |
+| Hide other apps' floating windows (`HIDE_OVERLAY_WINDOWS`) | Hide other apps' floating windows over the PIN screen, and over the lock screen and confirmations, only while they show. Granted at install, without a prompt. It isn't a network permission: BeamCtrl stays offline. |
 
 `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` also shows up in the app's details: it's an internal permission Android adds to every app built for Android 13 and newer, and only keeps BeamCtrl's own broadcasts private. Every build is checked before release: if the APK ever had an internet or network permission, the build would fail.
 
@@ -136,6 +138,8 @@ You need [Android Studio](https://developer.android.com/studio), or JDK 17 and t
 3. The APK is in `app/build/outputs/apk/debug/`. Copy it to your phone and install it.
 
 Or open the folder in Android Studio and press **Run** with your phone connected.
+
+**Dependency verification:** every library and Gradle plugin the build downloads is checked against its SHA-256 in `gradle/verification-metadata.xml`, and the build stops if one doesn't match. When you add or update a dependency or plugin, run the **Dependency verification metadata** workflow from the Actions tab, check the diff of the file it prints, and commit the new `gradle/verification-metadata.xml` in the same push.
 
 ## Support the project
 

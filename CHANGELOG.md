@@ -4,9 +4,22 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
-## Project updates (2026-11-05)
+## v0.6.4 (2026-11-05)
 
-No app changes in this push, so no new version.
+More protection for the PIN screen and confirmations, and a way to check that a download really comes from this repo. BeamCtrl still has no internet permission, and nothing works differently in day-to-day use.
+
+### Security
+
+- **No floating windows over the PIN screen:** while the lock screen, a PIN screen, "Forgot PIN?" or a delete confirmation is open, other apps' floating windows (chat heads, overlays) are hidden, so they can't cover or imitate it. They come back as soon as it closes and keep working everywhere else in BeamCtrl. This uses Android's "hide overlay windows" permission, which is granted at install without a prompt. It isn't a network permission: BeamCtrl stays fully offline.
+- **PIN screens hidden from accessibility misuse (Android 14+):** the lock screen and PIN screens are hidden from apps that use accessibility access to read the screen. Real accessibility tools such as TalkBack keep working.
+- **Stricter about other apps' requests (Android 16+):** other apps can now only open BeamCtrl the way the launcher does.
+- **Every library checked:** the build now refuses any library or build plugin whose SHA-256 doesn't match the one recorded in the repo.
+
+### Project
+
+- **Check a download:** this is the first release with GitHub build provenance. The release notes end with the APK's SHA-256, and `gh attestation verify BeamCtrl-v0.6.4.apk -R VoidedKN0X/BeamCtrl` proves the APK was built by this repo's workflow from the tagged commit. The README explains both, next to the signing-certificate fingerprint, and lists the new permission.
+
+## Project updates (2026-11-05)
 
 ### Project
 
@@ -15,11 +28,6 @@ No app changes in this push, so no new version.
 - **Least privilege in CI:** every workflow now starts with no permissions, and each job asks only for what it needs. Only the release job can write, and it alone gets the permissions to sign the build provenance.
 - **CodeQL:** a new workflow scans the app's code for security problems every week and when the app changes. Results go to the repo's Security tab; it never blocks a release.
 - **Dependency verification:** a new workflow writes `gradle/verification-metadata.xml`, the SHA-256 of every library and Gradle plugin the build downloads, so the build can refuse anything that doesn't match. CLAUDE.md explains how to update it when a dependency changes.
-
-## Project updates (2026-11-05)
-
-### Project
-
 - **Security check-up, no app changes:** the code was reviewed for privacy and security (permissions, the app lock, exported screens, backup files, logging). Nothing in the app needed fixing, so there's no new version.
 - **Build checks:** every build now checks that the Gradle wrapper is an official Gradle release, that no Google Play services, Firebase, ML Kit, Play Core or Tink library ends up in the app, that the APK has no internet or network permission, and that it's signed with BeamCtrl's release key before it's published.
 - **README:** the permissions section explains the one internal permission Android adds to every app, the Privacy section says BeamCtrl is Google-free and has no network destinations at all, and the Ctrl series list shows all 28 apps, with CallCtrl, ClockCtrl, ContactCtrl, DateCtrl, LijnCtrl, MailCtrl, RecorderCtrl and TextCtrl added.
