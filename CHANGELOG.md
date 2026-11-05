@@ -4,6 +4,15 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Project updates (2026-11-05)
+
+### Project
+
+- **Security check-up, no app changes:** the code was reviewed for privacy and security (permissions, the app lock, exported screens, backup files, logging). Nothing in the app needed fixing, so there's no new version.
+- **Build checks:** every build now checks that the Gradle wrapper is an official Gradle release, that no Google Play services, Firebase, ML Kit, Play Core or Tink library ends up in the app, that the APK has no internet or network permission, and that it's signed with BeamCtrl's release key before it's published.
+- **README:** the permissions section explains the one internal permission Android adds to every app, the Privacy section says BeamCtrl is Google-free and has no network destinations at all, and the Ctrl series list shows all 28 apps, with CallCtrl, ClockCtrl, ContactCtrl, DateCtrl, LijnCtrl, MailCtrl, RecorderCtrl and TextCtrl added.
+- `.gitignore` now also keeps signing files (`*.p12`, `keystore.properties`, base64 keystores) and `google-services.json` out of the repo.
+
 ## Project updates (2026-11-03)
 
 ### Project

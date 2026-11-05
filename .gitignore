@@ -10,3 +10,8 @@ captures/
 *.jks
 *.keystore
 !debug.keystore
+local.properties
+*.jks.b64
+*.p12
+keystore.properties
+google-services.json
