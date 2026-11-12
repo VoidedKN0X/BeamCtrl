@@ -1,5 +1,11 @@
 # BeamCtrl
 
+## Hard rules
+
+- **No `INTERNET` permission, ever** (the manifest removes it; CI fails the build if the APK has any network permission).
+- **Google-free:** no Google libraries, services or SDKs, including transitive ones (CI checks `releaseRuntimeClasspath` for anything from `com.google.`). Guava's `listenablefuture` and `profileinstaller` are excluded in `app/build.gradle.kts`.
+- **Telemetry-free:** no analytics or crash reporting.
+
 ## Dependency verification
 
 Gradle checks every library and plugin download against its SHA-256 in `gradle/verification-metadata.xml` (checksums only, no PGP). When a dependency or plugin changes, run the `verification-metadata.yml` workflow (`gh api -X POST repos/VoidedKN0X/BeamCtrl/actions/workflows/verification-metadata.yml/dispatches -f ref=main`), decode the file from its log, check the diff (only Maven Central, Google's Maven and the Gradle plugin portal) and commit it in the same push. Never turn verification off or make it lenient.

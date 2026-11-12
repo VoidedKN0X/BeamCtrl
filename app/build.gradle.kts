@@ -22,8 +22,8 @@ android {
         minSdk = 35
         targetSdk = 36
         // Bump both to publish a new release (see CHANGELOG.md).
-        versionCode = 32
-        versionName = "0.6.7"
+        versionCode = 33
+        versionName = "0.6.8"
         // 64-bit ARM phones only (arm64-v8a), like every Ctrl app.
         ndk { abiFilters += listOf("arm64-v8a") }
     }
@@ -102,6 +102,14 @@ kotlin {
             "kotlinx.serialization.ExperimentalSerializationApi",
         )
     }
+}
+
+// Google-free: no Google library may reach the APK, not even transitively. AndroidX's
+// concurrent-futures pulls Guava's one-interface listenablefuture jar, and profileinstaller
+// (baseline-profile installation, not needed for an offline app) pulls concurrent-futures.
+configurations.configureEach {
+    exclude(group = "com.google.guava")
+    exclude(group = "androidx.profileinstaller", module = "profileinstaller")
 }
 
 dependencies {

@@ -4,6 +4,20 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.6.8 (2026-11-13)
+
+A small privacy and security update. Your remotes and the code library work as before.
+
+### Privacy
+
+- **No Google code left in the app.** A tiny Google helper library (one Guava interface) that came in with Android's own libraries, and the start-up profile installer that needed it, are no longer built in. BeamCtrl now has no Google code at all, and the build checks for any library from Google, not only Play services and Firebase.
+- **No debug logging in the app.** Release builds now strip debug, verbose and info log messages from the app and the libraries it uses.
+
+### Security
+
+- **Offline, guaranteed twice.** BeamCtrl never had the internet permission; the app now also removes it explicitly in case a library ever tries to add it, on top of the build check that refuses an APK with any network permission.
+- **Checked build tools.** The build now checks the Gradle download against its published checksum, so a tampered build tool can't slip into a release.
+
 ## v0.6.7 (2026-11-12)
 
 ### Changed

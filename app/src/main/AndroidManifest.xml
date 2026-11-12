@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.TRANSMIT_IR" />
-    <!-- BeamCtrl works fully offline: no INTERNET permission. Network state isn't needed either, so make
-         sure no library adds it. -->
+    <!-- BeamCtrl works fully offline: no INTERNET permission. Remove it (and network state) in case a library
+         ever adds them; CI also checks the built APK has neither. -->
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
     <uses-feature android:name="android.hardware.consumerir" android:required="false" />
 
@@ -39,11 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- AndroidX's profile installer adds an exported receiver (for app-store and adb tooling).
-             BeamCtrl keeps the launcher screen as its only exported component, so it's removed. -->
-        <receiver
-            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-            tools:node="remove" />
 
         <!-- No downloadable emoji font: don't let androidx.emoji2 look one up from a font provider
              at start-up. Emoji are drawn with the phone's own emoji font instead. -->
