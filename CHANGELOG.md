@@ -4,18 +4,6 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
-## Unreleased
-
-Not in a release yet: this is built but BeamCtrl's version number hasn't changed. Everything works the same as in the current version.
-
-### Changed
-
-- **A slightly lighter start.** BeamCtrl asked the phone's IR service whether there is an IR blaster, and which frequencies it supports, while the app was still starting. It now asks the first time the answer is needed: the blaster check when the first screen shows it, the frequency list when you open Settings. The answers are the same and are still asked only once.
-
-### Project
-
-- There were no home-screen widgets or Quick Settings tiles in BeamCtrl to remove (checked as part of the Ctrl series clean-up).
-
 ## Project updates (2026-11-19)
 
 ### Project

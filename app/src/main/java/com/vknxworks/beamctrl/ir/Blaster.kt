@@ -36,21 +36,13 @@ class Blaster(context: Context) {
     /** Goes up in [releaseAll]; a held button stops repeating as soon as it changes. */
     private val holdGeneration = AtomicInteger(0)
 
-    /**
-     * Whether this phone has an IR emitter that apps can use. Asked once, the first time it's needed
-     * (a call into the system's IR service), rather than while the app is still starting.
-     */
-    val available: Boolean by lazy { runCatching { ir?.hasIrEmitter() == true }.getOrDefault(false) }
+    /** Whether this phone has an IR emitter that apps can use. */
+    val available: Boolean = runCatching { ir?.hasIrEmitter() == true }.getOrDefault(false)
 
-    /**
-     * Carrier frequencies the emitter supports, in Hz. Empty when the phone doesn't say. Asked once,
-     * the first time it's needed (Settings shows it).
-     */
-    val carrierRanges: List<IntRange> by lazy {
-        if (!available) emptyList() else runCatching {
-            ir?.carrierFrequencies?.map { it.minFrequency..it.maxFrequency }.orEmpty()
-        }.getOrDefault(emptyList())
-    }
+    /** Carrier frequencies the emitter supports, in Hz. Empty when the phone doesn't say. */
+    val carrierRanges: List<IntRange> = if (!available) emptyList() else runCatching {
+        ir?.carrierFrequencies?.map { it.minFrequency..it.maxFrequency }.orEmpty()
+    }.getOrDefault(emptyList())
 
     private val _beams = MutableSharedFlow<Unit>(extraBufferCapacity = 16)
 
