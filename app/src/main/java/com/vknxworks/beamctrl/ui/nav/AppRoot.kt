@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.SettingsRemote
 import androidx.compose.material.icons.outlined.AddCircleOutline
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.SettingsRemote
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -33,12 +34,14 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +59,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import kotlinx.coroutines.launch
 import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.ui.add.AddScreen
 import com.vknxworks.beamctrl.ui.add.BrandScreen
@@ -66,7 +70,9 @@ import com.vknxworks.beamctrl.ui.library.LibraryDeviceScreen
 import com.vknxworks.beamctrl.ui.library.LibraryScreen
 import com.vknxworks.beamctrl.ui.poweroff.PowerOffScreen
 import com.vknxworks.beamctrl.ui.components.LocalBottomClearance
+import com.vknxworks.beamctrl.ui.components.ConfirmDialog
 import com.vknxworks.beamctrl.ui.components.CtrlBottomBar
+import com.vknxworks.beamctrl.ui.components.MessageView
 import com.vknxworks.beamctrl.ui.components.TabItem
 import com.vknxworks.beamctrl.ui.theme.CtrlColors
 import com.vknxworks.beamctrl.ui.remote.RemoteScreen
@@ -78,11 +84,49 @@ import com.vknxworks.beamctrl.ui.settings.YouScreen
 fun AppRoot() {
     val c = LocalContext.current.container
     val ready by c.remotes.ready.collectAsStateWithLifecycle()
+    val unreadable by c.remotes.unreadable.collectAsStateWithLifecycle()
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         if (!ready) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.AccentText) }
+        } else if (unreadable) {
+            UnreadableRemotes()
         } else {
             MainScaffold()
+        }
+    }
+}
+
+/**
+ * The saved remotes are encrypted and can't be opened (the key in the phone's secure storage is gone or
+ * changed). Nothing was deleted or changed: say so, offer to try again, and only start empty when asked to,
+ * keeping the unreadable files aside.
+ */
+@Composable
+private fun UnreadableRemotes() {
+    val remotes = LocalContext.current.container.remotes
+    val scope = rememberCoroutineScope()
+    var confirm by remember { mutableStateOf(false) }
+    Box(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
+        MessageView(
+            icon = Icons.Outlined.Lock,
+            title = stringResource(R.string.unreadable_title),
+            body = stringResource(R.string.unreadable_body),
+            actionLabel = stringResource(R.string.unreadable_retry),
+            onAction = { remotes.retry() },
+        )
+        TextButton(onClick = { confirm = true }, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp)) {
+            Text(stringResource(R.string.unreadable_start_empty), color = CtrlColors.Muted)
+        }
+    }
+    if (confirm) {
+        ConfirmDialog(
+            title = stringResource(R.string.unreadable_start_empty_title),
+            body = stringResource(R.string.unreadable_start_empty_body),
+            confirm = stringResource(R.string.unreadable_start_empty),
+            onDismiss = { confirm = false },
+        ) {
+            confirm = false
+            scope.launch { remotes.startEmpty(keep = true) }
         }
     }
 }

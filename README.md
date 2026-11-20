@@ -114,6 +114,7 @@ Turn it on under **Settings > Privacy and security > App lock** (tap your profil
 
 **Telemetry-free and Google-free.** BeamCtrl has no analytics, crash reporting, usage stats, ads or tracking of any kind, and no Google libraries or services. It has no internet permission, works fully offline and never connects to anything: there are no network destinations at all.
 
+- Your saved remotes are stored encrypted on the phone (AES-256-GCM, with a key protected by the phone's secure hardware), on top of Android's own storage encryption. Backup files and Flipper exports are ordinary files, so keep them somewhere private.
 - Remotes, the code library, Turn off any TV, imports and backups all stay on your phone. BeamCtrl is left out of Android's cloud backup **and** its phone-to-phone transfer, so nothing leaves the phone unless you tap **Back up to a file** and choose where the file goes.
 - The Support, Report a bug, Source code and Licence links on the You page (tap your profile picture) open in your browser, only when you tap them.
 

@@ -2,6 +2,8 @@ package com.vknxworks.beamctrl
 
 import android.content.Context
 import com.vknxworks.beamctrl.data.RemoteRepository
+import com.vknxworks.beamctrl.data.crypto.DataKeyStore
+import com.vknxworks.beamctrl.data.crypto.KeystoreWrapper
 import com.vknxworks.beamctrl.data.lock.LockVault
 import com.vknxworks.beamctrl.data.settings.AppSettings
 import com.vknxworks.beamctrl.ui.lock.AppLock
@@ -13,6 +15,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
 
 /** Manual dependency container; one per process. */
 class AppContainer(val context: Context) {
@@ -23,11 +26,13 @@ class AppContainer(val context: Context) {
     val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, _ -> })
 
     val settings = SettingsRepository(context, appScope)
-    val remotes = RemoteRepository(context, appScope)
+    /** The key that encrypts the saved remotes at rest; itself kept by the Android Keystore. */
+    private val dataKey = DataKeyStore(context.filesDir, KeystoreWrapper("beamctrl_data_at_rest"))
+    val remotes = RemoteRepository(context, appScope, dataKey)
     val blaster = Blaster(context)
     val library = IrLibrary(context)
 
-    /** The app lock's PIN and fingerprint key. BeamCtrl has no servers or passwords to seal. */
+    /** The app lock's PIN and fingerprint key. BeamCtrl has no servers or passwords to seal with it. */
     val vault = LockVault(context, "beamctrl")
 
     /** Turns the app lock on with [pin]. */
@@ -47,6 +52,10 @@ class AppContainer(val context: Context) {
      * remote and setting on the phone is deleted and the lock turned off.
      */
     suspend fun forgetEverything() {
+        // After the saved remotes were read, so the load can't bring them back.
+        remotes.ready.first { it }
+        // Remotes that couldn't even be opened go too (the file is deleted, not set aside).
+        remotes.startEmpty(keep = false)
         remotes.deleteAll()
         settings.update { AppSettings() }
         vault.disable()

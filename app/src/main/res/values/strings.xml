@@ -427,4 +427,12 @@
     <string name="remotes_empty_no_blaster">This phone doesn\'t seem to have an IR blaster, but you can still set remotes up.</string>
     <string name="remotes_no_blaster">No IR blaster found on this phone, so remotes can\'t send anything.</string>
     <string name="remote_power">%1$s power</string>
+
+    <!-- Encryption at rest: the saved remotes can't be opened -->
+    <string name="unreadable_title">Can\'t open your remotes</string>
+    <string name="unreadable_body">Your remotes are stored encrypted on this phone, and the key that opens them is missing from the phone\'s secure storage or no longer matches. Nothing has been deleted or changed. Try again first; restarting the phone can help too.</string>
+    <string name="unreadable_retry">Try again</string>
+    <string name="unreadable_start_empty">Start empty</string>
+    <string name="unreadable_start_empty_title">Start with no remotes?</string>
+    <string name="unreadable_start_empty_body">Only do this if trying again doesn\'t help. The remotes that can\'t be opened are kept aside on this phone, not deleted, but BeamCtrl won\'t show them. You can then restore a backup from the profile page.</string>
 </resources>

@@ -6,6 +6,14 @@
 - **Google-free:** no Google libraries, services or SDKs, including transitive ones (CI checks `releaseRuntimeClasspath` for anything from `com.google.`). Guava's `listenablefuture` and `profileinstaller` are excluded in `app/build.gradle.kts`.
 - **Telemetry-free:** no analytics or crash reporting.
 
+## Encryption at rest
+
+- `remotes.json` is sealed with AES-256-GCM (`data/crypto/SealedFile`, marker `BEAMCTRL-REST1`) under the data key (`DataKeyStore`: 32 random bytes in `filesDir/data.key`, wrapped by the Keystore key `beamctrl_data_at_rest` through `KeystoreWrapper`/`KeystoreAes`; no user authentication). Settings (DataStore) are not encrypted; the app lock vault is separate and unchanged.
+- Readers must accept both sealed and ordinary files (`SealedFile.isSealed`). Without a data key the app reads and writes the ordinary file as before.
+- Never delete or overwrite a file that can't be opened, never replace an existing `data.key`, and never create a Keystore key on the decrypt path (`KeystoreAes.existing`). An ordinary file only becomes a sealed one through `SealedFile.sealInPlace` (temp file, sync, read back, compare, atomic rename). Sealed remotes that can't be opened put `RemoteRepository.unreadable` on: nothing is written and the UI shows the "Can't open your remotes" screen.
+- Backups and Flipper `.ir` exports stay ordinary files in their existing formats (they are written from the list in memory).
+- All of it runs off the main thread (the repository's load and saves). There is no unit-test source set in this repo; the same classes are tested in RideCtrl (`SealedFileTest`).
+
 ## Dependency verification
 
 Gradle checks every library and plugin download against its SHA-256 in `gradle/verification-metadata.xml` (checksums only, no PGP). When a dependency or plugin changes, run the `verification-metadata.yml` workflow (`gh api -X POST repos/VoidedKN0X/BeamCtrl/actions/workflows/verification-metadata.yml/dispatches -f ref=main`), decode the file from its log, check the diff (only Maven Central, Google's Maven and the Gradle plugin portal) and commit it in the same push. Never turn verification off or make it lenient.
