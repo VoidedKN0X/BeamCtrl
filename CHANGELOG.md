@@ -4,6 +4,12 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+### Fixed
+
+- **Footer badges translated.** The "Google-free · Telemetry-free · arm64" line at the bottom of the You page was still in English in Dutch, French and German; it now reads "Google-vrij · Zonder telemetrie", "Sans Google · Sans télémétrie" and "Google-frei · Ohne Telemetrie", like the other Ctrl apps.
+
 ## v0.9.0 (2026-11-21)
 
 Built and checked by CI only: nothing in this release had been run on a phone when it was published.

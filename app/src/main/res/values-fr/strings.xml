@@ -475,6 +475,7 @@
     <string name="source_title">Code source</string>
     <string name="licence_title">Licence</string>
     <string name="about_footer">BeamCtrl %1$s · VKNXWorks</string>
+    <string name="label_footer_badges">Sans Google · Sans télémétrie · arm64</string>
 
     <string name="settings">Paramètres</string>
     <string name="you_title">Vous</string>
