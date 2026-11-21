@@ -4,6 +4,12 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+### New
+
+- **BeamCtrl in French and German, following the phone's language.** With your phone set to French, BeamCtrl is now in French (formal "vous", as Android itself uses); set to German, it is in German (informal "du", as modern Android apps use). Every screen, message and the app lock are translated. Brand names, IR protocol names (NEC, RC5, RC6, Pronto…), file formats (Flipper Zero .ir, LIRC, irplus), the Flipper-IRDB library's own remote and button names, and units stay as they are, and like the Dutch version the brand line, badges, licence name and source link stay in English. Android's per-app language setting (Settings > Apps > BeamCtrl > Language) now offers English, Dutch, French and German, so you can also pick one for BeamCtrl alone.
+
 ## v0.8.0 (2026-11-21)
 
 Built and checked by CI only: nothing in this release had been run on a phone when it was published.
