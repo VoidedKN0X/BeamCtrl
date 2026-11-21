@@ -29,6 +29,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Back up to a file** and **restore** every remote and setting, also on another phone
 - **Vibrate on press**, keep the screen on while a remote is open, and show or hide the number pad
 - **App lock** with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes
+- **In English or Dutch:** BeamCtrl follows your phone's language. With the phone set to Dutch it is in Dutch (written for Flanders, informal "je"); otherwise English. Brand names, protocol names and units stay as they are
 - **Ctrl / Signal look**, shared by every Ctrl app: dark and light, following your phone's dark theme setting, high contrast, one violet accent, Space Grotesk and JetBrains Mono; tablet and foldable layout
 
 ## Requirements

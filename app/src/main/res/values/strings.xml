@@ -427,7 +427,7 @@
     <string name="delete_remote_body">Its buttons and codes will be removed from this phone.</string>
     <string name="delete">Delete</string>
     <string name="no_blaster_banner">This phone doesn\'t have an IR blaster Android apps can use, so buttons won\'t send anything. You can still set up and edit remotes.</string>
-    <string name="remotes_empty_body">Add one for your TV in a few taps, import a Flipper .ir file, or build your own.</string>
+    <string name="remotes_empty_body">Add one for your TV in a few taps, import a file, or build your own.</string>
     <string name="remotes_empty_no_blaster">This phone doesn\'t seem to have an IR blaster, but you can still set remotes up.</string>
     <string name="remotes_no_blaster">No IR blaster found on this phone, so remotes can\'t send anything.</string>
     <string name="remote_power">%1$s power</string>
