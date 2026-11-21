@@ -1,6 +1,21 @@
 package com.vknxworks.beamctrl.ui.remotes
 
 import com.vknxworks.beamctrl.R
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.outlined.MeetingRoom
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.PlaylistPlay
+import androidx.compose.material.icons.outlined.Stop
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.vknxworks.beamctrl.data.Macro
+import com.vknxworks.beamctrl.ui.macros.NewMacroDialog
+import com.vknxworks.beamctrl.ui.nav.MacroRoute
+import com.vknxworks.beamctrl.ui.remote.RoomSheet
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.combinedClickable
@@ -75,13 +90,24 @@ fun RemotesScreen() {
     val nav = LocalNavigator.current
     val remotes by c.remotes.remotes.collectAsStateWithLifecycle()
     val settings by c.settings.settings.collectAsStateWithLifecycle()
-    val sorted = remember(remotes) { remotes.sortedWith(compareByDescending<Remote> { it.lastUsed }.thenBy { it.created }) }
+    val extras by c.extras.extras.collectAsStateWithLifecycle()
+    val running by c.macroRunner.running.collectAsStateWithLifecycle()
+    val rooms = remember(remotes) { remotes.mapNotNull { it.room }.distinct().sortedBy { it.lowercase() } }
+    var roomFilter by rememberSaveable { mutableStateOf<String?>(null) }
+    // A room that no longer has remotes stops being the filter.
+    val room = roomFilter?.takeIf { it in rooms }
+    val sorted = remember(remotes, room) {
+        remotes.filter { room == null || it.room == room }
+            .sortedWith(compareByDescending<Remote> { it.lastUsed }.thenBy { it.created })
+    }
     var actionsFor by remember { mutableStateOf<Remote?>(null) }
+    var roomFor by remember { mutableStateOf<Remote?>(null) }
+    var newMacro by remember { mutableStateOf(false) }
     var renaming by remember { mutableStateOf<Remote?>(null) }
     var deleting by remember { mutableStateOf<Remote?>(null) }
 
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
-        if (sorted.isEmpty()) {
+        if (remotes.isEmpty()) {
             TabTitle(stringResource(R.string.tab_remotes)) {
                 CtrlSquareButton(Icons.Outlined.Add, stringResource(R.string.add_title), onClick = { nav.navigate(AddRoute) })
             }
@@ -102,9 +128,39 @@ fun RemotesScreen() {
                     item(key = "title") {
                         TabTitle(
                             stringResource(R.string.tab_remotes),
-                            label = pluralStringResource(R.plurals.you_remote_count, sorted.size, sorted.size),
+                            label = pluralStringResource(R.plurals.you_remote_count, remotes.size, remotes.size),
                         ) {
                             CtrlSquareButton(Icons.Outlined.Add, stringResource(R.string.add_title), onClick = { nav.navigate(AddRoute) })
+                        }
+                    }
+                    if (rooms.isNotEmpty()) {
+                        item(key = "rooms") {
+                            Row(
+                                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Gutter, vertical = 4.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                RoomChip(stringResource(R.string.room_all), room == null) { roomFilter = null }
+                                rooms.forEach { r -> RoomChip(r, room == r) { roomFilter = r } }
+                            }
+                        }
+                    }
+                    if (extras.macros.isNotEmpty()) {
+                        item(key = "macros-header") {
+                            Row(
+                                Modifier.fillMaxWidth().padding(start = Gutter, end = Gutter, top = 14.dp, bottom = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(stringResource(R.string.macros), style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+                                CtrlSquareButton(Icons.Outlined.Add, stringResource(R.string.macro_new), onClick = { newMacro = true }, size = 36.dp)
+                            }
+                        }
+                        items(extras.macros, key = { "macro-" + it.id }) { m ->
+                            MacroRow(
+                                m,
+                                running = running == m.id,
+                                onOpen = { nav.navigate(MacroRoute(m.id)) },
+                                onRun = { if (running == m.id) c.macroRunner.stop() else c.macroRunner.run(m) },
+                            )
                         }
                     }
                     if (!c.blaster.available) {
@@ -117,8 +173,8 @@ fun RemotesScreen() {
                         }
                     }
                     // The hero: the remote used last, with its power key right on the card.
-                    val first = sorted.first()
-                    item(key = "hero-${first.id}") {
+                    val first = sorted.firstOrNull()
+                    if (first != null) item(key = "hero-${first.id}") {
                         HeroRemote(
                             first,
                             onOpen = { nav.openRemote(first.id) },
@@ -159,6 +215,7 @@ fun RemotesScreen() {
             Column(Modifier.padding(bottom = 24.dp)) {
                 GroupRow(stringResource(R.string.edit_buttons), icon = Icons.Outlined.Edit, onClick = { actionsFor = null; nav.openRemote(r.id, edit = true) })
                 GroupRow(stringResource(R.string.rename), icon = Icons.Outlined.DriveFileRenameOutline, onClick = { actionsFor = null; renaming = r })
+                GroupRow(stringResource(R.string.room), icon = Icons.Outlined.MeetingRoom, value = r.room, onClick = { actionsFor = null; roomFor = r })
                 GroupRow(
                     stringResource(R.string.delete),
                     icon = Icons.Outlined.Delete,
@@ -167,6 +224,13 @@ fun RemotesScreen() {
                     onClick = { actionsFor = null; deleting = r },
                 )
             }
+        }
+    }
+    roomFor?.let { r -> RoomSheet(r, onDismiss = { roomFor = null }) }
+    if (newMacro) {
+        NewMacroDialog(onDismiss = { newMacro = false }) { id ->
+            newMacro = false
+            nav.navigate(MacroRoute(id))
         }
     }
     renaming?.let { r ->
@@ -187,8 +251,59 @@ fun RemotesScreen() {
 @Composable
 private fun remoteMeta(remote: Remote): String =
     pluralStringResource(R.plurals.buttons_count, remote.buttons.size, remote.buttons.size).let { buttons ->
-        remote.brand?.let { stringResource(R.string.dot_pair, it, buttons) } ?: buttons
+        val withBrand = remote.brand?.let { stringResource(R.string.dot_pair, it, buttons) } ?: buttons
+        remote.room?.let { stringResource(R.string.dot_pair, it, withBrand) } ?: withBrand
     }
+
+@Composable
+private fun RoomChip(text: String, selected: Boolean, onClick: () -> Unit) {
+    FilterChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(text, style = CtrlType.Data) },
+        shape = CtrlShapes.Chip,
+        colors = FilterChipDefaults.filterChipColors(
+            containerColor = CtrlColors.Surface,
+            labelColor = CtrlColors.Text,
+            selectedContainerColor = CtrlColors.Accent,
+            selectedLabelColor = CtrlColors.OnAccent,
+        ),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true,
+            selected = selected,
+            borderColor = CtrlColors.ControlOutline,
+            selectedBorderColor = CtrlColors.Accent,
+        ),
+    )
+}
+
+/** One macro on the Remotes tab: its name, how many steps, and Run (or Stop while it runs). */
+@Composable
+private fun MacroRow(macro: Macro, running: Boolean, onOpen: () -> Unit, onRun: () -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onOpen)
+            .padding(horizontal = Gutter)
+            .topDivider()
+            .heightIn(min = 60.dp)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(Icons.Outlined.PlaylistPlay, null, Modifier.size(22.dp), tint = CtrlColors.Muted)
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(macro.name, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(pluralStringResource(R.plurals.macro_steps, macro.steps.size, macro.steps.size), style = CtrlType.Data, color = CtrlColors.Muted)
+        }
+        CtrlSquareButton(
+            if (running) Icons.Outlined.Stop else Icons.Outlined.PlayArrow,
+            stringResource(if (running) R.string.macro_stop else R.string.macro_run_named, macro.name),
+            onClick = onRun,
+            enabled = macro.steps.isNotEmpty(),
+        )
+    }
+}
 
 /** The last-used remote as an accent hero card: type and button count on top, its name big, and quick power. */
 @Composable

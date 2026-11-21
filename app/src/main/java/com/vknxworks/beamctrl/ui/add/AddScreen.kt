@@ -2,6 +2,9 @@ package com.vknxworks.beamctrl.ui.add
 
 import android.net.Uri
 import com.vknxworks.beamctrl.R
+import androidx.compose.material.icons.outlined.PlaylistPlay
+import com.vknxworks.beamctrl.ui.macros.NewMacroDialog
+import com.vknxworks.beamctrl.ui.nav.MacroRoute
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import android.provider.OpenableColumns
@@ -61,6 +64,7 @@ fun AddScreen() {
     val nav = LocalNavigator.current
     val scope = rememberCoroutineScope()
     var naming by remember { mutableStateOf(false) }
+    var newMacro by remember { mutableStateOf(false) }
 
     val importIr = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         if (uri == null) return@rememberLauncherForActivityResult
@@ -167,12 +171,26 @@ fun AddScreen() {
                 onClick = { importIr.launch(arrayOf("*/*")) },
             )
             GroupRow(
+                stringResource(R.string.macro_new),
+                stringResource(R.string.add_macro_subtitle),
+                icon = Icons.Outlined.PlaylistPlay,
+                showChevron = true,
+                onClick = { newMacro = true },
+            )
+            GroupRow(
                 stringResource(R.string.add_blank),
                 stringResource(R.string.add_blank_subtitle),
                 icon = Icons.Outlined.Edit,
                 showChevron = true,
                 onClick = { naming = true },
             )
+        }
+    }
+
+    if (newMacro) {
+        NewMacroDialog(onDismiss = { newMacro = false }) { id ->
+            newMacro = false
+            nav.navigate(MacroRoute(id))
         }
     }
 

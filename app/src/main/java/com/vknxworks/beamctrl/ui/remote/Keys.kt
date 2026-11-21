@@ -47,7 +47,7 @@ class KeyHost(
     val holdToRepeat: Boolean = true,
     val haptics: Boolean = true,
     val onEdit: (button: RemoteButton?, role: KeyRole?) -> Unit = { _, _ -> },
-    val onSent: () -> Unit = {},
+    val onSent: (RemoteButton) -> Unit = {},
 )
 
 val LocalKeyHost = compositionLocalOf { KeyHost() }
@@ -98,7 +98,7 @@ fun BeamKey(
                     pressed = true
                     if (host.haptics) haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     val press = blaster.press(b.code, repeat && host.holdToRepeat)
-                    host.onSent()
+                    host.onSent(b)
                     try {
                         tryAwaitRelease()
                     } finally {
@@ -125,7 +125,7 @@ fun BeamKey(
             .semantics {
                 this.role = Role.Button
                 if (label != null) this.contentDescription = label
-                if (button != null && !host.editing) onClick(label) { blaster.send(button.code); true }
+                if (button != null && !host.editing) onClick(label) { blaster.send(button.code); host.onSent(button); true }
             },
         contentAlignment = Alignment.Center,
     ) {

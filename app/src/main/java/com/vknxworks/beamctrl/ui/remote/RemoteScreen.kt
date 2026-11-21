@@ -26,7 +26,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Bedtime
 import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.MeetingRoom
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
@@ -61,6 +64,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vknxworks.beamctrl.container
 import com.vknxworks.beamctrl.data.DeviceType
 import com.vknxworks.beamctrl.data.KeyRole
+import com.vknxworks.beamctrl.data.LayoutKind
 import com.vknxworks.beamctrl.data.RemoteButton
 import com.vknxworks.beamctrl.ir.FlipperIr
 import com.vknxworks.beamctrl.ui.components.ChoiceSheet
@@ -99,6 +103,9 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
     var renaming by remember { mutableStateOf(false) }
     var pickingType by remember { mutableStateOf(false) }
     var confirmDelete by remember { mutableStateOf(false) }
+    var layoutSheet by remember { mutableStateOf(false) }
+    var sleepSheet by remember { mutableStateOf(false) }
+    var roomSheet by remember { mutableStateOf(false) }
 
     val exportIr = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
         val r = remote ?: return@rememberLauncherForActivityResult
@@ -133,10 +140,41 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
         holdToRepeat = settings.holdToRepeat,
         haptics = settings.haptics,
         onEdit = { button, role -> editTarget = EditTarget(button, role) },
-        onSent = {
+        onSent = { button ->
             c.remotes.markUsed(id)
+            c.remotes.recordAc(id, button)
         },
     )
+
+    // The phone's volume keys press this remote's Volume up and down (Settings > Volume keys), not while editing.
+    val volUp = remote.button(KeyRole.VOL_UP)
+    val volDown = remote.button(KeyRole.VOL_DOWN)
+    val volumeKeysOn = settings.volumeKeys && !editing && (volUp != null || volDown != null)
+    DisposableEffect(volumeKeysOn, volUp, volDown, settings.holdToRepeat) {
+        var held: com.vknxworks.beamctrl.ir.Press? = null
+        val handler: (android.view.KeyEvent) -> Boolean = handler@{ event ->
+            val b = (if (event.keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP) volUp else volDown) ?: return@handler false
+            // Not while a PIN screen covers the remote.
+            if (com.vknxworks.beamctrl.ui.lock.AppLock.request != null) return@handler false
+            when (event.action) {
+                android.view.KeyEvent.ACTION_DOWN -> if (event.repeatCount == 0) {
+                    held?.release()
+                    held = c.blaster.press(b.code, settings.holdToRepeat)
+                    c.remotes.markUsed(id)
+                }
+                android.view.KeyEvent.ACTION_UP -> {
+                    held?.release()
+                    held = null
+                }
+            }
+            true
+        }
+        if (volumeKeysOn) VolumeKeys.handler = handler
+        onDispose {
+            held?.release()
+            if (VolumeKeys.handler === handler) VolumeKeys.handler = null
+        }
+    }
 
     Column(Modifier.fillMaxSize()) {
         ScreenTopBar(remote.name) {
@@ -164,6 +202,9 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                 CtrlDropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     CtrlMenuItem(stringResource(R.string.rename), onClick = { menu = false; renaming = true }, leadingIcon = Icons.Outlined.DriveFileRenameOutline)
                     CtrlMenuItem(stringResource(R.string.device_type), onClick = { menu = false; pickingType = true }, leadingIcon = Icons.Outlined.Category)
+                    CtrlMenuItem(stringResource(R.string.room), onClick = { menu = false; roomSheet = true }, leadingIcon = Icons.Outlined.MeetingRoom)
+                    CtrlMenuItem(stringResource(R.string.layout), onClick = { menu = false; layoutSheet = true }, leadingIcon = Icons.Outlined.Dashboard)
+                    CtrlMenuItem(stringResource(R.string.sleep_timer), onClick = { menu = false; sleepSheet = true }, leadingIcon = Icons.Outlined.Bedtime)
                     CtrlMenuItem(
                         stringResource(R.string.export_flipper),
                         onClick = {
@@ -211,21 +252,51 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
                         )
                     }
                 } else {
-                    RemoteLayout(
-                        remote = remote,
-                        showNumbers = settings.showNumberPad,
-                        editing = editing,
-                        onAddButton = { editTarget = EditTarget(null, null) },
-                    )
+                    if (remote.type == DeviceType.AC && !editing) {
+                        AcPanel(
+                            remote,
+                            onSend = { b ->
+                                c.blaster.send(b.code)
+                                c.remotes.markUsed(id)
+                                c.remotes.recordAc(id, b)
+                            },
+                            modifier = AcPanelPadding,
+                        )
+                    }
+                    if (remote.layout == LayoutKind.GRID) {
+                        GridRemoteLayout(remote = remote, editing = editing, onAddButton = { editTarget = EditTarget(null, null) })
+                    } else {
+                        RemoteLayout(
+                            remote = remote,
+                            showNumbers = settings.showNumberPad,
+                            editing = editing,
+                            onAddButton = { editTarget = EditTarget(null, null) },
+                        )
+                    }
                 }
             }
         }
     }
 
     editTarget?.let { target ->
+        val index = target.button?.let { b -> remote.buttons.indexOfFirst { it.id == b.id } } ?: -1
+        fun move(by: Int) {
+            val b = target.button ?: return
+            c.remotes.update(id) { r ->
+                val list = r.buttons.toMutableList()
+                val from = list.indexOfFirst { it.id == b.id }
+                val to = from + by
+                if (from < 0 || to !in list.indices) return@update r
+                list.add(to, list.removeAt(from))
+                r.copy(buttons = list)
+            }
+        }
         ButtonEditorSheet(
             button = target.button,
             presetRole = target.role,
+            isAc = remote.type == DeviceType.AC,
+            onMoveEarlier = if (remote.layout == LayoutKind.GRID && index > 0) ({ move(-1) }) else null,
+            onMoveLater = if (remote.layout == LayoutKind.GRID && index >= 0 && index < remote.buttons.size - 1) ({ move(+1) }) else null,
             onDismiss = { editTarget = null },
             onSave = { saved ->
                 c.remotes.update(id) { r ->
@@ -248,6 +319,10 @@ fun RemoteScreen(id: String, startEditing: Boolean) {
             },
         )
     }
+
+    if (layoutSheet) LayoutSheet(remote, onDismiss = { layoutSheet = false })
+    if (sleepSheet) SleepSheet(remote, onDismiss = { sleepSheet = false })
+    if (roomSheet) RoomSheet(remote, onDismiss = { roomSheet = false })
 
     if (renaming) {
         NameDialog(stringResource(R.string.rename_remote), remote.name, onDismiss = { renaming = false }) { name ->

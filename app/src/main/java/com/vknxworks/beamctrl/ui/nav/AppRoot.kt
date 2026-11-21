@@ -69,6 +69,7 @@ import com.vknxworks.beamctrl.ui.library.LibraryCategoryScreen
 import com.vknxworks.beamctrl.ui.library.LibraryDeviceScreen
 import com.vknxworks.beamctrl.ui.library.LibraryScreen
 import com.vknxworks.beamctrl.ui.poweroff.PowerOffScreen
+import com.vknxworks.beamctrl.ui.macros.MacroScreen
 import com.vknxworks.beamctrl.ui.components.LocalBottomClearance
 import com.vknxworks.beamctrl.ui.components.ConfirmDialog
 import com.vknxworks.beamctrl.ui.components.CtrlBottomBar
@@ -84,9 +85,12 @@ import com.vknxworks.beamctrl.ui.settings.YouScreen
 fun AppRoot() {
     val c = LocalContext.current.container
     val ready by c.remotes.ready.collectAsStateWithLifecycle()
-    val unreadable by c.remotes.unreadable.collectAsStateWithLifecycle()
+    val remotesUnreadable by c.remotes.unreadable.collectAsStateWithLifecycle()
+    val extrasReady by c.extras.ready.collectAsStateWithLifecycle()
+    val extrasUnreadable by c.extras.unreadable.collectAsStateWithLifecycle()
+    val unreadable = remotesUnreadable || extrasUnreadable
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        if (!ready) {
+        if (!ready || !extrasReady) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = CtrlColors.AccentText) }
         } else if (unreadable) {
             UnreadableRemotes()
@@ -103,7 +107,8 @@ fun AppRoot() {
  */
 @Composable
 private fun UnreadableRemotes() {
-    val remotes = LocalContext.current.container.remotes
+    val c = LocalContext.current.container
+    val remotes = c.remotes
     val scope = rememberCoroutineScope()
     var confirm by remember { mutableStateOf(false) }
     Box(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
@@ -112,7 +117,7 @@ private fun UnreadableRemotes() {
             title = stringResource(R.string.unreadable_title),
             body = stringResource(R.string.unreadable_body),
             actionLabel = stringResource(R.string.unreadable_retry),
-            onAction = { remotes.retry() },
+            onAction = { remotes.retry(); c.extras.retry() },
         )
         TextButton(onClick = { confirm = true }, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp)) {
             Text(stringResource(R.string.unreadable_start_empty), color = CtrlColors.Muted)
@@ -126,7 +131,10 @@ private fun UnreadableRemotes() {
             onDismiss = { confirm = false },
         ) {
             confirm = false
-            scope.launch { remotes.startEmpty(keep = true) }
+            scope.launch {
+                remotes.startEmpty(keep = true)
+                c.extras.startEmpty(keep = true)
+            }
         }
     }
 }
@@ -268,5 +276,6 @@ private fun AppNavHost(navController: NavHostController) {
         }
         composable<LibraryDeviceRoute> { LibraryDeviceScreen(it.toRoute<LibraryDeviceRoute>().id) }
         composable<PowerOffRoute> { PowerOffScreen() }
+        composable<MacroRoute> { MacroScreen(it.toRoute<MacroRoute>().id) }
     }
 }

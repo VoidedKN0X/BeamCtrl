@@ -56,7 +56,7 @@
 
     <!-- Backup (on the You page) -->
     <string name="backup_group">Backup</string>
-    <string name="backup_footer">To move BeamCtrl to another phone, back up here, copy the file to the new phone, then tap Restore from a file in BeamCtrl there. The file holds every remote and setting, but never the app lock PIN or fingerprint: set the app lock up again on the new phone. The file isn\'t encrypted, so keep it somewhere private. BeamCtrl isn\'t in Android\'s cloud backup or phone-to-phone transfer, so this file is the only copy of your remotes off this phone.</string>
+    <string name="backup_footer">To move BeamCtrl to another phone, back up here, copy the file to the new phone, then tap Restore from a file in BeamCtrl there. The file holds every remote, macro and setting, but never the app lock PIN or fingerprint: set the app lock up again on the new phone. The file isn\'t encrypted, so keep it somewhere private. BeamCtrl isn\'t in Android\'s cloud backup or phone-to-phone transfer, so this file is the only copy of your remotes off this phone.</string>
     <string name="backup_to_file">Back up to a file</string>
     <plurals name="backup_to_file_subtitle">
         <item quantity="one">Your remote and all settings, saved where you choose</item>
@@ -70,7 +70,7 @@
     <string name="backup_save_failed">Couldn\'t save the backup. Nothing was written.</string>
     <string name="cancel">Cancel</string>
     <string name="backup_restore_confirm_title">Restore this backup?</string>
-    <string name="backup_restore_confirm_body">This backup from %1$s has %2$s and all of BeamCtrl\'s settings. Restoring replaces every remote and setting on this phone (%3$s now). The app lock and its PIN stay as they are on this phone.</string>
+    <string name="backup_restore_confirm_body">This backup from %1$s has %2$s, their macros and all of BeamCtrl\'s settings. Restoring replaces every remote, macro and setting on this phone (%3$s now). The app lock and its PIN stay as they are on this phone.</string>
     <string name="backup_restore_confirm_body_v1">This older backup has %1$s and no settings. Restoring replaces every remote on this phone (%2$s now); your settings and the app lock stay as they are.</string>
     <string name="backup_restore_confirm">Replace and restore</string>
     <string name="backup_restore_failed_title">Can\'t restore this file</string>
@@ -434,9 +434,106 @@
 
     <!-- Encryption at rest: the saved remotes can't be opened -->
     <string name="unreadable_title">Can\'t open your remotes</string>
-    <string name="unreadable_body">Your remotes are stored encrypted on this phone, and the key that opens them is missing from the phone\'s secure storage or no longer matches. Nothing has been deleted or changed. Try again first; restarting the phone can help too.</string>
+    <string name="unreadable_body">Your remotes and macros are stored encrypted on this phone, and the key that opens them is missing from the phone\'s secure storage or no longer matches. Nothing has been deleted or changed. Try again first; restarting the phone can help too.</string>
     <string name="unreadable_retry">Try again</string>
     <string name="unreadable_start_empty">Start empty</string>
     <string name="unreadable_start_empty_title">Start with no remotes?</string>
     <string name="unreadable_start_empty_body">Only do this if trying again doesn\'t help. The remotes that can\'t be opened are kept aside on this phone, not deleted, but BeamCtrl won\'t show them. You can then restore a backup from the profile page.</string>
+    <!-- Layouts -->
+    <string name="layout">Layout</string>
+    <string name="layout_full">Full remote</string>
+    <string name="layout_full_sub">Power, d-pad, volume, channels, playback and numbers in their usual places</string>
+    <string name="layout_grid">Buttons in a grid</string>
+    <plurals name="layout_grid_columns">
+        <item quantity="one">%1$d button per row, in your own order</item>
+        <item quantity="other">%1$d buttons per row, in your own order</item>
+    </plurals>
+    <string name="layout_footer">In the grid every button of the remote shows, in the order you choose: tap Edit buttons, open a button and use Move earlier or Move later.</string>
+    <string name="move_earlier">Move earlier</string>
+    <string name="move_later">Move later</string>
+
+    <!-- Rooms -->
+    <string name="room">Room</string>
+    <string name="room_none">No room</string>
+    <string name="room_new">New room…</string>
+    <string name="room_new_title">New room</string>
+    <string name="room_all">All</string>
+
+    <!-- Volume keys -->
+    <string name="volume_keys">Volume keys control the remote</string>
+    <string name="volume_keys_subtitle">While a remote with volume buttons is open, the phone\'s volume keys press them</string>
+
+    <!-- Air conditioners -->
+    <string name="ac_off">Off</string>
+    <string name="ac_cool">Cool</string>
+    <string name="ac_heat">Heat</string>
+    <string name="ac_dry">Dry</string>
+    <string name="ac_fan_only">Fan only</string>
+    <string name="ac_auto">Auto</string>
+    <string name="ac_fan_auto">auto</string>
+    <string name="ac_fan_low">low</string>
+    <string name="ac_fan_medium">medium</string>
+    <string name="ac_fan_high">high</string>
+    <string name="ac_degrees">%1$d °C</string>
+    <string name="ac_fan_value">Fan %1$s</string>
+    <string name="ac_now">Last setting sent</string>
+    <string name="ac_unknown">Not known yet. Send a setting and BeamCtrl remembers it.</string>
+    <string name="ac_sent_at">Sent at %1$s</string>
+    <string name="ac_no_states">None of this remote\'s buttons says what it sets. Open Edit buttons, pick a button and choose what it sets (mode, temperature, fan).</string>
+    <string name="ac_colder">One degree colder</string>
+    <string name="ac_warmer">One degree warmer</string>
+    <string name="ac_button_sets">This button sets</string>
+    <string name="ac_nothing">Not a setting</string>
+    <string name="ac_temperature_field">Temperature, %1$d to %2$d °C (optional)</string>
+    <string name="ac_fan_unknown">Fan not given</string>
+    <string name="ac_button_sets_hint">Air conditioners get their whole setting with every press. Say what this button\'s code sets, and BeamCtrl remembers it as the current setting each time you send it.</string>
+    <string name="ac_temperature_range">The temperature must be between %1$d and %2$d °C</string>
+
+    <!-- Sleep timer -->
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="sleep_active">Sleep timer on</string>
+    <string name="sleep_active_title">%1$s on %2$s</string>
+    <string name="sleep_at">At %1$s</string>
+    <string name="sleep_at_window">At %1$s, or up to 10 minutes later</string>
+    <string name="sleep_cancel">Cancel the sleep timer</string>
+    <string name="sleep_no_buttons">This remote has no buttons yet.</string>
+    <string name="sleep_new">Press a button later</string>
+    <string name="sleep_new_replaces">Replace it with a new timer</string>
+    <string name="sleep_button">Button</string>
+    <plurals name="sleep_after_minutes">
+        <item quantity="one">In %1$d minute</item>
+        <item quantity="other">In %1$d minutes</item>
+    </plurals>
+    <string name="sleep_footer_exact">BeamCtrl presses the button once at that time, also with the screen off or the app closed. Keep the phone pointed at the device. There is one sleep timer at a time; restarting the phone cancels it.</string>
+    <string name="sleep_footer_window">BeamCtrl presses the button once, also with the screen off or the app closed. Android may run it up to 10 minutes late unless you allow Alarms and reminders for BeamCtrl. Keep the phone pointed at the device. There is one sleep timer at a time; restarting the phone cancels it.</string>
+    <string name="sleep_allow_exact">Allow exact timing</string>
+    <string name="sleep_allow_exact_sub">Opens Android\'s Alarms and reminders setting for BeamCtrl</string>
+
+    <!-- Macros -->
+    <string name="macros">Macros</string>
+    <string name="macro_new">New macro</string>
+    <string name="macro_default_name">Watch TV</string>
+    <string name="add_macro_subtitle">Several buttons on one or more remotes with one tap, such as TV on, soundbar on and the right input</string>
+    <string name="macro_run">Run</string>
+    <string name="macro_run_named">Run %1$s</string>
+    <string name="macro_stop">Stop</string>
+    <string name="macro_rename">Rename macro</string>
+    <string name="macro_delete">Delete macro</string>
+    <string name="macro_delete_title">Delete %1$s?</string>
+    <string name="macro_delete_body">The macro is deleted for good. Your remotes and their buttons stay as they are.</string>
+    <string name="macro_empty">No steps yet. Add a step for each button to press, in order.</string>
+    <string name="macro_footer">Run presses each button in turn, with its pause before the next one. Tap a step to change its pause. A step for a remote or button you delete is removed from the macro.</string>
+    <string name="macro_then_wait">then %1$s</string>
+    <string name="macro_add_step">Add a step</string>
+    <string name="macro_remove_step">Remove step</string>
+    <string name="macro_pick_remote">Which remote?</string>
+    <string name="macro_pick_button">Button on %1$s</string>
+    <string name="macro_pause_after">Pause after this step</string>
+    <string name="macro_no_pause">no pause</string>
+    <string name="macro_seconds_whole">wait %1$d s</string>
+    <string name="macro_seconds_tenths">wait %1$d.%2$d s</string>
+    <plurals name="macro_steps">
+        <item quantity="one">%1$d step</item>
+        <item quantity="other">%1$d steps</item>
+    </plurals>
 </resources>

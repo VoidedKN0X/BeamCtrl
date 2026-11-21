@@ -15,6 +15,9 @@
     <!-- Hides other apps' floating windows over the lock screen, PIN screens and confirmations (only while they
          show). Granted at install, no prompt. Not a network permission: BeamCtrl stays offline. -->
     <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS" />
+    <!-- The sleep timer: lets it go off at the exact minute. Not granted until you allow "Alarms and reminders" for
+         BeamCtrl; without it the timer still works but Android may run it up to 10 minutes late. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:name=".BeamCtrlApp"
@@ -40,6 +43,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- The sleep timer's alarm. Not exported: only BeamCtrl's own alarm can start it. -->
+        <receiver
+            android:name=".ir.SleepReceiver"
+            android:exported="false" />
 
         <!-- No downloadable emoji font: don't let androidx.emoji2 look one up from a font provider
              at start-up. Emoji are drawn with the phone's own emoji font instead. -->

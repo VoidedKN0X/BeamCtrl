@@ -19,7 +19,11 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Ready-made remotes** for Samsung, LG, Sony, Philips and Vizio TVs, and **Find my TV** to work out which one yours uses
 - **Import remotes from files:** Flipper Zero `.ir` files (for example from Flipper-IRDB), LIRC remote definitions (`lircd.conf`, from the LIRC remotes database) and irplus files (`.irplus`), or build a remote button by button
 - **Full TV layout**: power, input, d-pad, volume, channels, playback keys and a number pad
-- **Hold to repeat** volume, channel and arrow keys
+- **Hold to repeat** volume, channel and arrow keys, and the phone's **volume keys** press the open remote's volume buttons
+- **Macros:** several buttons on one or more remotes with one tap ("Watch TV": TV on, soundbar on, input), with a pause you choose after each step
+- **Air-conditioner remotes remember their setting:** mode, temperature and fan as last sent, with one-degree colder/warmer and mode and fan chips
+- **Rooms** to group your remotes, and a **custom layout**: every button in a grid, 2 to 4 per row, in your own order
+- **Sleep timer:** press Power (or any button) once in 15 minutes to 2 hours, also with the screen off
 - **Edit any remote**: change a button's code, add buttons, or export it as a Flipper Zero file
 - **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Panasonic, JVC, Denon, Sharp, Pronto hex and raw timings
 - **Back up to a file** and **restore** every remote and setting, also on another phone
@@ -31,7 +35,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 
 - Android 15 or newer, on a 64-bit ARM phone (nearly every phone from the last several years)
 - A phone with a built-in IR blaster (many Xiaomi, OPPO, Honor, Huawei and Vivo phones have one)
-- Permissions: the IR blaster, and fingerprint unlock for the optional app lock. No internet (see [Is it safe to install?](#is-it-safe-to-install))
+- Permissions: the IR blaster, fingerprint unlock for the optional app lock, and (only if you allow it) exact alarms for the sleep timer. No internet (see [Is it safe to install?](#is-it-safe-to-install))
 - **Google-free and de-Googled:** no Google Play services, Firebase or other Google services, and the app never contacts Google. It works the same on de-Googled phones (GrapheneOS, CalyxOS, /e/OS, LineageOS without Google apps).
 
 ## Install
@@ -62,13 +66,14 @@ If the Obtainium button doesn't open the app, add `https://github.com/VoidedKN0X
   Advanced users can compare it with [AppVerifier](https://github.com/soupslurpr/AppVerifier).
 - **Check a download.** Each release's notes end with the APK's SHA-256, so you can check the file you downloaded (`sha256sum BeamCtrl-vX.Y.Z.apk`). With the [GitHub CLI](https://cli.github.com/), `gh attestation verify BeamCtrl-vX.Y.Z.apk -R VoidedKN0X/BeamCtrl` proves the APK was built by this repo's build workflow from the tagged commit. The signing-certificate fingerprint above stays the check Android and AppVerifier use.
 
-**Permissions.** BeamCtrl asks for only three, and **no internet permission**, so it can't go online at all.
+**Permissions.** BeamCtrl asks for only four, and **no internet permission**, so it can't go online at all.
 
 | Permission | What BeamCtrl uses it for |
 | --- | --- |
 | Transmit infrared (`TRANSMIT_IR`) | Sending codes through your phone's IR blaster. This is what makes the remote work. |
 | Use biometric hardware (`USE_BIOMETRIC`) | Unlocking the app lock with your fingerprint, only if you turn that on. |
 | Hide other apps' floating windows (`HIDE_OVERLAY_WINDOWS`) | Hide other apps' floating windows over the PIN screen, and over the lock screen and confirmations, only while they show. Granted at install, without a prompt. It isn't a network permission: BeamCtrl stays offline. |
+| Alarms and reminders (`SCHEDULE_EXACT_ALARM`) | Lets the sleep timer go off at the exact minute. Android doesn't grant it until you allow it (the sleep timer has a shortcut); without it the timer still works but may go off up to 10 minutes late. |
 
 `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` also shows up in the app's details: it's an internal permission Android adds to every app built for Android 13 and newer, and only keeps BeamCtrl's own broadcasts private. Every build is checked before release: if the APK ever had an internet or network permission, the build would fail.
 

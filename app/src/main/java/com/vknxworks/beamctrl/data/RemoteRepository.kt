@@ -110,6 +110,14 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope, priv
     /** Deletes every remote ("Forgot PIN?"). */
     fun deleteAll() = change { emptyList() }
 
+    /** Air conditioners: remembers the state [button] sets as the remote's current state. */
+    fun recordAc(id: String, button: RemoteButton) {
+        val state = acStateOf(button) ?: return
+        val r = get(id) ?: return
+        if (r.type != DeviceType.AC) return
+        update(id) { it.copy(acState = state, acStateAt = System.currentTimeMillis()) }
+    }
+
     fun markUsed(id: String) {
         // Not worth a disk write on every press: only when it changes the order on the list.
         val now = System.currentTimeMillis()
@@ -172,13 +180,15 @@ class RemoteRepository(context: Context, private val scope: CoroutineScope, priv
             .map { b ->
                 val id = b.id.takeIf { it.isSaneId() && it !in buttonIds } ?: UUID.randomUUID().toString()
                 buttonIds += id
-                b.copy(id = id, label = b.label.clean(MAX_LABEL))
+                b.copy(id = id, label = b.label.clean(MAX_LABEL), ac = b.ac?.takeIf { a -> a.temperature == null || a.temperature in AcState.MIN_TEMP..AcState.MAX_TEMP })
             }
             .toList()
         return remote.copy(
             id = remote.id.takeIf { it.isSaneId() && it !in takenIds } ?: UUID.randomUUID().toString(),
             name = remote.name.clean(MAX_NAME).ifEmpty { unnamed },
             brand = remote.brand?.clean(MAX_NAME)?.ifEmpty { null },
+            room = remote.room?.clean(MAX_NAME)?.ifEmpty { null },
+            gridColumns = remote.gridColumns.coerceIn(2, 4),
             buttons = buttons,
         )
     }

@@ -49,6 +49,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.vknxworks.beamctrl.container
+import com.vknxworks.beamctrl.data.AcFan
+import com.vknxworks.beamctrl.data.AcMode
+import com.vknxworks.beamctrl.data.AcState
 import com.vknxworks.beamctrl.data.KeyRole
 import com.vknxworks.beamctrl.data.RemoteButton
 import com.vknxworks.beamctrl.ir.IrCode
@@ -135,6 +138,11 @@ private fun parseHex(text: String, max: Int, isAddress: Boolean): Int {
 fun ButtonEditorSheet(
     button: RemoteButton?,
     presetRole: KeyRole?,
+    /** Air-conditioner remote: offer "This button sets" (mode, temperature, fan). */
+    isAc: Boolean = false,
+    /** Grid layout: move the button one place earlier or later (null when it can't move that way). */
+    onMoveEarlier: (() -> Unit)? = null,
+    onMoveLater: (() -> Unit)? = null,
     onDismiss: () -> Unit,
     onSave: (RemoteButton) -> Unit,
     onDelete: (() -> Unit)?,
@@ -159,6 +167,11 @@ fun ButtonEditorSheet(
     var timings by remember { mutableStateOf(if (initialCode is IrCode.Raw) initialCode.timings.joinToString(" ") else "") }
     var error by remember { mutableStateOf<String?>(null) }
     var pickRole by remember { mutableStateOf(false) }
+    // Air conditioners: what this button sets. Starts from what was saved, or a guess from the name.
+    val initialAc = button?.ac ?: button?.let { AcState.guess(it.label) }
+    var acMode by remember { mutableStateOf(initialAc?.mode) }
+    var acTemp by remember { mutableStateOf(initialAc?.temperature?.toString().orEmpty()) }
+    var acFan by remember { mutableStateOf(initialAc?.fan) }
 
     fun build(): IrCode = when (proto) {
         Proto.PRONTO -> IrCode.Pronto(pronto.trim()).also { Pronto.decode(it.hex) }
@@ -306,6 +319,38 @@ fun ButtonEditorSheet(
                 }
             }
 
+            if (isAc) {
+                SectionLabel(stringResource(R.string.ac_button_sets))
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    EditorChip(stringResource(R.string.ac_nothing), acMode == null) { acMode = null }
+                    AcMode.entries.forEach { m -> EditorChip(stringResource(m.label), acMode == m) { acMode = m } }
+                }
+                if (acMode != null && acMode != AcMode.OFF) {
+                    OutlinedTextField(
+                        shape = CtrlShapes.Field,
+                        colors = ctrlFieldColors(),
+                        value = acTemp,
+                        onValueChange = { acTemp = it.filter(Char::isDigit).take(2) },
+                        label = { Text(stringResource(R.string.ac_temperature_field, AcState.MIN_TEMP, AcState.MAX_TEMP)) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        EditorChip(stringResource(R.string.ac_fan_unknown), acFan == null) { acFan = null }
+                        AcFan.entries.forEach { f -> EditorChip(stringResource(f.label), acFan == f) { acFan = f } }
+                    }
+                }
+                Text(stringResource(R.string.ac_button_sets_hint), style = MaterialTheme.typography.bodySmall, color = CtrlColors.Muted)
+            }
+
+            if (onMoveEarlier != null || onMoveLater != null) {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    CtrlSecondaryButton(onClick = { onMoveEarlier?.invoke() }, enabled = onMoveEarlier != null, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.move_earlier)) }
+                    CtrlSecondaryButton(onClick = { onMoveLater?.invoke() }, enabled = onMoveLater != null, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.move_later)) }
+                }
+            }
+
             error?.let { Text(it, color = CtrlColors.Error, style = MaterialTheme.typography.bodyMedium) }
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -315,8 +360,25 @@ fun ButtonEditorSheet(
                     onClick = {
                         attempt { code ->
                             val name = label.trim().ifEmpty { role?.label(context) ?: context.getString(R.string.button_default) }
+                            val acResult = runCatching {
+                                if (!isAc) button?.ac else acMode?.let { m ->
+                                    if (m == AcMode.OFF) AcState(AcMode.OFF) else {
+                                        val t = acTemp.trim().takeIf { it.isNotEmpty() }?.let { txt ->
+                                            txt.toIntOrNull()?.takeIf { it in AcState.MIN_TEMP..AcState.MAX_TEMP }
+                                                ?: throw IrCodeException(R.string.ac_temperature_range, AcState.MIN_TEMP, AcState.MAX_TEMP)
+                                        }
+                                        AcState(m, t, acFan)
+                                    }
+                                }
+                            }
+                            val failure = acResult.exceptionOrNull()
+                            if (failure != null) {
+                                error = irErrorText(context, failure)
+                                return@attempt
+                            }
+                            val ac = acResult.getOrNull()
                             onSave(
-                                (button ?: RemoteButton(label = name, code = code)).copy(label = name, role = role, code = code),
+                                (button ?: RemoteButton(label = name, code = code)).copy(label = name, role = role, code = code, ac = ac),
                             )
                         }
                     },
@@ -344,4 +406,26 @@ fun ButtonEditorSheet(
             pickRole = false
         }
     }
+}
+
+@Composable
+private fun EditorChip(text: String, selected: Boolean, onClick: () -> Unit) {
+    FilterChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(text, style = CtrlType.Data) },
+        shape = CtrlShapes.Chip,
+        colors = FilterChipDefaults.filterChipColors(
+            containerColor = CtrlColors.Surface,
+            labelColor = CtrlColors.Text,
+            selectedContainerColor = CtrlColors.Accent,
+            selectedLabelColor = CtrlColors.OnAccent,
+        ),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true,
+            selected = selected,
+            borderColor = CtrlColors.ControlOutline,
+            selectedBorderColor = CtrlColors.Accent,
+        ),
+    )
 }

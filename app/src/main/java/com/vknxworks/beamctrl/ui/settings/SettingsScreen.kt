@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Dialpad
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Repeat
+import androidx.compose.material.icons.outlined.VolumeUp
 import androidx.compose.material.icons.outlined.Sensors
 import androidx.compose.material.icons.outlined.Vibration
 import androidx.compose.material.icons.outlined.Waves
@@ -105,6 +106,12 @@ fun SettingsScreen() {
                     checked = settings.holdToRepeat,
                     icon = Icons.Outlined.Repeat,
                 ) { v -> set { it.copy(holdToRepeat = v) } }
+                GroupSwitch(
+                    stringResource(R.string.volume_keys),
+                    stringResource(R.string.volume_keys_subtitle),
+                    checked = settings.volumeKeys,
+                    icon = Icons.Outlined.VolumeUp,
+                ) { v -> set { it.copy(volumeKeys = v) } }
                 GroupSwitch(
                     stringResource(R.string.number_pad),
                     stringResource(R.string.number_pad_subtitle),

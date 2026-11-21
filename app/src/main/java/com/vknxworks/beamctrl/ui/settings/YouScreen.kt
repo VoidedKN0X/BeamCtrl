@@ -121,7 +121,7 @@ fun YouScreen() {
     val backUp = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
         scope.launch {
-            val text = BackupFile.write(c.remotes.remotes.value, c.settings.stored.first())
+            val text = BackupFile.write(c.remotes.remotes.value, c.settings.stored.first(), c.extras.extras.value.macros)
             val ok = withContext(Dispatchers.IO) {
                 runCatching {
                     val out = context.contentResolver.openOutputStream(uri, "wt") ?: error("No file")
@@ -298,6 +298,8 @@ fun YouScreen() {
         ) {
             pending = null
             c.remotes.replaceAll(backup.remotes)
+            // Macros press buttons on the remotes being replaced, so they go with them.
+            c.extras.replaceMacros(backup.macros.orEmpty())
             val settings = backup.settings
             if (settings != null) c.appScope.launch { c.settings.update { settings.applyTo(it) } }
             val count = backup.remotes.size

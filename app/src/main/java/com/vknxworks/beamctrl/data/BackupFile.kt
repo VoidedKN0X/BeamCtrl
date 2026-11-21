@@ -17,7 +17,9 @@ import kotlinx.serialization.json.intOrNull
  * the file can be restored on this phone or another one. The app lock's PIN and fingerprint keys are
  * never in it (they belong to this phone's secure hardware), and neither is whether the lock is on.
  *
- * Version 1 files ("Export all remotes" before 0.4.0) only hold remotes; they still restore.
+ * Version 1 files ("Export all remotes" before 0.4.0) only hold remotes; they still restore. Version 3 (1.0) adds
+ * macros, rooms, layouts, air-conditioner states and the newer protocols; older BeamCtrl versions refuse it as
+ * "made by a newer BeamCtrl" instead of reading half of it.
  */
 @Serializable
 data class Backup(
@@ -28,6 +30,8 @@ data class Backup(
     val remotes: List<Remote>,
     /** Missing in version 1 files, which only held remotes. */
     val settings: BackupSettings? = null,
+    /** Missing before version 3. */
+    val macros: List<Macro>? = null,
 )
 
 /** Every setting in [AppSettings]. Kept separate so the file format doesn't change by accident. */
@@ -42,6 +46,8 @@ data class BackupSettings(
     val lockTimeout: LockTimeout,
     val hideScreenshots: Boolean,
     val hideRecents: Boolean,
+    /** Missing before version 3: on, as on a new install. */
+    val volumeKeys: Boolean = true,
 ) {
     fun applyTo(s: AppSettings) = s.copy(
         theme = theme,
@@ -53,6 +59,7 @@ data class BackupSettings(
         lockTimeout = lockTimeout,
         hideScreenshots = hideScreenshots,
         hideRecents = hideRecents,
+        volumeKeys = volumeKeys,
     )
 
     companion object {
@@ -66,6 +73,7 @@ data class BackupSettings(
             lockTimeout = s.lockTimeout,
             hideScreenshots = s.hideScreenshots,
             hideRecents = s.hideRecents,
+            volumeKeys = s.volumeKeys,
         )
     }
 }
@@ -75,7 +83,7 @@ class BackupException(@StringRes val reason: Int) : Exception()
 
 object BackupFile {
     const val APP = "BeamCtrl"
-    const val VERSION = 2
+    const val VERSION = 3
 
     const val MAX_REMOTES = 500
     const val MAX_BUTTONS = 500
@@ -90,10 +98,10 @@ object BackupFile {
         encodeDefaults = true
     }
 
-    fun write(remotes: List<Remote>, settings: AppSettings, now: Long = System.currentTimeMillis()): String =
+    fun write(remotes: List<Remote>, settings: AppSettings, macros: List<Macro>, now: Long = System.currentTimeMillis()): String =
         strict.encodeToString(
             Backup.serializer(),
-            Backup(app = APP, version = VERSION, created = now, remotes = remotes, settings = BackupSettings.from(settings)),
+            Backup(app = APP, version = VERSION, created = now, remotes = remotes, settings = BackupSettings.from(settings), macros = macros),
         )
 
     /**
@@ -122,6 +130,7 @@ object BackupFile {
         // Version 2 always has the settings and a date; version 1 never had settings.
         if (version >= 2 && (settings == null || created == null)) return false
         if (version == 1 && settings != null) return false
+        if (version < 3 && macros != null) return false
         if (created != null && created < 0) return false
         if (remotes.size > MAX_REMOTES) return false
         val remoteIds = HashSet<String>()
@@ -130,6 +139,9 @@ object BackupFile {
             if (!r.name.isCleanText(MAX_NAME) || r.name.isBlank()) return false
             if (r.brand != null && (!r.brand.isCleanText(MAX_NAME) || r.brand.isBlank())) return false
             if (r.created < 0 || r.lastUsed < 0) return false
+            if (r.room != null && (!r.room.isCleanText(MAX_NAME) || r.room.isBlank())) return false
+            if (r.gridColumns !in 2..4) return false
+            if (r.acState?.isValid() == false) return false
             if (r.buttons.size > MAX_BUTTONS) return false
             val buttonIds = HashSet<String>()
             for (b in r.buttons) {
@@ -137,10 +149,24 @@ object BackupFile {
                 if (!b.label.isCleanText(MAX_LABEL)) return false
                 // Only codes the blaster can actually send.
                 if (runCatching { b.code.encode() }.isFailure) return false
+                if (b.ac?.isValid() == false) return false
             }
+        }
+        val all = macros.orEmpty()
+        if (all.size > MacroLimits.MAX_MACROS) return false
+        val buttons = remotes.associate { r -> r.id to r.buttons.map { it.id }.toSet() }
+        val macroIds = HashSet<String>()
+        for (m in all) {
+            if (!m.id.isSaneId() || !macroIds.add(m.id)) return false
+            if (!m.name.isCleanText(MAX_NAME) || m.name.isBlank()) return false
+            if (m.created < 0 || m.steps.size > MacroLimits.MAX_STEPS) return false
+            // Every step must press a button that is in this same file.
+            if (m.steps.any { s -> s.delayMs !in 0..MacroLimits.MAX_DELAY_MS || buttons[s.remoteId]?.contains(s.buttonId) != true }) return false
         }
         return true
     }
+
+    private fun AcState.isValid(): Boolean = temperature == null || temperature in AcState.MIN_TEMP..AcState.MAX_TEMP
 
     fun String.isSaneId(): Boolean = length in 1..64 && all { it.isLetterOrDigit() || it == '-' }
 

@@ -20,3 +20,6 @@ import kotlinx.serialization.Serializable
 @Serializable data class LibraryBrandRoute(val category: Int, val brand: String)
 @Serializable data class LibraryDeviceRoute(val id: Int)
 @Serializable data object PowerOffRoute
+
+// Macros
+@Serializable data class MacroRoute(val id: String)

@@ -93,7 +93,16 @@ data class RemoteButton(
     val label: String,
     val role: KeyRole? = null,
     val code: IrCode,
+    /** Air conditioners: the state this button sets (mode, temperature, fan), when you've said so in the editor. */
+    val ac: AcState? = null,
 )
+
+/** How a remote's buttons are laid out: the full TV-style remote, or every button in a grid in your own order. */
+@Serializable
+enum class LayoutKind(@StringRes val label: Int) {
+    FULL(R.string.layout_full),
+    GRID(R.string.layout_grid),
+}
 
 @Serializable
 data class Remote(
@@ -104,6 +113,14 @@ data class Remote(
     val buttons: List<RemoteButton> = emptyList(),
     val created: Long = System.currentTimeMillis(),
     val lastUsed: Long = 0,
+    /** The room it's in ("Living room"), or none. */
+    val room: String? = null,
+    val layout: LayoutKind = LayoutKind.FULL,
+    /** Buttons per row in the [LayoutKind.GRID] layout (2 to 4). */
+    val gridColumns: Int = 3,
+    /** Air conditioners: the last state BeamCtrl sent, and when. */
+    val acState: AcState? = null,
+    val acStateAt: Long = 0,
 ) {
     fun button(role: KeyRole): RemoteButton? = buttons.firstOrNull { it.role == role }
 }

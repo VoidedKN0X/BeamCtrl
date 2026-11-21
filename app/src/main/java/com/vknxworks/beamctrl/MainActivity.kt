@@ -1,6 +1,7 @@
 package com.vknxworks.beamctrl
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -16,6 +17,7 @@ import com.vknxworks.beamctrl.ui.lock.AppLockGate
 import com.vknxworks.beamctrl.ui.lock.lockCovering
 import com.vknxworks.beamctrl.ui.components.shield
 import com.vknxworks.beamctrl.ui.nav.AppRoot
+import com.vknxworks.beamctrl.ui.remote.VolumeKeys
 import com.vknxworks.beamctrl.ui.theme.BeamCtrlTheme
 
 class MainActivity : ComponentActivity() {
@@ -58,6 +60,15 @@ class MainActivity : ComponentActivity() {
                 AppLockGate { AppRoot() }
             }
         }
+    }
+
+    /** Volume keys press Volume up/down on the open remote, when it has them and the setting is on. */
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (VolumeKeys.isVolumeKey(event.keyCode)) {
+            val handler = VolumeKeys.handler
+            if (handler != null && handler(event)) return true
+        }
+        return super.dispatchKeyEvent(event)
     }
 }
 

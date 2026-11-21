@@ -53,6 +53,8 @@ data class AppSettings(
     val hideScreenshots: Boolean = false,
     /** "Hide in recent apps": the Recents view shows a blank card. Screenshots still work. */
     val hideRecents: Boolean = false,
+    /** The phone's volume keys press Volume up and down on the open remote. */
+    val volumeKeys: Boolean = true,
 )
 
 class SettingsRepository(private val context: Context, scope: CoroutineScope) {
@@ -66,6 +68,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         val lockTimeout = stringPreferencesKey("lock_timeout")
         val hideScreenshots = booleanPreferencesKey("hide_screenshots")
         val hideRecents = booleanPreferencesKey("hide_recents")
+        val volumeKeys = booleanPreferencesKey("volume_keys")
         /** The earlier single "hide in screenshots and recent apps" switch; an "on" turns on both new ones. */
         val legacyHide = booleanPreferencesKey("hide_content")
     }
@@ -104,6 +107,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         lockTimeout = this[K.lockTimeout]?.let { n -> LockTimeout.entries.firstOrNull { it.name == n } } ?: LockTimeout.IMMEDIATELY,
         hideScreenshots = this[K.hideScreenshots] ?: this[K.legacyHide] ?: false,
         hideRecents = this[K.hideRecents] ?: this[K.legacyHide] ?: false,
+        volumeKeys = this[K.volumeKeys] ?: true,
     )
 
     /** Saves a change. If the phone's storage fails, the change is dropped instead of closing the app. */
@@ -127,6 +131,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
             p[K.lockTimeout] = s.lockTimeout.name
             p[K.hideScreenshots] = s.hideScreenshots
             p[K.hideRecents] = s.hideRecents
+            p[K.volumeKeys] = s.volumeKeys
             p.remove(K.legacyHide)
         }
     }
