@@ -182,6 +182,10 @@
     <string name="proto_rc5">RC5</string>
     <string name="proto_rc5x">RC5X</string>
     <string name="proto_rc6">RC6</string>
+    <string name="proto_panasonic">Panasonic</string>
+    <string name="proto_jvc">JVC</string>
+    <string name="proto_denon">Denon</string>
+    <string name="proto_sharp">Sharp</string>
     <string name="proto_pronto">Pronto</string>
     <string name="proto_raw">Raw</string>
     <string name="code_invalid">That code isn\'t valid</string>
@@ -279,9 +283,9 @@
     <string name="add_brands">TV brands</string>
     <string name="dot_pair">%1$s · %2$s</string>
     <string name="add_build">Build your own</string>
-    <string name="add_build_footer">Phones can send infrared but not learn it from another remote, so codes come from the library, a Flipper Zero .ir file, or typing them in: NEC, Samsung, Sony, RC5, RC6, Pronto hex or raw timings.</string>
-    <string name="add_import">Import a Flipper .ir file</string>
-    <string name="add_import_subtitle">Turns every signal in the file into a button</string>
+    <string name="add_build_footer">Phones can send infrared but not learn it from another remote, so codes come from the library, a file (Flipper Zero .ir, LIRC lircd.conf or irplus), or typing them in: NEC, Samsung, Sony, RC5, RC6, Panasonic, JVC, Denon, Sharp, Pronto hex or raw timings.</string>
+    <string name="add_import">Import a file</string>
+    <string name="add_import_subtitle">Flipper Zero .ir, LIRC (lircd.conf) or irplus: every signal becomes a button</string>
     <string name="add_blank">Blank remote</string>
     <string name="add_blank_subtitle">Start empty and add buttons one by one</string>
     <string name="new_remote">New remote</string>

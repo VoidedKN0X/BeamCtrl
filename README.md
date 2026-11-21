@@ -17,11 +17,11 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Try every button before you save** a remote
 - **Turn off any TV**: sends every TV power code in turn until the TV switches off
 - **Ready-made remotes** for Samsung, LG, Sony, Philips and Vizio TVs, and **Find my TV** to work out which one yours uses
-- **Import Flipper Zero `.ir` files** (for example from Flipper-IRDB), or build a remote button by button
+- **Import remotes from files:** Flipper Zero `.ir` files (for example from Flipper-IRDB), LIRC remote definitions (`lircd.conf`, from the LIRC remotes database) and irplus files (`.irplus`), or build a remote button by button
 - **Full TV layout**: power, input, d-pad, volume, channels, playback keys and a number pad
 - **Hold to repeat** volume, channel and arrow keys
 - **Edit any remote**: change a button's code, add buttons, or export it as a Flipper Zero file
-- **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Pronto hex and raw timings
+- **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Panasonic, JVC, Denon, Sharp, Pronto hex and raw timings
 - **Back up to a file** and **restore** every remote and setting, also on another phone
 - **Vibrate on press**, keep the screen on while a remote is open, and show or hide the number pad
 - **App lock** with its own PIN and optional fingerprint unlock, so nobody else can use or change your remotes
@@ -93,7 +93,9 @@ Tap your profile picture at the top right. Under **Backup**:
 
 ## Tips and troubleshooting
 
-Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use the code library, a ready-made remote or a Flipper Zero file instead.
+Phones can only **send** infrared, not receive it, so BeamCtrl can't learn codes from your existing remote. Use the code library, a ready-made remote or a Flipper Zero, LIRC or irplus file instead.
+
+**Importing LIRC and irplus files.** From a LIRC file, BeamCtrl reads remotes that use space or pulse encoding (most of them, including NEC-style remotes) and raw codes; RC5, RC6 and other bi-phase LIRC remotes are listed as skipped (use the RC5/RC6 protocol in the button editor instead). From an irplus file it reads the Pronto hex, raw (`WINLIRC_RAW`) and NEC (`WINLIRC_NEC1`) formats; buttons in other formats are listed as skipped. Every imported code becomes a button, named after the key in the file, and well-known key names (power, volume, channels, arrows, digits) are put in their place on the remote.
 
 ## App lock
 

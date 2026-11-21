@@ -162,6 +162,89 @@ object Protocols {
     }
 }
 
+/**
+ * The four named protocols added in 1.0, with the timings and bit layouts of Arduino-IRremote (`ir_Kaseikyo.hpp`,
+ * `ir_JVC.hpp`, `ir_Denon.hpp`), which match the descriptions on SB-Projects' IR pages.
+ */
+object MoreProtocols {
+
+    // ---------- Panasonic (Kaseikyo, vendor 0x2002) ----------
+
+    private const val KASEIKYO_UNIT = 432
+    const val PANASONIC_VENDOR = 0x2002
+
+    /**
+     * The six bytes sent, LSB first: vendor id (2 bytes), vendor parity in the low nibble with the 12-bit address
+     * above it (2 bytes), the command, and a parity byte (command xor the two address bytes).
+     */
+    fun panasonicBytes(address: Int, command: Int, vendor: Int = PANASONIC_VENDOR): IntArray {
+        var vp = (vendor xor (vendor shr 8)) and 0xFF
+        vp = (vp xor (vp shr 4)) and 0xF
+        val addressWord = ((address and 0xFFF) shl 4) or vp
+        val b2 = addressWord and 0xFF
+        val b3 = (addressWord shr 8) and 0xFF
+        val c = command and 0xFF
+        return intArrayOf(vendor and 0xFF, (vendor shr 8) and 0xFF, b2, b3, c, c xor b2 xor b3)
+    }
+
+    fun panasonic(address: Int, command: Int): IrSignal {
+        val bytes = panasonicBytes(address, command)
+        val frame = Pulses().apply {
+            on(KASEIKYO_UNIT * 8); off(KASEIKYO_UNIT * 4)
+            for (b in bytes) for (i in 0 until 8) {
+                on(KASEIKYO_UNIT)
+                off(if ((b shr i) and 1 == 1) KASEIKYO_UNIT * 3 else KASEIKYO_UNIT)
+            }
+            on(KASEIKYO_UNIT)
+            padTo(130_000)
+        }.build()
+        return IrSignal(37_000, frame, frame)
+    }
+
+    // ---------- JVC ----------
+
+    private const val JVC_UNIT = 526
+
+    fun jvc(address: Int, command: Int): IrSignal {
+        val bits = (address and 0xFF) or ((command and 0xFF) shl 8)
+        fun frame(header: Boolean) = Pulses().apply {
+            if (header) { on(JVC_UNIT * 16); off(JVC_UNIT * 8) }
+            for (i in 0 until 16) {
+                on(JVC_UNIT)
+                off(if ((bits shr i) and 1 == 1) JVC_UNIT * 3 else JVC_UNIT)
+            }
+            on(JVC_UNIT)
+            off(JVC_UNIT * 45)
+        }.build()
+        // The header goes only before the first frame; repeats while held are the frame without it.
+        return IrSignal(38_000, frame(header = true), frame(header = false))
+    }
+
+    // ---------- Denon and Sharp ----------
+
+    private const val DENON_UNIT = 260
+
+    /** The 15-bit word: address in bits 0-4, command in 5-12, frame bits in 13-14 (00 Denon, 01 Sharp). */
+    fun denonWord(address: Int, command: Int, sharp: Boolean): Int =
+        (address and 0x1F) or ((command and 0xFF) shl 5) or ((if (sharp) 1 else 0) shl 13)
+
+    fun denon(address: Int, command: Int, sharp: Boolean): IrSignal {
+        val word = denonWord(address, command, sharp)
+        // The second frame repeats the address with the command and frame bits inverted.
+        val inverted = word xor 0x7FE0
+        fun frame(w: Int) = Pulses().apply {
+            for (i in 0 until 15) {
+                on(DENON_UNIT)
+                off(if ((w shr i) and 1 == 1) DENON_UNIT * 7 else DENON_UNIT * 3)
+            }
+            on(DENON_UNIT)
+            off(45_000)
+        }.build()
+        val pair = concat(frame(word), frame(inverted))
+        return IrSignal(38_000, pair, pair)
+    }
+}
+
 object Pronto {
 
     /** Decodes "0000 006D 0022 0002 0157 00AC …" (learned, modulated codes). */

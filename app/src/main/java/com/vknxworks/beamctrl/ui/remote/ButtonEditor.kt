@@ -68,6 +68,10 @@ private enum class Proto(@StringRes val label: Int, val maxAddress: Int, val max
     SONY20(R.string.chip_sony_20, 0x1FFF, 0x7F),
     RC5(R.string.proto_rc5, 0x1F, 0x7F),
     RC6(R.string.proto_rc6, 0xFF, 0xFF),
+    PANASONIC(R.string.proto_panasonic, 0xFFF, 0xFF),
+    JVC(R.string.proto_jvc, 0xFF, 0xFF),
+    DENON(R.string.proto_denon, 0x1F, 0xFF),
+    SHARP(R.string.proto_sharp, 0x1F, 0xFF),
     PRONTO(R.string.proto_pronto, 0, 0),
     RAW(R.string.proto_raw, 0, 0);
 
@@ -80,6 +84,10 @@ private fun protoOf(code: IrCode): Proto = when (code) {
     is IrCode.Sirc -> when (code.bits) { 15 -> Proto.SONY15; 20 -> Proto.SONY20; else -> Proto.SONY12 }
     is IrCode.Rc5 -> Proto.RC5
     is IrCode.Rc6 -> Proto.RC6
+    is IrCode.Panasonic -> Proto.PANASONIC
+    is IrCode.Jvc -> Proto.JVC
+    is IrCode.Denon -> Proto.DENON
+    is IrCode.Sharp -> Proto.SHARP
     is IrCode.Pronto -> Proto.PRONTO
     is IrCode.Raw -> Proto.RAW
 }
@@ -90,6 +98,10 @@ private fun addressOf(code: IrCode): Int? = when (code) {
     is IrCode.Sirc -> code.address
     is IrCode.Rc5 -> code.address
     is IrCode.Rc6 -> code.address
+    is IrCode.Panasonic -> code.address
+    is IrCode.Jvc -> code.address
+    is IrCode.Denon -> code.address
+    is IrCode.Sharp -> code.address
     else -> null
 }
 
@@ -99,6 +111,10 @@ private fun commandOf(code: IrCode): Int? = when (code) {
     is IrCode.Sirc -> code.command
     is IrCode.Rc5 -> code.command
     is IrCode.Rc6 -> code.command
+    is IrCode.Panasonic -> code.command
+    is IrCode.Jvc -> code.command
+    is IrCode.Denon -> code.command
+    is IrCode.Sharp -> code.command
     else -> null
 }
 
@@ -164,6 +180,10 @@ fun ButtonEditorSheet(
                 Proto.SONY15 -> IrCode.Sirc(15, a, c)
                 Proto.SONY20 -> IrCode.Sirc(20, a, c)
                 Proto.RC5 -> IrCode.Rc5(a, c)
+                Proto.PANASONIC -> IrCode.Panasonic(a, c)
+                Proto.JVC -> IrCode.Jvc(a, c)
+                Proto.DENON -> IrCode.Denon(a, c)
+                Proto.SHARP -> IrCode.Sharp(a, c)
                 else -> IrCode.Rc6(a, c)
             }
         }

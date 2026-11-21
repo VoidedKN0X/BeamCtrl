@@ -11,7 +11,8 @@ import java.util.Locale
  */
 object FlipperIr {
 
-    class ImportResult(val buttons: List<RemoteButton>, val skipped: List<String>)
+    /** Buttons read from a file; [skipped] names the signals that couldn't be used; [name] and [brand] when the file says. */
+    class ImportResult(val buttons: List<RemoteButton>, val skipped: List<String>, val name: String? = null, val brand: String? = null)
 
     fun parse(text: String, fallbackName: String): ImportResult {
         val buttons = mutableListOf<RemoteButton>()
@@ -107,7 +108,7 @@ object FlipperIr {
     /** Signals read from one file; the rest are reported as skipped. */
     const val MAX_SIGNALS = 500
 
-    private fun prettyName(name: String): String =
+    internal fun prettyName(name: String): String =
         name.replace('_', ' ').filterNot { it.isISOControl() }.trim().take(MAX_LABEL).replaceFirstChar { it.titlecase(Locale.getDefault()) }
 
     private val roleNames: Map<String, KeyRole> = buildMap<String, KeyRole> {
@@ -139,8 +140,9 @@ object FlipperIr {
         (0..9).forEach { alias(KeyRole.digit(it), "$it", "num$it", "digit$it", "key$it") }
     }
 
-    private fun roleFor(name: String): KeyRole? {
-        val n = name.lowercase(Locale.ROOT).trim()
+    internal fun roleFor(name: String): KeyRole? {
+        // LIRC names keys like KEY_VOLUMEUP and BTN_1.
+        val n = name.lowercase(Locale.ROOT).trim().removePrefix("key_").removePrefix("btn_")
         roleNames[n]?.let { return it }
         return roleNames[n.filter { it.isLetterOrDigit() || it == '+' || it == '-' }]
             ?: roleNames[n.filter { it.isLetterOrDigit() }]
@@ -176,6 +178,8 @@ object FlipperIr {
                 is IrCode.Sirc -> parsed(if (c.bits == 12) "SIRC" else "SIRC${c.bits}", c.address, c.command)
                 is IrCode.Rc5 -> parsed(if (c.command >= 64) "RC5X" else "RC5", c.address, c.command)
                 is IrCode.Rc6 -> parsed("RC6", c.address, c.command)
+                // Flipper's files have no named form for these that maps one to one, so they go out as timings.
+                is IrCode.Panasonic, is IrCode.Jvc, is IrCode.Denon, is IrCode.Sharp,
                 is IrCode.Pronto, is IrCode.Raw -> {
                     val signal = c.encode()
                     append("type: raw\n")

@@ -36,7 +36,7 @@ import com.vknxworks.beamctrl.data.FileTooBigException
 import com.vknxworks.beamctrl.data.Remote
 import com.vknxworks.beamctrl.data.readTextCapped
 import com.vknxworks.beamctrl.ir.CodeLibrary
-import com.vknxworks.beamctrl.ir.FlipperIr
+import com.vknxworks.beamctrl.ir.ImportFile
 import com.vknxworks.beamctrl.ir.protocolLabel
 import com.vknxworks.beamctrl.ui.components.Group
 import com.vknxworks.beamctrl.ui.components.GroupRow
@@ -69,7 +69,7 @@ fun AddScreen() {
                 runCatching {
                     val text = context.contentResolver.openInputStream(uri)?.use { it.readTextCapped() }.orEmpty()
                     val name = displayName(context, uri)?.substringBeforeLast('.')?.replace('_', ' ')?.trim()
-                    name to FlipperIr.parse(text, context.getString(R.string.button_default))
+                    name to ImportFile.read(text, context.getString(R.string.button_default))
                 }
             }
             result.onSuccess { (name, parsed) ->
@@ -78,7 +78,12 @@ fun AddScreen() {
                     return@onSuccess
                 }
                 val remote = c.remotes.add(
-                    Remote(name = name?.ifBlank { null } ?: context.getString(R.string.import_default_name), type = DeviceType.OTHER, buttons = parsed.buttons),
+                    Remote(
+                        name = parsed.name?.ifBlank { null } ?: name?.ifBlank { null } ?: context.getString(R.string.import_default_name),
+                        type = DeviceType.OTHER,
+                        brand = parsed.brand?.ifBlank { null },
+                        buttons = parsed.buttons,
+                    ),
                 )
                 val skipped = parsed.skipped.size
                 val imported = context.resources.getQuantityString(R.plurals.import_done, parsed.buttons.size, parsed.buttons.size)

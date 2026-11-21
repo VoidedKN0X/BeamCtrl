@@ -38,6 +38,29 @@ sealed interface IrCode {
     @SerialName("rc6")
     data class Rc6(val address: Int, val command: Int) : IrCode
 
+    /**
+     * Panasonic (the Kaseikyo family with Panasonic's vendor id 0x2002): 12-bit address and 8-bit command, as
+     * Arduino-IRremote's `sendPanasonic` takes them.
+     */
+    @Serializable
+    @SerialName("panasonic")
+    data class Panasonic(val address: Int, val command: Int) : IrCode
+
+    /** JVC: 8-bit address and command. */
+    @Serializable
+    @SerialName("jvc")
+    data class Jvc(val address: Int, val command: Int) : IrCode
+
+    /** Denon: 5-bit address and 8-bit command, sent with its inverted copy. */
+    @Serializable
+    @SerialName("denon")
+    data class Denon(val address: Int, val command: Int) : IrCode
+
+    /** Sharp: the Denon frame with Sharp's frame bits (expansion 1, check 0). 5-bit address, 8-bit command. */
+    @Serializable
+    @SerialName("sharp")
+    data class Sharp(val address: Int, val command: Int) : IrCode
+
     /** A Pronto hex code, as printed in remote code databases. */
     @Serializable
     @SerialName("pronto")
@@ -76,6 +99,10 @@ fun IrCode.protocolLabel(context: Context): String = when (this) {
     is IrCode.Sirc -> context.getString(R.string.proto_sony_bits, bits)
     is IrCode.Rc5 -> context.getString(if (command >= 64) R.string.proto_rc5x else R.string.proto_rc5)
     is IrCode.Rc6 -> context.getString(R.string.proto_rc6)
+    is IrCode.Panasonic -> context.getString(R.string.proto_panasonic)
+    is IrCode.Jvc -> context.getString(R.string.proto_jvc)
+    is IrCode.Denon -> context.getString(R.string.proto_denon)
+    is IrCode.Sharp -> context.getString(R.string.proto_sharp)
     is IrCode.Pronto -> context.getString(R.string.proto_pronto)
     is IrCode.Raw -> context.getString(R.string.proto_raw)
 }
@@ -104,6 +131,10 @@ fun IrCode.encode(toggle: Boolean = false): IrSignal = when (this) {
     is IrCode.Sirc -> Protocols.sirc(bits, address, command)
     is IrCode.Rc5 -> Protocols.rc5(address, command, toggle)
     is IrCode.Rc6 -> Protocols.rc6(address, command, toggle)
+    is IrCode.Panasonic -> MoreProtocols.panasonic(address, command)
+    is IrCode.Jvc -> MoreProtocols.jvc(address, command)
+    is IrCode.Denon -> MoreProtocols.denon(address, command, sharp = false)
+    is IrCode.Sharp -> MoreProtocols.denon(address, command, sharp = true)
     is IrCode.Pronto -> Pronto.decode(hex)
     is IrCode.Raw -> {
         irRequire(timings.size <= IrLimits.MAX_TIMINGS, R.string.code_too_many_timings, IrLimits.MAX_TIMINGS)

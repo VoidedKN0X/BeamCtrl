@@ -6,7 +6,12 @@ To publish a new version: bump `versionCode` and `versionName` in `app/build.gra
 
 ## Unreleased
 
-Changes on `main` that aren't in a release yet. They ship with the next version.
+Changes on `main` that aren't in a release yet. They ship with the next version. Built and checked by CI only: none of this has been run on a phone.
+
+### New
+
+- **Four more named protocols: Panasonic, JVC, Denon and Sharp.** The button editor offers them next to NEC, Samsung, Sony and RC5/RC6, with an address and a command in hex like the others: Panasonic takes a 12-bit address and 8-bit command (the Kaseikyo frame with Panasonic's vendor id, as in Arduino-IRremote), JVC an 8-bit address and command, Denon and Sharp a 5-bit address and 8-bit command (sent with the inverted second frame those protocols use). Timings and bit layouts follow Arduino-IRremote's implementation. Exporting a remote with these codes to a Flipper Zero file writes them as raw timings, because Flipper's files have no matching named form.
+- **Import LIRC and irplus files.** "Import a file" on the Add tab (formerly "Import a Flipper .ir file") now also reads LIRC remote definitions (`lircd.conf`, as in the LIRC remotes database and WinLIRC) and irplus remotes (`.irplus`). From LIRC files it reads space- and pulse-encoded remotes (header, pre/post data, trailing pulse, constant-length gaps, `REVERSE`, `min_repeat`) and raw codes; RC5, RC6 and other bi-phase encodings are listed as skipped instead of guessed. From irplus files it reads Pronto hex, raw timings and the NEC format; other irplus formats are listed as skipped. The new remote takes the remote's name (and, for irplus, its brand) from the file, every code becomes a button, and well-known key names such as `KEY_POWER` or `KEY_VOLUMEUP` are put in their place on the remote. The file type is recognised from its contents, not its name.
 
 ### Project
 
