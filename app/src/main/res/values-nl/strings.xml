@@ -99,7 +99,10 @@
     <string name="lock_too_many">Te veel pogingen. Probeer opnieuw over %1$d s</string>
     <string name="lock_forgot">Pincode vergeten?</string>
     <string name="lock_forgot_title">Je pincode vergeten?</string>
-    <string name="lock_forgot_body">De pincode kan niet worden teruggehaald. BeamCtrl verwijdert elke afstandsbediening en instelling op deze telefoon en zet de app-vergrendeling uit. Als je een back-up naar een bestand maakte, kun je daarna alles terugzetten (tik op je profielfoto en dan op Terugzetten uit een bestand).</string>
+    <string name="lock_forgot_body">De pincode kan niet worden teruggehaald. BeamCtrl verwijdert elke afstandsbediening en instelling op deze telefoon en zet de app-vergrendeling uit. Als je een back-up naar een bestand maakte, kun je daarna alles terugzetten (tik op je profielfoto en dan op Terugzetten uit een bestand). Als je telefoon een schermvergrendeling heeft, bevestig je eerst daarmee.</string>
+    <string name="lock_reset_prompt_title">App-vergrendeling van BeamCtrl terugzetten</string>
+    <string name="lock_reset_prompt_subtitle">Gebruik de schermvergrendeling van je telefoon om te bevestigen dat jij het bent</string>
+    <string name="lock_reset_prompt_failed">De schermvergrendeling kon niet getoond worden</string>
     <string name="lock_forgot_confirm">Afstandsbedieningen verwijderen en resetten</string>
     <string name="lock_choose_pin">Kies een pincode voor de app</string>
     <string name="lock_enable_intro">Minstens %1$d cijfers, anders dan de pincode van je telefoon. Als je ze vergeet, kom je alleen weer binnen door je afstandsbedieningen te verwijderen en opnieuw te beginnen.</string>

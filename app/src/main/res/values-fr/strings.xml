@@ -72,7 +72,10 @@
     <string name="app_lock_subtitle">Demander un code PIN (et éventuellement votre empreinte) à l\'ouverture de BeamCtrl, pour que personne d\'autre ne puisse utiliser ou modifier vos télécommandes</string>
     <string name="app_lock_footer">BeamCtrl fonctionne entièrement hors ligne : il n\'a ni autorisation Internet, ni statistiques, ni pistage. Le verrouillage garde seulement BeamCtrl fermé ; il n\'y a aucun mot de passe à protéger.</string>
     <string name="lock_prompt_subtitle">Vos télécommandes</string>
-    <string name="lock_forgot_body">Le code PIN ne peut pas être récupéré. BeamCtrl supprimera chaque télécommande et paramètre de ce téléphone et désactivera le verrouillage. Si vous avez sauvegardé dans un fichier, vous pourrez tout restaurer ensuite (touchez votre photo de profil, puis Restaurer depuis un fichier).</string>
+    <string name="lock_forgot_body">Le code PIN ne peut pas être récupéré. BeamCtrl supprimera chaque télécommande et paramètre de ce téléphone et désactivera le verrouillage. Si vous avez sauvegardé dans un fichier, vous pourrez tout restaurer ensuite (touchez votre photo de profil, puis Restaurer depuis un fichier). Si votre téléphone a un verrouillage d\'écran, vous confirmerez d\'abord avec celui-ci.</string>
+    <string name="lock_reset_prompt_title">Réinitialiser le verrouillage de BeamCtrl</string>
+    <string name="lock_reset_prompt_subtitle">Utilisez le verrouillage d\'écran de votre téléphone pour confirmer que c\'est bien vous</string>
+    <string name="lock_reset_prompt_failed">Impossible d\'afficher le verrouillage d\'écran</string>
     <string name="lock_forgot_confirm">Supprimer les télécommandes et réinitialiser</string>
     <string name="lock_enable_intro">Au moins %1$d chiffres, différent du code PIN de votre téléphone. Si vous l\'oubliez, le seul moyen de revenir est de supprimer vos télécommandes et de recommencer.</string>
 

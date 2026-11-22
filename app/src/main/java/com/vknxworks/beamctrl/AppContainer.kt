@@ -5,6 +5,7 @@ import com.vknxworks.beamctrl.data.ExtrasRepository
 import com.vknxworks.beamctrl.data.RemoteRepository
 import com.vknxworks.beamctrl.ir.MacroRunner
 import com.vknxworks.beamctrl.ir.SleepAlarm
+import com.vknxworks.beamctrl.ir.SleepPlan
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import com.vknxworks.beamctrl.data.crypto.DataKeyStore
@@ -91,6 +92,15 @@ class AppContainer(val context: Context) {
             combine(remotes.remotes, remotes.ready, remotes.unreadable, extras.ready, extras.unreadable) { list, rReady, rBad, eReady, eBad ->
                 if (rReady && !rBad && eReady && !eBad) list else null
             }.collect { list -> if (list != null) extras.dropMissing(list) }
+        }
+        // Android drops alarms on a reboot, a force stop and an app update, but the timer stays saved (and shown).
+        // Set the alarm again once the saved extras are read; a timer that is long past is cleared instead.
+        appScope.launch {
+            extras.ready.first { it }
+            if (extras.unreadable.value) return@launch
+            val timer = extras.extras.value.sleep ?: return@launch
+            val at = SleepPlan.alarmAtStart(timer.at, System.currentTimeMillis())
+            if (at != null) SleepAlarm.schedule(context, at) else extras.setSleep(null)
         }
     }
 }

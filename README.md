@@ -23,7 +23,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Macros:** several buttons on one or more remotes with one tap ("Watch TV": TV on, soundbar on, input), with a pause you choose after each step
 - **Air-conditioner remotes remember their setting:** mode, temperature and fan as last sent, with one-degree colder/warmer and mode and fan chips
 - **Rooms** to group your remotes, and a **custom layout**: every button in a grid, 2 to 4 per row, in your own order
-- **Sleep timer:** press Power (or any button) once in 15 minutes to 2 hours, also with the screen off
+- **Sleep timer:** press Power (or any button) once in 15 minutes to 2 hours, also with the screen off. After a restart or an update of BeamCtrl the timer is set again when you open the app (Android forgets alarms on a phone restart); one that is more than 5 minutes past by then is cleared instead of going off late
 - **Edit any remote**: change a button's code, add buttons, or export it as a Flipper Zero file
 - **Supports common IR codes**: NEC, Samsung, Sony SIRC, Philips RC5/RC6, Panasonic, JVC, Denon, Sharp, Pronto hex and raw timings
 - **Back up to a file** and **restore** every remote and setting, also on another phone
@@ -93,7 +93,7 @@ Settings, Backup and About are behind your profile picture at the top right of t
 Tap your profile picture at the top right. Under **Backup**:
 
 - **Back up to a file** saves everything in one file, in a place you choose with Android's file picker (Downloads, an SD card, a USB stick or a cloud storage app you've installed). The file holds every remote with all its buttons and codes, and every setting. It never holds the app lock's PIN or fingerprint keys, or whether the lock is on.
-- **Restore from a file** reads a backup file, checks all of it, and asks before it **replaces** every remote and setting on the phone. The app lock and its PIN stay as they are on that phone. A file that isn't a BeamCtrl backup, is damaged or was edited by hand, or was made by a newer BeamCtrl is refused with a message, and nothing changes. Files exported by BeamCtrl 0.3.1 and older still restore (remotes only).
+- **Restore from a file** reads a backup file, checks all of it, and asks before it **replaces** every remote and setting on the phone. The app lock and its PIN stay as they are on that phone, and a restore can only make privacy stricter: it can turn **Hide in screenshots** and **Hide in recent apps** on but not off, and make **Lock again** shorter but not longer. A file that isn't a BeamCtrl backup, is damaged or was edited by hand, or was made by a newer BeamCtrl is refused with a message, and nothing changes. Files exported by BeamCtrl 0.3.1 and older still restore (remotes only).
 
 **To move to a new phone:** back up on the old phone, copy the file to the new one, install BeamCtrl there and tap **Restore from a file**. Then turn the app lock on again if you use it. BeamCtrl isn't included in Android's cloud backup or its phone-to-phone transfer, so the backup file is the only way your remotes move. The file isn't encrypted (it only holds remotes and settings), so keep it somewhere private.
 
@@ -113,7 +113,7 @@ Turn it on under **Settings > Privacy and security > App lock** (tap your profil
 - **Wrong PINs:** after 5 tries you wait 30 seconds, doubling up to 15 minutes. Restarting the app or the phone, or changing the clock, doesn't skip the wait.
 - **Lock again:** as soon as you leave the app (the default), after 1, 5 or 15 minutes or 1 hour away, or only when the app restarts. Backing up to a file, restoring from one and opening a link in your browser don't count as leaving, unless you stay away for more than 5 minutes.
 - **Change app PIN** asks for your current PIN first, and turning the app lock off asks for the PIN too.
-- **Forgot your PIN?** It can't be recovered. The lock screen offers to delete every remote and setting on the phone and turn the lock off; if you backed up to a file, you can restore everything from it afterwards.
+- **Forgot your PIN?** It can't be recovered. The lock screen offers to delete every remote and setting on the phone and turn the lock off, after you confirm with your phone's own screen lock (PIN, pattern, password or fingerprint) if it has one, so someone holding your unlocked phone can't simply wipe it; if you backed up to a file, you can restore everything from it afterwards.
 - **BeamCtrl has no servers or passwords**, so the app lock only keeps the app closed until it's unlocked.
 
 **Hide in screenshots** and **Hide in recent apps** (the last two switches in the same section, also without the app lock, both off by default): the first keeps BeamCtrl out of screenshots and screen recordings (and blanks its recent-apps preview), the second shows a blank card for BeamCtrl in the recent-apps view while screenshots still work. With the app lock on, the recent-apps view always shows a blank card. The lock screen and the PIN screens are always kept out of screenshots.

@@ -49,6 +49,10 @@ data class BackupSettings(
     /** Missing before version 3: on, as on a new install. */
     val volumeKeys: Boolean = true,
 ) {
+    /**
+     * [s] with this backup's settings. A restore can only make privacy stricter: "Hide in screenshots" and "Hide in
+     * recent apps" can be turned on but not off, and "Lock again" can get shorter but not longer.
+     */
     fun applyTo(s: AppSettings) = s.copy(
         theme = theme,
         dynamicColor = dynamicColor,
@@ -56,13 +60,16 @@ data class BackupSettings(
         holdToRepeat = holdToRepeat,
         showNumberPad = showNumberPad,
         keepScreenOn = keepScreenOn,
-        lockTimeout = lockTimeout,
-        hideScreenshots = hideScreenshots,
-        hideRecents = hideRecents,
+        lockTimeout = if (rank(lockTimeout) <= rank(s.lockTimeout)) lockTimeout else s.lockTimeout,
+        hideScreenshots = s.hideScreenshots || hideScreenshots,
+        hideRecents = s.hideRecents || hideRecents,
         volumeKeys = volumeKeys,
     )
 
     companion object {
+        /** How long the app stays unlocked; "only when the app restarts" is the longest. */
+        private fun rank(t: LockTimeout) = if (t.millis < 0) Long.MAX_VALUE else t.millis
+
         fun from(s: AppSettings) = BackupSettings(
             theme = s.theme,
             dynamicColor = s.dynamicColor,

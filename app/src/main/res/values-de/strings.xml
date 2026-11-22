@@ -72,7 +72,10 @@
     <string name="app_lock_subtitle">Beim Öffnen von BeamCtrl nach einer App-PIN (und optional deinem Fingerabdruck) fragen, damit niemand sonst deine Fernbedienungen nutzen oder ändern kann</string>
     <string name="app_lock_footer">BeamCtrl funktioniert komplett offline: Es hat keine Internetberechtigung, keine Analysen und kein Tracking. Die App-Sperre hält nur BeamCtrl verschlossen; es gibt keine Passwörter zu schützen.</string>
     <string name="lock_prompt_subtitle">Deine Fernbedienungen</string>
-    <string name="lock_forgot_body">Die PIN kann nicht wiederhergestellt werden. BeamCtrl löscht jede Fernbedienung und Einstellung auf diesem Smartphone und schaltet die App-Sperre aus. Wenn du in eine Datei gesichert hast, kannst du danach alles daraus wiederherstellen (tippe auf dein Profilbild, dann auf „Aus Datei wiederherstellen“).</string>
+    <string name="lock_forgot_body">Die PIN kann nicht wiederhergestellt werden. BeamCtrl löscht jede Fernbedienung und Einstellung auf diesem Smartphone und schaltet die App-Sperre aus. Wenn du in eine Datei gesichert hast, kannst du danach alles daraus wiederherstellen (tippe auf dein Profilbild, dann auf „Aus Datei wiederherstellen“). Wenn dein Smartphone eine Displaysperre hat, bestätigst du zuerst damit.</string>
+    <string name="lock_reset_prompt_title">App-Sperre von BeamCtrl zurücksetzen</string>
+    <string name="lock_reset_prompt_subtitle">Bestätige mit der Displaysperre deines Smartphones, dass du es bist</string>
+    <string name="lock_reset_prompt_failed">Die Displaysperre konnte nicht angezeigt werden</string>
     <string name="lock_forgot_confirm">Fernbedienungen löschen und zurücksetzen</string>
     <string name="lock_enable_intro">Mindestens %1$d Ziffern, nicht dieselbe wie die PIN deines Smartphones. Wenn du sie vergisst, kommst du nur wieder hinein, indem du deine Fernbedienungen löschst und neu anfängst.</string>
 

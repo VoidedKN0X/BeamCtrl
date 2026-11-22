@@ -12,7 +12,7 @@
 - Readers must accept both sealed and ordinary files (`SealedFile.isSealed`). Without a data key the app reads and writes the ordinary file as before.
 - Never delete or overwrite a file that can't be opened, never replace an existing `data.key`, and never create a Keystore key on the decrypt path (`KeystoreAes.existing`). An ordinary file only becomes a sealed one through `SealedFile.sealInPlace` (temp file, sync, read back, compare, atomic rename). Sealed remotes that can't be opened put `RemoteRepository.unreadable` on: nothing is written and the UI shows the "Can't open your remotes" screen.
 - Backups and Flipper `.ir` exports stay ordinary files in their existing formats (they are written from the list in memory).
-- All of it runs off the main thread (the repository's load and saves). There is no unit-test source set in this repo; the same classes are tested in RideCtrl (`SealedFileTest`).
+- All of it runs off the main thread (the repository's load and saves). The crypto classes are tested in RideCtrl (`SealedFileTest`). This repo's own unit tests (JUnit 4, `app/src/test`) run on CI with every build (`:app:testDebugUnitTest`).
 
 ## Dependency verification
 

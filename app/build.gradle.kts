@@ -135,4 +135,7 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
+
+    // Unit tests only (plain JVM, never in the APK).
+    testImplementation(libs.junit)
 }

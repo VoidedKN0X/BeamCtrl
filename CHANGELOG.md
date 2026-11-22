@@ -4,6 +4,23 @@ What changed in each BeamCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+Built and checked by CI only: nothing here has been run on a phone yet.
+
+### Fixed
+
+- **A sleep timer survives an update or restart of BeamCtrl.** Android forgets alarms when the phone restarts, when BeamCtrl is force-stopped and when it's updated, but BeamCtrl kept the timer saved. So the timer silently never went off, while the sleep timer sheet kept showing "Sleep timer active … at 23:30", even after that time. Now BeamCtrl sets the alarm again every time it starts. A timer that is still ahead goes off at its time; one that was missed by up to 5 minutes goes off right away; one that is older than that is cleared, so the sheet no longer shows a stale time and your TV isn't switched off hours later. After a phone restart this happens when you open BeamCtrl (there is no start-up receiver, so no new permission). Needs a test on the phone: set a timer, update or force-stop BeamCtrl, open it again.
+
+### Security
+
+- **"Forgot PIN?" now asks for your phone's screen lock first.** Before, anyone holding your unlocked phone could tap "Forgot PIN?" on BeamCtrl's lock screen and, after one confirmation, delete every remote and turn the app lock off. Now BeamCtrl first asks for your phone's own PIN, pattern, password or fingerprint. If you cancel or it fails, nothing is deleted. The warning that every remote and setting will be deleted is still shown first. If your phone has no screen lock at all, the reset works as before.
+- **Restoring a backup can only make privacy stricter.** "Restore from a file" took every setting from the file, so a backup file could turn "Hide in screenshots" and "Hide in recent apps" off, or make "Lock again" wait longer (up to "only when the app restarts"). Now a restore can turn those two switches on but never off, and can make "Lock again" shorter but never longer. Remotes, macros and the other settings restore as before.
+
+### Project
+
+- Unit tests (JUnit 4, test-only, not in the app) for the sleep timer start-up rule and the restore rule, run by CI on every build. `gradle/verification-metadata.xml` gains the checksums of JUnit 4.13.2 and Hamcrest 1.3, and the verification-metadata workflow now includes the test downloads.
+
 ## v0.9.1 (2026-11-21)
 
 Built and checked by CI only: nothing in this release had been run on a phone when it was published.

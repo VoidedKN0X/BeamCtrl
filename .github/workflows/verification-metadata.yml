@@ -45,7 +45,7 @@ jobs:
           # Adds entries to the existing file and keeps its settings (the trusted sources and javadoc jars).
           # No secrets here: CI and GITHUB_ACTIONS are unset so the release build signs with the
           # debug key instead of refusing. It downloads the same libraries as the signed build.
-          env -u CI -u GITHUB_ACTIONS ./gradlew --no-daemon --write-verification-metadata sha256 assembleRelease assembleDebug :app:dependencies --configuration releaseRuntimeClasspath
+          env -u CI -u GITHUB_ACTIONS ./gradlew --no-daemon --write-verification-metadata sha256 assembleRelease assembleDebug :app:testDebugUnitTest :app:dependencies --configuration releaseRuntimeClasspath
 
       - name: Print verification metadata
         run: |
